@@ -1,17 +1,20 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:it_project/src/ui/base/bindings/main_binding.dart';
-import 'package:it_project/src/ui/main_screen.dart';
+import 'package:it_project/src/configs/bindings/login_binding.dart';
+import 'package:it_project/src/configs/constants/app_colors.dart';
+import 'package:it_project/src/core/login_register/screens/login_screen.dart';
+import 'package:it_project/src/di/di_graph_setup.dart';
+
 import 'package:it_project/src/utils/app_pages.dart';
 
-void main() {
-  runApp(
-    // DevicePreview(
-    // builder: ((context) => const MyApp()),
-    const MyApp(),
-    // )
-  );
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await setupDependenciesGraph();
+  runApp(DevicePreview(
+    builder: (context) => const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -19,14 +22,38 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      theme: ThemeData(
-        textTheme: GoogleFonts.nunitoTextTheme(),
-      ),
+      debugShowCheckedModeBanner: false,
+      theme: lightMode(),
       getPages: AppPages.pages,
-      home: const MainScreen(),
-
-      initialBinding: MainBinding(),
-      // home: const LoginScreen(),
+      home: const LoginScreen(),
+      initialBinding: LoginBinding(),
     );
+  }
+
+  ThemeData lightMode() {
+    return ThemeData(
+        textTheme: TextTheme(
+          headline1: GoogleFonts.nunito(),
+        ),
+        scaffoldBackgroundColor: AppColors.whiteColor,
+        // backgroundColor: AppColors.redColor.withOpacity(0.9),
+        appBarTheme: AppBarTheme(
+          backgroundColor: AppColors.whiteColor,
+          foregroundColor: AppColors.brownColor,
+          elevation: 0,
+        ),
+        bottomAppBarColor: Colors.transparent);
+  }
+
+  ThemeData darkMode() {
+    return ThemeData(
+        textTheme: TextTheme(
+          headline1: GoogleFonts.nunito(),
+        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: AppColors.whiteColor,
+          foregroundColor: AppColors.brownColor,
+          elevation: 0,
+        ));
   }
 }
