@@ -2,5 +2,7 @@ part of 'di_graph_setup.dart';
 
 void _registerApiModule() {
   // API Server
-  Get.put(AuthService(Get.find<DioHttpClient>(tag: 'auth')));
+  getIt.registerSingleton(AuthService(getIt<DioHttpClient>()));
+  getIt.registerSingleton(ProductService(getIt<DioHttpClient>()));
+  getIt.registerSingleton(SearchService(getIt<DioHttpClient>()));
 }

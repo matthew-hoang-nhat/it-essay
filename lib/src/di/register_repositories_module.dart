@@ -1,9 +1,13 @@
 part of 'di_graph_setup.dart';
 
 Future<void> _registerRepositoriesModule() async {
-  // Repository
-  Get.put(AuthRepository(
-    Get.find<AppShared>(),
-    Get.find(),
+  getIt.registerSingleton(AuthRepositoryImpl(
+    authService: GetIt.I<AuthService>(),
+  ));
+  getIt.registerSingleton(ProductRepositoryImpl(
+    productService: getIt<ProductService>(),
+  ));
+  getIt.registerSingleton(SearchRepositoryImpl(
+    searchService: getIt<SearchService>(),
   ));
 }
