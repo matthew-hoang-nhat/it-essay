@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:get/get.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
+import 'package:it_project/src/configs/locates/lang_vi.dart';
 import 'package:it_project/src/features/shopping_cart/widgets/product_cart.dart';
 import 'package:it_project/src/widgets/product_general/product_general_model.dart';
-import '../../configs/locates/translation_manager.dart';
 
 class CartScreen extends StatefulWidget {
-  const CartScreen({super.key, required this.product});
-
-  final ProductGeneralModel product;
+  const CartScreen({super.key});
 
   @override
   State<CartScreen> createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
-  final meLocalKey = Get.find<TranslationManager>().keys['vi_VN'];
+  final meLocalKey = viVN;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +28,8 @@ class _CartScreenState extends State<CartScreen> {
               shrinkWrap: true,
               slivers: <Widget>[
                 SliverAppBar(
+                  backgroundColor: AppColors.whiteColor,
+                  foregroundColor: AppColors.brownColor,
                   pinned: true,
                   expandedHeight: 100,
                   flexibleSpace: FlexibleSpaceBar(
