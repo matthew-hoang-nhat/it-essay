@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import 'package:google_fonts/google_fonts.dart';
-import 'package:it_project/src/configs/constants/app_assets.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/constants/app_dimensions.dart';
+import 'package:it_project/src/configs/locates/lang_vi.dart';
 import 'package:it_project/src/widgets/product_general/product_general_model.dart';
 
-import '../../configs/locates/translation_manager.dart';
 import '../icon_heart.dart';
 
+// ignore: must_be_immutable
 class ProductGeneralWidget extends StatefulWidget {
   ProductGeneralWidget(
       {super.key, required this.product, required this.isHeart});
@@ -19,8 +19,7 @@ class ProductGeneralWidget extends StatefulWidget {
 }
 
 class _ProductGeneralWidgetState extends State<ProductGeneralWidget> {
-  final meLocalKey = Get.find<TranslationManager>().keys['vi_VN'];
-
+  final meLocalKey = viVN;
   bool isFollow = false;
 
   @override
@@ -45,18 +44,25 @@ class _ProductGeneralWidgetState extends State<ProductGeneralWidget> {
             ),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(5),
-                  topRight: Radius.circular(5),
-                ),
-                child: Image.asset(
-                  AppAssets.fkImHarryPotter1,
-                  width: double.infinity,
-                  height: 180,
-                  fit: BoxFit.cover,
-                ),
-              ),
+              if (widget.product.productImage != null)
+                ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(5),
+                      topRight: Radius.circular(5),
+                    ),
+                    child: Image.network(
+                      widget.product.productImage!,
+                      height: 180,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    )
+                    //  Image.asset(
+                    //   AppAssets.fkImHarryPotter1,
+                    //   width: double.infinity,
+                    //   height: 180,
+                    //   fit: BoxFit.cover,
+                    // ),
+                    ),
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10),

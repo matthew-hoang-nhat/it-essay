@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:get/get.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 
 import '../configs/constants/app_colors.dart';
 import '../configs/constants/app_dimensions.dart';
 
-Widget categoryWidget(String title) {
+Widget categoryWidget(context, String title) {
   return Container(
-    width: Get.width * 1 / 5,
-    height: Get.width * 1 / 5 * 5 / 4,
-    constraints: const BoxConstraints(maxWidth: 200),
+    width: 100,
+    height: 120,
+    margin: const EdgeInsets.only(right: 20),
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(AppDimensions.dp10),
