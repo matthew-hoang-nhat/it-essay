@@ -4,10 +4,11 @@ import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/locates/lang_vi.dart';
 import 'package:it_project/src/configs/locates/me_locale_key.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
-import 'package:it_project/src/features/login_register/repositories/auth_repository.dart';
-import 'package:it_project/src/features/login_register/repositories/auth_repository_impl.dart';
 
 import 'package:it_project/src/utils/helpers/validate.dart';
+import 'package:it_project/src/utils/remote/services/fresult.dart';
+import 'package:it_project/src/utils/repository/auth_repository.dart';
+import 'package:it_project/src/utils/repository/auth_repository_impl.dart';
 
 part 'register_state.dart';
 
@@ -31,6 +32,7 @@ class RegisterCubit extends Cubit<RegisterState>
 
   @override
   void addNewEvent(RegisterEnum key, value) {
+    if (isClosed == true) return;
     switch (key) {
       case RegisterEnum.announcement:
         emit(NewRegisterState.fromOldSettingState(state, announcement: value));
@@ -88,7 +90,7 @@ class RegisterCubit extends Cubit<RegisterState>
     return true;
   }
 
-  Future<Map<bool, String?>> registerButtonClick(
+  Future<String?> registerButtonClick(
       {required emailText,
       required firstName,
       required lastName,
@@ -101,13 +103,13 @@ class RegisterCubit extends Cubit<RegisterState>
 
     if (isEmptyField(
         emailText, firstName, lastName, gender, password, confirmPassword)) {
-      return {false: null};
+      return null;
     }
     if (!isAllValidated(
         email: emailText,
         password: password,
         confirmPassword: confirmPassword)) {
-      return {false: null};
+      return null;
     }
 
     bool isLoading = true;
@@ -121,17 +123,15 @@ class RegisterCubit extends Cubit<RegisterState>
       password: password,
     );
 
-    final isSucceedRegister = registerResponse.keys.first;
+    final isSucceedRegister = registerResponse.isSuccess;
     if (isSucceedRegister) {
-      return registerResponse;
+      return registerResponse.data;
     }
 
-    isLoading = false;
-    emit(NewRegisterState.fromOldSettingState(state, isLoading: isLoading));
+    addNewEvent(RegisterEnum.isLoading, false);
     final announcement = meLocalKey[MeLocaleKey.emailIsExisted];
-    emit(NewRegisterState.fromOldSettingState(state,
-        announcement: announcement));
+    addNewEvent(RegisterEnum.announcement, announcement);
 
-    return registerResponse;
+    return null;
   }
 }

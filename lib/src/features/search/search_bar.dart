@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/src/features/search/cubit/search_cubit.dart';
+import 'package:it_project/src/utils/remote/model/search/content_search.dart';
 import '../../configs/constants/app_colors.dart';
 import '../../configs/constants/app_dimensions.dart';
 
@@ -110,7 +111,8 @@ class _SearchBarState extends State<SearchBar> {
               Column(
                 children: [
                   ...bloc.state.contentSearches
-                      .map((e) => lineText(e.name))
+                      .map((e) => resultLineTextSearch(
+                          e.name, widget.textEditingController.text, e.slug))
                       .toList()
                 ],
               ),
@@ -119,17 +121,70 @@ class _SearchBarState extends State<SearchBar> {
       },
     );
   }
-}
 
-lineText(text) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        text,
-        style: GoogleFonts.nunito(fontSize: 16),
-      ),
-      const Divider(),
-    ],
-  );
+  resultLineTextSearch(text, query, slug) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          onTap: () {
+            widget.textEditingController.text = text;
+            bloc.addNewEvent(
+                SearchEnum.contentSearches, List<ContentSearch>.empty());
+            FocusScope.of(context).unfocus();
+          },
+          child: SizedBox(
+              width: double.infinity,
+              child: Text(
+                text,
+                style: GoogleFonts.nunito(fontSize: 16),
+              )
+              // RichText(
+              //   text: TextSpan(
+              //     children: highlightOccurrences(text, query),
+              //     style: GoogleFonts.nunito(
+              //         color: AppColors.greyColor, fontSize: 16),
+              //   ),
+              // ),
+              ),
+        ),
+        const Divider(),
+      ],
+    );
+  }
+
+  // List<TextSpan> highlightOccurrences(String source, String query) {
+  //   if (query.isEmpty || !source.toLowerCase().contains(query.toLowerCase())) {
+  //     return [TextSpan(text: source)];
+  //   }
+  //   final matches = query.toLowerCase().allMatches(source.toLowerCase());
+
+  //   int lastMatchEnd = 0;
+
+  //   final List<TextSpan> children = [];
+  //   for (var i = 0; i < matches.length; i++) {
+  //     final match = matches.elementAt(i);
+
+  //     if (match.start != lastMatchEnd) {
+  //       children.add(TextSpan(
+  //         text: source.substring(lastMatchEnd, match.start),
+  //       ));
+  //     }
+
+  //     children.add(TextSpan(
+  //       text: source.substring(match.start, match.end),
+  //       style:
+  //           const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+  //     ));
+
+  //     if (i == matches.length - 1 && match.end != source.length) {
+  //       children.add(TextSpan(
+  //         text: source.substring(match.end, source.length),
+  //       ));
+  //     }
+
+  //     lastMatchEnd = match.end;
+  //   }
+  //   return children;
+  // }
 }

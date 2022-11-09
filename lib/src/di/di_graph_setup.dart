@@ -6,15 +6,15 @@ import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/routes/routers_app.dart';
-import 'package:it_project/src/features/login_register/repositories/auth_repository_impl.dart';
-import 'package:it_project/src/features/login_register/services/auth_service.dart';
-import 'package:it_project/src/features/main/home_product/repositories/product_repository_impl.dart';
-import 'package:it_project/src/features/main/home_product/services/product_service.dart';
-import 'package:it_project/src/features/search/remote/search_service.dart';
-import 'package:it_project/src/features/search/repositories/search_repository_impl.dart';
-
 import 'package:it_project/src/utils/app_shared.dart';
-import 'package:it_project/src/utils/services/dio_http_client.dart';
+import 'package:it_project/src/utils/remote/services/auth_service/auth_service.dart';
+import 'package:it_project/src/utils/remote/services/dio_http_client.dart';
+import 'package:it_project/src/utils/remote/services/product/product_service.dart';
+import 'package:it_project/src/utils/remote/services/search/search_service.dart';
+import 'package:it_project/src/utils/repository/auth_repository_impl.dart';
+import 'package:it_project/src/utils/repository/product_repository_impl.dart';
+import 'package:it_project/src/utils/repository/search_repository_impl.dart';
+
 import 'package:path_provider/path_provider.dart';
 
 part 'register_api_module.dart';
