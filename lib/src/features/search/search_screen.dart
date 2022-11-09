@@ -9,6 +9,8 @@ import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/search/cubit/search_cubit.dart';
 import 'package:it_project/src/features/search/search_bar.dart';
 import 'package:it_project/src/widgets/category_widget.dart';
+import 'package:it_project/src/widgets/product_general/product_general_model.dart';
+import 'package:it_project/src/widgets/product_general/product_general_widget.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -46,8 +48,38 @@ class SearchScreen extends StatelessWidget {
           const SizedBox(height: 20),
           categories(context, bloc),
           // extensionSearchField(),
+          showProducts(bloc)
         ],
       ),
+    );
+  }
+
+  BlocBuilder<SearchCubit, SearchState> showProducts(SearchCubit bloc) {
+    return BlocBuilder<SearchCubit, SearchState>(
+      buildWhen: (previous, current) {
+        return previous.products != current.products;
+      },
+      bloc: bloc,
+      builder: (context, state) {
+        return SizedBox(
+          height: 300,
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: bloc.state.products.length,
+              itemBuilder: (context, index) {
+                final product = bloc.state.products.elementAt(index);
+                return ProductGeneralWidget(
+                    product: ProductGeneralModel(
+                      mainCategory: product.category.name,
+                      name: product.name,
+                      price: product.price.toString(),
+                      priceAfterDecrement: '',
+                      productImage: product.productImages.first.fileLink,
+                    ),
+                    isHeart: false);
+              }),
+        );
+      },
     );
   }
 
@@ -55,27 +87,29 @@ class SearchScreen extends StatelessWidget {
     return BlocBuilder<SearchCubit, SearchState>(
       bloc: bloc,
       buildWhen: (previous, current) {
-        return previous.categories != current.categories;
+        return current.isEmpty != previous.isEmpty;
       },
-      builder: (context, state) => SizedBox(
-        height: 120,
-        child: ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            itemCount: bloc.state.categories.length,
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: categoryWidget(
-                      context, bloc.state.categories.elementAt(index).name),
-                );
-              }
+      builder: (context, state) => state.isEmpty
+          ? SizedBox(
+              height: 120,
+              child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: bloc.state.categories.length,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: categoryWidget(context,
+                            bloc.state.categories.elementAt(index).name),
+                      );
+                    }
 
-              return categoryWidget(
-                  context, bloc.state.categories.elementAt(index).name);
-            }),
-      ),
+                    return categoryWidget(
+                        context, bloc.state.categories.elementAt(index).name);
+                  }),
+            )
+          : const SizedBox(),
     );
   }
 
@@ -93,7 +127,7 @@ class SearchScreen extends StatelessWidget {
                   Text('MEGASALE',
                       style: GoogleFonts.shrikhand(
                           fontSize: 30, color: Colors.orange)),
-                  Text('FASHION',
+                  Text('BOOK WEEK',
                       style: GoogleFonts.nunito(
                           fontSize: 30, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 20),

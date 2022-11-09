@@ -36,7 +36,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ));
   }
 
-  registerScreen(bloc) {
+  registerScreen(RegisterCubit bloc) {
     TextEditingController firstNameController = TextEditingController();
     TextEditingController lastNameController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
@@ -250,10 +250,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   lastName: lastNameController.text,
                                   password: passwordController.text,
                                 );
-                                final result = responseRegister.keys.first;
-                                if (result) {
+                                final userIdResponse = responseRegister != null;
+                                if (userIdResponse) {
                                   isRegisterScreen = false;
-                                  userId = responseRegister.values.first ?? '';
+                                  userId = responseRegister;
                                   setState(() {});
                                 }
                               },

@@ -4,11 +4,11 @@ import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/locates/lang_vi.dart';
 import 'package:it_project/src/configs/locates/me_locale_key.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
-import 'package:it_project/src/features/login_register/repositories/auth_repository.dart';
-import 'package:it_project/src/features/login_register/repositories/auth_repository_impl.dart';
 
 import 'package:it_project/src/utils/app_shared.dart';
 import 'package:it_project/src/utils/helpers/validate.dart';
+import 'package:it_project/src/utils/repository/auth_repository.dart';
+import 'package:it_project/src/utils/repository/auth_repository_impl.dart';
 
 part 'login_state.dart';
 
@@ -69,12 +69,12 @@ class LoginCubit extends Cubit<LoginState> implements ParentCubit<LoginEnum> {
     bool isLoading = true;
     addNewEvent(LoginEnum.isLoading, isLoading);
 
-    Map<bool, String?> responseManualLogin = await authRepository.manualLogin(
+    final responseManualLogin = await authRepository.manualLogin(
       email: emailText,
       password: passwordText,
     );
 
-    final isSuccess = responseManualLogin.keys.first;
+    final isSuccess = responseManualLogin.isSuccess;
 
     isLoading = false;
     addNewEvent(LoginEnum.isLoading, isLoading);
@@ -88,7 +88,7 @@ class LoginCubit extends Cubit<LoginState> implements ParentCubit<LoginEnum> {
       return false;
     }
 
-    final accessToken = responseManualLogin.values.first;
+    final accessToken = responseManualLogin.data;
     if (accessToken != null) {
       _appShared.setTokenValue(accessToken);
     } else {

@@ -5,15 +5,15 @@ import 'package:equatable/equatable.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/locates/lang_vi.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
-import 'package:it_project/src/features/login_register/repositories/auth_repository.dart';
-import 'package:it_project/src/features/login_register/repositories/auth_repository_impl.dart';
+import 'package:it_project/src/utils/repository/auth_repository.dart';
+import 'package:it_project/src/utils/repository/auth_repository_impl.dart';
 
 part 'otp_state.dart';
 
 enum OtpEnum { announcement, time, isLoading }
 
 class OtpCubit extends Cubit<OtpState> implements ParentCubit<OtpEnum> {
-  OtpCubit()
+  OtpCubit(this.userId)
       : super(const OtpInitial(
           announcement: '',
           time: '',
@@ -22,15 +22,17 @@ class OtpCubit extends Cubit<OtpState> implements ParentCubit<OtpEnum> {
   AuthRepository authRepository = getIt<AuthRepositoryImpl>();
   final meLocalKey = viVN;
 
+  final String userId;
+
   Timer? _timer;
   final int maxCount = 5;
   late int start = maxCount;
 
-  Future<bool> sendButtonClick(String otpCode, String emailUser) async {
+  Future<bool> sendButtonClick(String otpCode) async {
     bool isLoading = true;
     addNewEvent(OtpEnum.isLoading, isLoading);
 
-    final result = await _callApiOtpSend(int.parse(otpCode), emailUser);
+    final result = await _callApiOtpSend(int.parse(otpCode), userId);
 
     isLoading = false;
     addNewEvent(OtpEnum.isLoading, isLoading);
@@ -42,10 +44,10 @@ class OtpCubit extends Cubit<OtpState> implements ParentCubit<OtpEnum> {
   }
 
   Future<bool> _callApiOtpSend(int otp, userId) async {
-    final responseOtpRegister =
+    final otpRegisterResponse =
         await authRepository.otpRegister(userId: userId, otpCode: otp);
 
-    final result = responseOtpRegister.keys.first;
+    final result = otpRegisterResponse.isSuccess;
     if (result) return true;
 
     const announcement = 'OTP sai rồi bạn ơi';

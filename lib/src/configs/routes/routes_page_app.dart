@@ -1,11 +1,11 @@
 import 'package:go_router/go_router.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/login_register/screens/login_screen.dart';
-import 'package:it_project/src/features/main/home_product/home_screen.dart';
+import 'package:it_project/src/features/main/home/home_screen.dart';
 
 import 'package:it_project/src/features/main_screen.dart';
+import 'package:it_project/src/features/product/screens/product_screen.dart';
 import 'package:it_project/src/features/shopping_cart/cart_screen.dart';
-import 'package:it_project/src/widgets/product_general/product_general_model.dart';
 
 class AppPages {
   static const List<String> needAuthenticatedPages = [
@@ -24,6 +24,10 @@ class AppPages {
     GoRoute(
       path: Paths.homeScreen,
       builder: (context, state) => const HomeScreen(),
+    ),
+    GoRoute(
+      path: Paths.productScreen,
+      builder: (context, state) => const ProductScreen(),
     ),
     // GoRoute(
     //   path: Paths.otpScreen,

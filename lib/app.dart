@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/routes/routers_app.dart';
+import 'package:it_project/src/features/main/home/cubit/home_cubit.dart';
 import 'package:it_project/src/features/search/cubit/search_cubit.dart';
 
 class App extends StatelessWidget {
@@ -15,8 +16,10 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => SearchCubit()),
+        BlocProvider(create: (context) => HomeCubit()),
       ],
       child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
         theme: lightMode(),
         routerConfig: router,
       ),
