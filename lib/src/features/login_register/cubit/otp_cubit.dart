@@ -13,7 +13,7 @@ part 'otp_state.dart';
 enum OtpEnum { announcement, time, isLoading }
 
 class OtpCubit extends Cubit<OtpState> implements ParentCubit<OtpEnum> {
-  OtpCubit(this.userId)
+  OtpCubit()
       : super(const OtpInitial(
           announcement: '',
           time: '',
@@ -22,13 +22,11 @@ class OtpCubit extends Cubit<OtpState> implements ParentCubit<OtpEnum> {
   AuthRepository authRepository = getIt<AuthRepositoryImpl>();
   final meLocalKey = viVN;
 
-  final String userId;
-
   Timer? _timer;
   final int maxCount = 5;
   late int start = maxCount;
 
-  Future<bool> sendButtonClick(String otpCode) async {
+  Future<bool> sendButtonClick(String otpCode, String userId) async {
     bool isLoading = true;
     addNewEvent(OtpEnum.isLoading, isLoading);
 

@@ -30,7 +30,7 @@ class OtpCheckScreen extends StatelessWidget {
               textEditingControllers[index],
             ));
     final meLocalKey = viVN;
-    final bloc = OtpCubit(userId);
+    final bloc = OtpCubit();
 
     bloc.startTimer();
     return Stack(
@@ -110,7 +110,7 @@ class OtpCheckScreen extends StatelessWidget {
               InkWell(
                 onTap: () async {
                   await bloc
-                      .sendButtonClick(otpCode(textEditingControllers))
+                      .sendButtonClick(otpCode(textEditingControllers), userId)
                       .then((value) {
                     if (value) {
                       Navigator.pop(context);

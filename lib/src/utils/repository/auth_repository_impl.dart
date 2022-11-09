@@ -60,7 +60,7 @@ class AuthRepositoryImpl extends AuthRepository {
 
     try {
       final result = await authService.otpRegister(otpRequest);
-      return FResult.success(result.data);
+      return FResult.success('');
     } catch (dioError) {
       if (dioError is DioError) {
         // return dioError.errorsToString();
