@@ -5,4 +5,5 @@ class Paths {
   static const String registerScreen = "/register-screen";
   static const String cartScreen = "/cart-screen";
   static const String otpScreen = "/otp-screen";
+  static const String productScreen = "/product-screen";
 }
