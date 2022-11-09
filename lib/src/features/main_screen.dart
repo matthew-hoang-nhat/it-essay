@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
-import 'package:it_project/src/features/main/home_product/home_screen.dart';
+import 'package:it_project/src/features/main/home/home_screen.dart';
 import 'package:it_project/src/features/search/search_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -12,7 +12,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int tab = 1;
+  int tab = 0;
   final List tabs = [
     // const HomeScreen(),i
     const HomeScreen(),
