@@ -10,7 +10,11 @@ Future<void> _registerCoreModule() async {
 
 registerAppSharedAsync() async {
   final Directory directory = await getApplicationDocumentsDirectory();
-  Hive.init(directory.path);
+  Hive
+    ..init(directory.path)
+    ..registerAdapter(ItemCartAdapter());
+
   final Box box = await Hive.openBox(AppShared.keyBox);
+
   getIt.registerSingleton<AppShared>(AppShared(box));
 }

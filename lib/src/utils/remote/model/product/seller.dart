@@ -10,9 +10,9 @@ class Seller {
   @JsonKey(name: 'info')
   InfoData infoData;
   @JsonKey(name: 'logo')
-  LogoData logoData;
+  LogoData? logoData;
   @JsonKey(name: 'userId')
-  String userId;
+  String? userId;
 
   Seller({
     required this.infoData,

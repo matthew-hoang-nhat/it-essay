@@ -40,4 +40,6 @@ class AppAssets {
   static const String fkImHarryPotter3 =
       'assets/fake_images/harry_potter_3.jpg';
   static const String imgPersonBook = 'assets/images/img_person_book.png';
+  static const String imgPoster = 'assets/images/img_poster.png';
+  static const String imgLogoTuoiTre = 'assets/images/img_tuoi_tre.png';
 }

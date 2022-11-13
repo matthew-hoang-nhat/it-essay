@@ -3,17 +3,22 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/search/cubit/search_cubit.dart';
-import 'package:it_project/src/utils/remote/model/search/content_search.dart';
-import '../../configs/constants/app_colors.dart';
-import '../../configs/constants/app_dimensions.dart';
+import '../../../configs/constants/app_colors.dart';
 
 class SearchBar extends StatefulWidget {
-  const SearchBar({Key? key, required this.textEditingController})
+  const SearchBar(
+      {Key? key,
+      required this.textEditingController,
+      this.focusNode,
+      this.hintText = 'Chú dế mèn phiêu lưu ký'})
       : super(key: key);
   final TextEditingController textEditingController;
-
+  final String hintText;
+  final FocusNode? focusNode;
   @override
   State<SearchBar> createState() => _SearchBarState();
 }
@@ -23,11 +28,6 @@ class _SearchBarState extends State<SearchBar> {
   late final SearchCubit bloc;
 
   _onSearchChanged() {
-    if (bloc.state.isEmpty != widget.textEditingController.text.isEmpty) {
-      bloc.addNewEvent(
-          SearchEnum.isEmpty, widget.textEditingController.text.isEmpty);
-    }
-
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (widget.textEditingController.text.isNotEmpty) {
@@ -39,6 +39,7 @@ class _SearchBarState extends State<SearchBar> {
   @override
   void initState() {
     super.initState();
+
     bloc = context.read<SearchCubit>();
   }
 
@@ -48,44 +49,57 @@ class _SearchBarState extends State<SearchBar> {
     super.dispose();
   }
 
+  // var focusNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
+    // FocusScope.of(context).requestFocus(focusNode);
+    // focusNode.requestFocus();
+    return searchBar();
+  }
+
+  BlocBuilder<SearchCubit, SearchState> searchBar() {
     return BlocBuilder<SearchCubit, SearchState>(
       bloc: bloc,
-      buildWhen: (previous, current) {
-        return previous.contentSearches != current.contentSearches;
-      },
+      // buildWhen: (previous, current) {
+      //   return previous.contentSearches != current.contentSearches;
+      // },
       builder: (context, state) {
         return Column(
           children: [
             TextField(
+              focusNode: widget.focusNode,
               controller: widget.textEditingController,
               onChanged: (value) {
+                bloc.addNewEvent(SearchEnum.isEmpty,
+                    widget.textEditingController.text.isEmpty);
                 _onSearchChanged();
                 setState(() {});
               },
+              onSubmitted: (value) {
+                GoRouter.of(context)
+                    .push(Paths.detailSearchScreen, extra: value);
+              },
               decoration: InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(),
-                  filled: true, //<-- SEE HERE
-                  // fillColor: AppColors.whiteBlueColor, //<
-                  fillColor: AppColors.whiteColor, //<
-
+                  filled: true,
+                  fillColor: AppColors.whiteColor,
                   alignLabelWithHint: true,
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(AppDimensions.dp20),
+                    borderRadius: BorderRadius.circular(5),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(AppDimensions.dp20),
+                    borderRadius: BorderRadius.circular(5),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(AppDimensions.dp20),
+                    borderRadius: BorderRadius.circular(5),
                   ),
                   labelStyle: GoogleFonts.nunito(color: AppColors.brownColor),
                   // labelText: widget.hintText,
-                  hintText: 'Search...',
+                  hintText: widget.hintText,
                   prefixIcon: Icon(
                     MaterialCommunityIcons.crosshairs,
                     color: AppColors.greyColor,
@@ -107,49 +121,9 @@ class _SearchBarState extends State<SearchBar> {
                           ),
                         )),
             ),
-            if (widget.textEditingController.text.isNotEmpty)
-              Column(
-                children: [
-                  ...bloc.state.contentSearches
-                      .map((e) => resultLineTextSearch(
-                          e.name, widget.textEditingController.text, e.slug))
-                      .toList()
-                ],
-              ),
           ],
         );
       },
-    );
-  }
-
-  resultLineTextSearch(text, query, slug) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        InkWell(
-          onTap: () {
-            widget.textEditingController.text = text;
-            bloc.addNewEvent(
-                SearchEnum.contentSearches, List<ContentSearch>.empty());
-            FocusScope.of(context).unfocus();
-          },
-          child: SizedBox(
-              width: double.infinity,
-              child: Text(
-                text,
-                style: GoogleFonts.nunito(fontSize: 16),
-              )
-              // RichText(
-              //   text: TextSpan(
-              //     children: highlightOccurrences(text, query),
-              //     style: GoogleFonts.nunito(
-              //         color: AppColors.greyColor, fontSize: 16),
-              //   ),
-              // ),
-              ),
-        ),
-        const Divider(),
-      ],
     );
   }
 
