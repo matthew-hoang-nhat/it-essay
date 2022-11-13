@@ -7,10 +7,13 @@ class Category {
   String id;
   @JsonKey(name: 'name')
   String name;
+  @JsonKey(name: 'slug')
+  String slug;
 
   Category({
     required this.id,
     required this.name,
+    required this.slug,
   });
 
   factory Category.fromJson(Map<String, dynamic> json) =>

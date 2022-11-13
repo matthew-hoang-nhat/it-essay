@@ -10,4 +10,7 @@ Future<void> _registerRepositoriesModule() async {
   getIt.registerSingleton(SearchRepositoryImpl(
     searchService: getIt<SearchService>(),
   ));
+  getIt.registerSingleton(CategoryRepositoryImpl(
+    categoryService: getIt<CategoryService>(),
+  ));
 }

@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
 import 'package:it_project/src/utils/remote/model/search/content_search.dart';
 import 'package:it_project/src/utils/remote/services/fresult.dart';
 import 'package:it_project/src/utils/repository/search_repository.dart';
@@ -17,6 +20,10 @@ class SearchRepositoryImpl extends SearchRepository {
 
       return FResult.success(result);
     } catch (ex) {
+      if (ex is DioError) {
+        log(ex.error.toString());
+      }
+
       return FResult.error(ex.toString());
     }
   }

@@ -1,21 +1,21 @@
-var mockProductGeneralModel = ProductGeneralModel(
+var mockProductGeneralModel = BriefProductModel(
     mainCategory: 'Sách thiếu nhi',
     name: 'Chú dế mèn kêu phiêu lưu kí',
-    price: '29000',
-    priceAfterDecrement: '25000',
+    price: 29000,
+    discountPercent: 20,
     productImage: null);
 
-class ProductGeneralModel {
-  ProductGeneralModel({
+class BriefProductModel {
+  BriefProductModel({
     required this.name,
     required this.mainCategory,
     required this.price,
-    required this.priceAfterDecrement,
+    required this.discountPercent,
     required this.productImage,
   });
   String name;
   String mainCategory;
-  String price;
-  String priceAfterDecrement;
+  int price;
+  int discountPercent;
   String? productImage;
 }

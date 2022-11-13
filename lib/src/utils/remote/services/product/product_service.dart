@@ -9,12 +9,31 @@ part 'product_service.g.dart';
 abstract class ProductService {
   factory ProductService(Dio dio, {String baseUrl}) = _ProductService;
 
+  // @GET("/products")
+  // Future<SuccessResponse> getProducts();
   @GET("/products")
-  Future<SuccessResponse> getProducts();
+  Future<SuccessResponse> getProductsPage({
+    @Query("sellerId") String? sellerId,
+    @Query("name") String? name,
+    @Query("limit") required int limit,
+    @Query("currentPage") required int currentPage,
+  });
+
+  @GET("/product/{slug}")
+  Future<SuccessResponse> getDetailProduct(@Path('slug') String slug);
+  @GET("/category")
+  Future<SuccessResponse> getProductsOfCategoryPage({
+    @Query('slug') required String slug,
+    @Query('limit') required int limit,
+    @Query('currentPage') required int currentPage,
+  });
 
   @GET("/categories")
   Future<SuccessResponse> getCategories();
 
-  @GET("/product/{slug}")
-  Future<SuccessResponse> getDetailProduct(@Path('slug') String slug);
+  @GET("/categories")
+  Future<SuccessResponse> getCategoriesPage({
+    @Query("limit") required int limit,
+    @Query("currentPage") required int currentPage,
+  });
 }
