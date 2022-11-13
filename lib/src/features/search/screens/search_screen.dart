@@ -7,10 +7,9 @@ import 'package:it_project/src/configs/constants/app_assets.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/search/cubit/search_cubit.dart';
-import 'package:it_project/src/features/search/search_bar.dart';
+import 'package:it_project/src/features/search/widgets/search_bar.dart';
+import 'package:it_project/src/widgets/cart_button.dart';
 import 'package:it_project/src/widgets/category_widget.dart';
-import 'package:it_project/src/widgets/product_general/product_general_model.dart';
-import 'package:it_project/src/widgets/product_general/product_general_widget.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -18,68 +17,83 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<SearchCubit>();
-    if (bloc.state.categories.isEmpty) {
-      bloc.getCategories();
-    }
+    final textEditingController = TextEditingController();
+    var focusNode = FocusNode();
+    focusNode.requestFocus();
 
-    return Scaffold(
-      body: Column(
-        children: [
-          Stack(
-            children: [
-              imageBackground(bloc),
-              Padding(
-                padding: EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    top: MediaQuery.of(context).padding.top),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    topBar(context),
-                    SearchBar(textEditingController: TextEditingController()),
-                    const SizedBox(height: 20),
-                    textInImageBackground(bloc)
-                  ],
-                ),
-              ),
-            ],
+    return BlocProvider(
+      create: (context) => bloc,
+      child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            foregroundColor: AppColors.whiteColor,
+            backgroundColor: AppColors.primaryColor,
+            title: SearchBar(
+              focusNode: focusNode,
+              textEditingController: textEditingController,
+              hintText: 'Chú dế mèn kêu',
+            ),
+            actions: [cartButton(context)],
           ),
-          const SizedBox(height: 20),
-          categories(context, bloc),
-          // extensionSearchField(),
-          showProducts(bloc)
-        ],
-      ),
+          body: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(children: [
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: resultBar(bloc, textEditingController),
+                ),
+                // imageBackground(bloc),
+                // textInImageBackground(bloc),
+                const SizedBox(height: 20),
+                // categories(context, bloc),
+                // extensionSearchField(),
+                // showProducts(bloc)
+                // const ComponentSearchProductVertical()
+              ]))),
     );
   }
 
-  BlocBuilder<SearchCubit, SearchState> showProducts(SearchCubit bloc) {
+  BlocBuilder<SearchCubit, SearchState> resultBar(
+      bloc, TextEditingController textEditingController) {
     return BlocBuilder<SearchCubit, SearchState>(
-      buildWhen: (previous, current) {
-        return previous.products != current.products;
-      },
-      bloc: bloc,
       builder: (context, state) {
-        return SizedBox(
-          height: 300,
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: bloc.state.products.length,
-              itemBuilder: (context, index) {
-                final product = bloc.state.products.elementAt(index);
-                return ProductGeneralWidget(
-                    product: ProductGeneralModel(
-                      mainCategory: product.category.name,
-                      name: product.name,
-                      price: product.price.toString(),
-                      priceAfterDecrement: '',
-                      productImage: product.productImages.first.fileLink,
-                    ),
-                    isHeart: false);
-              }),
+        if (state.isEmpty == true) return Container();
+        return Column(
+          children: [
+            ...bloc.state.contentSearches
+                .map((e) => resultLineTextSearch(
+                    e.name, textEditingController, bloc, context))
+                .toList()
+          ],
         );
       },
+    );
+  }
+
+  resultLineTextSearch(String text, TextEditingController textController,
+      SearchCubit bloc, context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          onTap: () {
+            textController.text = text;
+            // bloc.addNewEvent(
+            //     SearchEnum.contentSearches, List<ContentSearch>.empty());
+            // FocusScope.of(context).unfocus();
+            GoRouter.of(context).push(Paths.detailSearchScreen, extra: text);
+            // bloc.loadPageProducts(text);
+            // bloc.addNewEvent(SearchEnum.isShowProducts, true);
+          },
+          child: SizedBox(
+              width: double.infinity,
+              child: Text(
+                text,
+                style: GoogleFonts.nunito(fontSize: 16),
+              )),
+        ),
+        const Divider(),
+      ],
     );
   }
 
@@ -97,16 +111,15 @@ class SearchScreen extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   itemCount: bloc.state.categories.length,
                   itemBuilder: (context, index) {
+                    final category = bloc.state.categories.elementAt(index);
                     if (index == 0) {
                       return Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: categoryWidget(context,
-                            bloc.state.categories.elementAt(index).name),
-                      );
+                          padding: const EdgeInsets.only(left: 20),
+                          child: CategoryWidget(
+                            category: category,
+                          ));
                     }
-
-                    return categoryWidget(
-                        context, bloc.state.categories.elementAt(index).name);
+                    return CategoryWidget(category: category);
                   }),
             )
           : const SizedBox(),
@@ -124,12 +137,22 @@ class SearchScreen extends StatelessWidget {
         return state.isEmpty == true
             ? Column(
                 children: [
-                  Text('MEGASALE',
-                      style: GoogleFonts.shrikhand(
-                          fontSize: 30, color: Colors.orange)),
-                  Text('BOOK WEEK',
-                      style: GoogleFonts.nunito(
-                          fontSize: 30, fontWeight: FontWeight.bold)),
+                  SizedBox(
+                    width: 200,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('SALE CỰC KHỦNG',
+                            style: GoogleFonts.montserrat(
+                                fontSize: 30,
+                                color: Colors.orange,
+                                fontWeight: FontWeight.bold)),
+                        Text('Tuần lễ sách',
+                            style: GoogleFonts.nunito(
+                                fontSize: 30, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                       style: ButtonStyle(
@@ -153,46 +176,16 @@ class SearchScreen extends StatelessWidget {
     );
   }
 
-  Row topBar(context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          'Search',
-          style: GoogleFonts.nunito(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        InkWell(
-            borderRadius: BorderRadius.circular(100),
-            onTap: () {
-              GoRouter.of(context).push(Paths.cartScreen);
-            },
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: const Icon(
-                MaterialCommunityIcons.cart,
-                size: 20,
-              ),
-            ))
-      ],
-    );
-  }
-
   BlocBuilder<SearchCubit, SearchState> imageBackground(SearchCubit bloc) {
     return BlocBuilder<SearchCubit, SearchState>(
       bloc: bloc,
-      buildWhen: (previous, current) {
-        return previous.isEmpty != current.isEmpty;
-      },
       builder: (context, state) {
         return state.isEmpty
             ? Stack(
-                alignment: Alignment.centerRight,
+                alignment: Alignment.topRight,
                 children: [
                   Container(
-                    height: 350,
+                    height: 300,
                     width: double.infinity,
                     color: AppColors.greyColor,
                     padding: const EdgeInsets.symmetric(horizontal: 20),

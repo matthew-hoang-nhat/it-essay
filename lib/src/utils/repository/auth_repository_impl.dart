@@ -1,4 +1,5 @@
-import 'package:dio/dio.dart';
+import 'dart:developer';
+
 import 'package:it_project/src/utils/remote/model/login/login_request.dart';
 import 'package:it_project/src/utils/remote/model/register/otp_register_request.dart';
 import 'package:it_project/src/utils/remote/model/register/register_request.dart';
@@ -17,12 +18,9 @@ class AuthRepositoryImpl extends AuthRepository {
       final result = await authService
           .manualLogin(LoginRequest(email: email, password: password));
       return FResult.success(result.accessToken);
-    } catch (dioError) {
-      if (dioError is DioError) {
-        return FResult.error(dioError.toString());
-      }
-      final errMessage = dioError.toString();
-      return FResult.error(errMessage);
+    } catch (ex) {
+      log(ex.toString());
+      return FResult.error(ex.toString());
     }
   }
 
@@ -45,11 +43,10 @@ class AuthRepositoryImpl extends AuthRepository {
 
       final userId = responseRegister.userId;
       return FResult.success(userId);
-    } catch (dioError) {
-      if (dioError is DioError) {
-        return FResult.error(dioError.toString());
-      }
-      return FResult.error(dioError.toString());
+    } catch (ex) {
+      log(ex.toString());
+
+      return FResult.error(ex.toString());
     }
   }
 
@@ -61,11 +58,10 @@ class AuthRepositoryImpl extends AuthRepository {
     try {
       final result = await authService.otpRegister(otpRequest);
       return FResult.success('');
-    } catch (dioError) {
-      if (dioError is DioError) {
-        // return dioError.errorsToString();
-      }
-      return FResult.error(dioError.toString());
+    } catch (ex) {
+      log(ex.toString());
+
+      return FResult.error(ex.toString());
     }
   }
 }

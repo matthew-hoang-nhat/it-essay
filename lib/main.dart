@@ -8,5 +8,9 @@ final getIt = GetIt.instance;
 
 void main() async {
   await initializeApp();
-runApp(DevicePreview(builder: (context) => const App()));
+  runApp(
+      // const App()
+      DevicePreview(
+    builder: (context) => const App(),
+  ));
 }
