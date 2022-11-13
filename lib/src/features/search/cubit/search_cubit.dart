@@ -17,7 +17,8 @@ enum SearchEnum {
   isLoading,
   isEmpty,
   categories,
-  products,
+  // products,
+  // isShowProducts,
 }
 
 class SearchCubit extends Cubit<SearchState>
@@ -25,40 +26,61 @@ class SearchCubit extends Cubit<SearchState>
   SearchCubit()
       : super(const SearchInitial(
           contentSearches: [],
-          products: [],
+          // products: [],
           categories: [],
           isLoading: false,
           isEmpty: true,
+          // isShowProducts: false,
         ));
 
   final SearchRepository _searchRepository = getIt<SearchRepositoryImpl>();
-
   final ProductRepository _productRepository = getIt<ProductRepositoryImpl>();
 
-  searchContent(String text) async {
-    addNewEvent(SearchEnum.isLoading, true);
+  final int _currentPageProducts = 1;
+  bool isLoadingProducts = false;
 
+  searchContent(String text) async {
+    // addNewEvent(SearchEnum.isLoading, true);
     final searchContentsResponse = await _searchRepository.searchContent(text);
     if (searchContentsResponse.isSuccess) {
       addNewEvent(SearchEnum.contentSearches, searchContentsResponse.data);
     }
-    addNewEvent(SearchEnum.isLoading, false);
+    // addNewEvent(SearchEnum.isLoading, false);
   }
 
-  getCategories() async {
-    final categoriesResponse = await _productRepository.getCategories();
-    if (categoriesResponse.isSuccess) {
-      addNewEvent(SearchEnum.categories, categoriesResponse.data);
-    }
-  }
+  // getCategories() async {
+  //   final categoriesResponse =
+  //       await _productRepository.getCategories(_currentPageProducts);
+  //   if (categoriesResponse.isSuccess) {
+  //     addNewEvent(SearchEnum.categories, categoriesResponse.data);
+  //   }
+  // }
 
-  getProducts() async {
-    final productsResponse = await _productRepository.getProducts();
-    if (productsResponse.isSuccess) {
-      addNewEvent(SearchEnum.products, productsResponse.data);
-      return;
-    }
-  }
+  String name = '';
+  // loadPageProducts(String name) {
+  //   // if (isLoadingProducts) return;
+
+  //   if (name != this.name) {
+  //     _currentPageProducts = 0;
+  //     this.name = name;
+  //     getProducts();
+  //     return;
+  //   }
+
+  //   _currentPageProducts++;
+  //   getProducts();
+  // }
+
+  // getProducts() async {
+  //   isLoadingProducts = true;
+  //   final productsResponse = await _productRepository.getProducts(
+  //       numberPage: _currentPageProducts, name: name);
+  //   if (productsResponse.isSuccess) {
+  //     addNewEvent(SearchEnum.products, productsResponse.data);
+  //   }
+
+  //   isLoadingProducts = false;
+  // }
 
   @override
   void addNewEvent(SearchEnum key, value) {
@@ -72,15 +94,18 @@ class SearchCubit extends Cubit<SearchState>
       case SearchEnum.contentSearches:
         emit(NewSearchState.fromOldSettingState(state, contentSearches: value));
         break;
-      case SearchEnum.products:
-        emit(NewSearchState.fromOldSettingState(state, products: value));
-        break;
+      // case SearchEnum.products:
+      //   emit(NewSearchState.fromOldSettingState(state, products: value));
+      //   break;
       case SearchEnum.isEmpty:
         emit(NewSearchState.fromOldSettingState(state, isEmpty: value));
         break;
       case SearchEnum.categories:
         emit(NewSearchState.fromOldSettingState(state, categories: value));
         break;
+      // case SearchEnum.isShowProducts:
+      //   emit(NewSearchState.fromOldSettingState(state, isShowProducts: value));
+      //   break;
     }
   }
 }

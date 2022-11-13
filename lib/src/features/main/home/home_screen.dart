@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:go_router/go_router.dart';
-
-import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/main.dart';
+
 import 'package:it_project/src/configs/constants/app_assets.dart';
+import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/constants/app_dimensions.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/main/home/cubit/home_cubit.dart';
-import 'package:it_project/src/features/main/home/widgets/category_widget.dart';
-import 'package:it_project/src/features/main/home/widgets/product_widget.dart';
-
+import 'package:it_project/src/features/main/home/widgets/component_category_horizontal_widget.dart';
+import 'package:it_project/src/features/main/home/widgets/component_flash_sale_widget.dart';
+import 'package:it_project/src/features/main/home/widgets/component_product_vertical.dart';
+import 'package:it_project/src/features/search/widgets/concrete_search_bar.dart';
 import 'package:it_project/src/utils/app_shared.dart';
 
 import 'package:it_project/src/widgets/product_general/product_general_model.dart';
+
+import 'widgets/component_top_seller_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -22,138 +25,91 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<HomeCubit>();
-    bloc.productCallApi();
+    final controller = ScrollController();
+    controller.addListener(() {
+      if (controller.position.pixels >=
+          controller.position.maxScrollExtent * 0.7) {
+        bloc.loadPage(HomeEnum.products);
+      }
+    });
 
     return Scaffold(
+        // backgroundColor: AppColors.whiteGreyColor,
+        resizeToAvoidBottomInset: false,
+        appBar: appBarHome(context),
         body: SafeArea(
-      child: Column(
-        children: [
-          ElevatedButton(
-              onPressed: () {
-                getIt<AppShared>().clear();
-              },
-              child: const Text('Log out')),
-          appBarHome(context),
-          Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const ProductWidget(),
-                    const CategoryWidget(),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      physics: const BouncingScrollPhysics(),
-                      child: Row(children: [
-                        const SizedBox(width: AppDimensions.dp20),
-                        bigImage(AppAssets.fkImHarryPotter1),
-                        const SizedBox(
-                          width: AppDimensions.dp20,
-                        ),
-                        bigImage(AppAssets.fkImHarryPotter2),
-                        const SizedBox(
-                          width: AppDimensions.dp20,
-                        ),
-                        bigImage(AppAssets.fkImHarryPotter3),
-                      ]),
-                    ),
-                    const SizedBox(height: 20),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 20),
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       Text(
-                    //         'Shop by Category',
-                    //         style:
-                    //             GoogleFonts.nunito(color: AppColors.greyColor),
-                    //       ),
-                    //       Text(
-                    //         'CATEGORIES',
-                    //         style: GoogleFonts.nunito(
-                    //             fontSize: AppDimensions.dp30,
-                    //             fontWeight: FontWeight.bold),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    // SingleChildScrollView(
-                    //   scrollDirection: Axis.horizontal,
-                    //   physics: const BouncingScrollPhysics(),
-                    //   child: Row(
-                    //     //   spacing: 20,
-                    //     //   runSpacing: 20,
-                    //     children: [
-                    //       const SizedBox(width: 20),
-                    //       categoryWidget(context, 'Thiếu nhi'),
-                    //       const SizedBox(width: 20),
-                    //       categoryWidget(context, 'Phát triển bản thân'),
-                    //       const SizedBox(width: 20),
-                    //       categoryWidget(context, 'Tiểu thuyết'),
-                    //       const SizedBox(width: 20),
-                    //       categoryWidget(context, 'Văn học'),
-                    //       const SizedBox(width: 20),
-                    //       categoryWidget(context, 'Phát triển bản thân'),
-                    //       const SizedBox(width: 20),
-                    //       categoryWidget(context, 'Tiểu thuyết'),
-                    //       const SizedBox(width: 20),
-                    //     ],
-                    //   ),
-                    // ),
-                    const SizedBox(height: 20),
-                    BlocProvider<HomeCubit>(
-                        create: (context) => bloc,
-                        child: const ProductWidget()),
-                    const SizedBox(height: 20),
-                  ]),
-            ),
+          child: SingleChildScrollView(
+            controller: controller,
+            physics: const BouncingScrollPhysics(),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              ElevatedButton(
+                  onPressed: () {
+                    getIt<AppShared>().clear();
+                  },
+                  child: const Text('Log out')),
+              poster(),
+              meDivider(),
+              const ComponentCategoryHorizontalWidget(),
+              meDivider(),
+              const ComponentFlashSaleWidget(),
+              meDivider(),
+              const ComponentSellerWidget(),
+              meDivider(),
+              Container(
+                color: AppColors.whiteGreyColor,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: const ComponentProductVertical(),
+              )
+            ]),
           ),
-        ],
-      ),
-    ));
+        ));
   }
 
-  Padding appBarHome(context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Row(
-        children: [
-          Image.asset(
-            AppAssets.icLogo,
-            height: AppDimensions.dp30,
+  meDivider() {
+    return Container(
+      height: 10,
+      width: double.infinity,
+      color: AppColors.whiteGreyColor,
+    );
+  }
+
+  Container poster() {
+    return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        height: 300,
+        width: double.infinity,
+        color: AppColors.whiteColor,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.asset(
+            AppAssets.imgPoster,
+            fit: BoxFit.cover,
           ),
-          const SizedBox(width: 20),
-          Text(
-            'Hi Matthew',
-            style: GoogleFonts.nunito(
-              fontSize: AppDimensions.dp20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const Spacer(),
-          InkWell(
-            onTap: () {
-              // getIt<AppRouter>()
-              //     .router
-              //     .push(Paths.cartScree, extra: mockProductGeneralModel);
-              GoRouter.of(context)
-                  .push(Paths.cartScreen, extra: mockProductGeneralModel);
-            },
-            // child: Image.asset(
-            //   AppAssets.icCartFilled,
-            //   height: 30,
-            // ),
-            child: const Icon(MaterialCommunityIcons.cart),
-          ),
-        ],
-      ),
+        ));
+  }
+
+  AppBar appBarHome(context) {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: AppColors.primaryColor,
+      actions: [
+        Expanded(
+            child: InkWell(
+                onTap: () {
+                  GoRouter.of(context).push(Paths.searchScreen);
+                },
+                child: concreteSearchBar(context, ''))),
+        InkWell(
+          onTap: () {
+            GoRouter.of(context)
+                .push(Paths.cartScreen, extra: mockProductGeneralModel);
+          },
+          child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Icon(MaterialCommunityIcons.cart)),
+        ),
+      ],
     );
   }
 

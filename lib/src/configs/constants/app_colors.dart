@@ -13,7 +13,10 @@ class AppColors {
   static Color redColor = const Color(0xf0EE4667);
 
   static Color yellowColor = const Color(0xf0f7850e);
+  static Color greenColor = const Color(0xf01e9a5b);
 
-  static Color whiteGreyColor = const Color(0xf0f5f5f5);
+  static Color whiteGreyColor = greyColor.withOpacity(0.2);
   static Color greyColor = const Color.fromARGB(239, 143, 137, 137);
+  static Color primaryColor = blueColor;
+  static Color textPrimaryColor = whiteColor;
 }

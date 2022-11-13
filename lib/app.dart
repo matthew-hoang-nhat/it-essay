@@ -28,11 +28,12 @@ class App extends StatelessWidget {
 
   ThemeData lightMode() {
     return ThemeData(
-        textTheme: TextTheme(
-          headline1: GoogleFonts.nunito(),
-        ),
+        textTheme: GoogleFonts.nunitoTextTheme(),
         scaffoldBackgroundColor: AppColors.whiteColor,
         // backgroundColor: AppColors.redColor.withOpacity(0.9),
+
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
         appBarTheme: AppBarTheme(
           backgroundColor: AppColors.whiteColor,
           foregroundColor: AppColors.brownColor,

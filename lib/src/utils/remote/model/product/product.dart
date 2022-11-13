@@ -13,8 +13,12 @@ class Product {
   String id;
   @JsonKey(name: 'price')
   int price;
+  @JsonKey(name: 'discountPercent')
+  int discountPercent;
   @JsonKey(name: 'name')
   String name;
+  @JsonKey(name: 'slug')
+  String slug;
   @JsonKey(name: 'seller')
   Seller? seller;
   @JsonKey(name: 'category')
@@ -25,7 +29,9 @@ class Product {
   Spec spec;
 
   Product(
-      {required this.category,
+      {this.discountPercent = 0,
+      required this.category,
+      required this.slug,
       required this.id,
       required this.price,
       required this.productImages,
