@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
-import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/search/cubit/detail_search_cubit.dart';
 import 'package:it_project/src/features/search/widgets/component_search_product_vertical.dart';
-import 'package:it_project/src/features/search/widgets/concrete_search_bar.dart';
+import 'package:it_project/src/features/search/widgets/search_bar.dart';
+import 'package:it_project/src/widgets/cart_button.dart';
 
 class DetailSearchScreen extends StatelessWidget {
   const DetailSearchScreen({super.key, required this.textSearch});
@@ -24,17 +23,12 @@ class DetailSearchScreen extends StatelessWidget {
               onTap: () {
                 context.pop();
               },
-              child: concreteSearchBar(context, textSearch)),
-          actions: [
-            InkWell(
-              onTap: () {
-                GoRouter.of(context).push(Paths.cartScreen);
-              },
-              child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Icon(MaterialCommunityIcons.cart)),
-            ),
-          ],
+              child: SearchBar(
+                isEnabled: false,
+                textEditingController: TextEditingController()
+                  ..text = textSearch,
+              )),
+          actions: [cartButton(context)],
         ),
         body: SafeArea(
           child: SingleChildScrollView(
