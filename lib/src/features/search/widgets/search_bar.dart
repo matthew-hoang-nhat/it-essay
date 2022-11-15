@@ -30,6 +30,7 @@ class _SearchBarState extends State<SearchBar> {
   _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
+      print(widget.textEditingController.text);
       if (widget.textEditingController.text.isNotEmpty) {
         bloc.searchContent(widget.textEditingController.text);
       }
@@ -71,8 +72,8 @@ class _SearchBarState extends State<SearchBar> {
               focusNode: widget.focusNode,
               controller: widget.textEditingController,
               onChanged: (value) {
-                bloc.addNewEvent(SearchEnum.isEmpty,
-                    widget.textEditingController.text.isEmpty);
+                // bloc.addNewEvent(SearchEnum.isEmpty,
+                //     widget.textEditingController.text.isEmpty);
                 _onSearchChanged();
                 setState(() {});
               },
@@ -112,7 +113,7 @@ class _SearchBarState extends State<SearchBar> {
                       : InkWell(
                           onTap: () {
                             widget.textEditingController.clear();
-                            bloc.addNewEvent(SearchEnum.isEmpty, true);
+                            // bloc.addNewEvent(SearchEnum.isEmpty, true);
                             setState(() {});
                           },
                           child: Icon(
