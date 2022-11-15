@@ -99,10 +99,14 @@ class _ProductWidgetState extends State<ProductWidget> {
   Widget priceWidget() {
     final bool isHighDiscountPrice =
         ((widget.product.discountPercent ?? 0) >= 15);
+
+    double priceAfterSaleOff =
+        (100 - widget.product.discountPercent) * widget.product.price / 100;
+
     return Row(
       children: [
         Text(
-          formatCurrency.format(widget.product.price),
+          formatCurrency.format(priceAfterSaleOff),
           style: GoogleFonts.nunito(
             fontWeight: FontWeight.bold,
             fontSize: AppDimensions.dp16,
@@ -128,25 +132,24 @@ class _ProductWidgetState extends State<ProductWidget> {
           topLeft: Radius.circular(5),
           topRight: Radius.circular(5),
         ),
-        child:
-            // widget.product.productImage == null
-            //     ? Image.asset(
-            //         AppAssets.fkImHarryPotter1,
-            //         width: double.infinity,
-            //         height: 180,
-            //         fit: BoxFit.cover,
-            //       )
-            //     : Image.network(
-            //         widget.product.productImage!,
-            //         height: 180,
-            //         width: double.infinity,
-            //         fit: BoxFit.cover,
-            //       ));
-            Image.asset(
-          AppAssets.fkImHarryPotter1,
-          width: double.infinity,
-          height: 180,
-          fit: BoxFit.cover,
-        ));
+        child: widget.product.productImage == null
+            ? Image.asset(
+                AppAssets.fkImHarryPotter1,
+                width: double.infinity,
+                height: 180,
+                fit: BoxFit.cover,
+              )
+            : Image.network(
+                widget.product.productImage!,
+                height: 180,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ));
+    //     Image.asset(
+    //   AppAssets.fkImHarryPotter1,
+    //   width: double.infinity,
+    //   height: 180,
+    //   fit: BoxFit.cover,
+    // ));
   }
 }
