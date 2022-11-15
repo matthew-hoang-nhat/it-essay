@@ -30,15 +30,15 @@ class _ItemReviewWidgetState extends State<ItemReviewWidget> {
                   text: TextSpan(
                       style: GoogleFonts.nunito(color: AppColors.greyColor),
                       children: const [
-                    TextSpan(text: 'Matthew'),
+                    TextSpan(text: 'Hoàng Trung Nhật'),
                     TextSpan(text: ' | '),
-                    TextSpan(text: 'Jul 29, 2020'),
+                    TextSpan(text: '12 - 11 - 2020'),
                   ])),
               const Spacer(),
               ...starWidget(4, 5)
             ],
           ),
-          Text('Cool design, too tight',
+          Text('Sản phẩm tốt lắm',
               style: GoogleFonts.nunito(
                   fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 10),
