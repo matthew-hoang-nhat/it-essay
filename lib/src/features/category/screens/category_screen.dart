@@ -24,7 +24,7 @@ class CategoryScreen extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           child: Column(
             children: const [
-              ComponentCategoryVerticalWidget(),
+              Center(child: ComponentCategoryVerticalWidget()),
             ],
           ),
         )),

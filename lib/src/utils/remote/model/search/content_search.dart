@@ -1,19 +1,29 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'content_search.g.dart';
 
+enum ContentTypeEnum { product, category }
+
+Map<String, ContentTypeEnum> contentSearchType = {
+  'product': ContentTypeEnum.product,
+  'category': ContentTypeEnum.category,
+};
+
 @JsonSerializable()
 class ContentSearch {
   // @JsonKey(name: 'email')
   // String? email;
   @JsonKey(name: 'name')
-  String? name;
+  String name;
   @JsonKey(name: 'slug')
-  String? slug;
+  String slug;
+  @JsonKey(name: 'type')
+  String type;
 
   ContentSearch({
     // this.email,
-    this.name,
-    this.slug,
+    required this.name,
+    required this.slug,
+    required this.type,
   });
 
   factory ContentSearch.fromJson(Map<String, dynamic> json) =>
