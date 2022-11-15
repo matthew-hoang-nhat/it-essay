@@ -58,7 +58,7 @@ class ComponentCategoryHorizontalWidget extends StatelessWidget {
                 if (bloc.state.categories.isEmpty) return Container();
                 final categories = bloc.state.categories;
                 return SizedBox(
-                  height: 100,
+                  height: 120,
                   child: ListView.builder(
                       controller: controller,
                       physics: const BouncingScrollPhysics(),
