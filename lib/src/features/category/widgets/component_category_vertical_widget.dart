@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/features/category/cubit/category_cubit.dart';
 import 'package:it_project/src/widgets/category_widget.dart';
 
@@ -12,10 +13,12 @@ class ComponentCategoryVerticalWidget extends StatelessWidget {
         bloc: context.read<CategoryCubit>(),
         // buildWhen: (previous, current) => previous.products != current.products,
         builder: (context, state) {
-          // if (state.isShowProducts == false) return Container();
           final categories = state.categories;
+
+          final width = MediaQuery.of(context).size.width * 2 / 7;
+          final height = MediaQuery.of(context).size.width * 2 / 7 * 9 / 11;
           return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -25,9 +28,26 @@ class ComponentCategoryVerticalWidget extends StatelessWidget {
                 spacing: 20,
                 runSpacing: 10,
                 children: categories
-                    .map((e) => CategoryWidget(
-                          category: e,
-                          size: MediaQuery.of(context).size.width * 2 / 7,
+                    .map((e) => Container(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 5),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 1,
+                                  blurRadius: 7,
+                                  offset: const Offset(
+                                      0, 3), // changes position of shadow
+                                ),
+                              ],
+                              color: AppColors.whiteColor),
+                          child: CategoryWidget(
+                            category: e,
+                            width: width,
+                            height: height,
+                          ),
                         ))
                     .toList(),
               ));
