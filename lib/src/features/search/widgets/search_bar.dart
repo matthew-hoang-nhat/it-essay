@@ -14,11 +14,13 @@ class SearchBar extends StatefulWidget {
       {Key? key,
       required this.textEditingController,
       this.focusNode,
+      this.isEnabled = true,
       this.hintText = 'Chú dế mèn phiêu lưu ký'})
       : super(key: key);
   final TextEditingController textEditingController;
   final String hintText;
   final FocusNode? focusNode;
+  final bool? isEnabled;
   @override
   State<SearchBar> createState() => _SearchBarState();
 }
@@ -66,63 +68,60 @@ class _SearchBarState extends State<SearchBar> {
       //   return previous.contentSearches != current.contentSearches;
       // },
       builder: (context, state) {
-        return Column(
-          children: [
-            TextField(
-              focusNode: widget.focusNode,
-              controller: widget.textEditingController,
-              onChanged: (value) {
-                // bloc.addNewEvent(SearchEnum.isEmpty,
-                //     widget.textEditingController.text.isEmpty);
-                _onSearchChanged();
-                setState(() {});
-              },
-              onSubmitted: (value) {
-                GoRouter.of(context)
-                    .push(Paths.detailSearchScreen, extra: value);
-              },
-              decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(),
-                  filled: true,
-                  fillColor: AppColors.whiteColor,
-                  alignLabelWithHint: true,
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  labelStyle: GoogleFonts.nunito(color: AppColors.brownColor),
-                  // labelText: widget.hintText,
-                  hintText: widget.hintText,
-                  prefixIcon: Icon(
-                    MaterialCommunityIcons.crosshairs,
-                    color: AppColors.greyColor,
-                  ),
-                  suffixIcon: widget.textEditingController.text.isEmpty
-                      ? Icon(
-                          MaterialCommunityIcons.arrow_right_circle,
-                          color: AppColors.brownColor,
-                        )
-                      : InkWell(
-                          onTap: () {
-                            widget.textEditingController.clear();
-                            // bloc.addNewEvent(SearchEnum.isEmpty, true);
-                            setState(() {});
-                          },
-                          child: Icon(
-                            MaterialCommunityIcons.close_circle,
-                            color: AppColors.brownColor,
-                          ),
-                        )),
-            ),
-          ],
+        return TextField(
+          enabled: widget.isEnabled,
+          focusNode: widget.focusNode,
+          controller: widget.textEditingController,
+          onChanged: (value) {
+            // bloc.addNewEvent(SearchEnum.isEmpty,
+            //     widget.textEditingController.text.isEmpty);
+            _onSearchChanged();
+            setState(() {});
+          },
+          onSubmitted: (value) {
+            if (value.isEmpty) return;
+            GoRouter.of(context).push(Paths.detailSearchScreen, extra: value);
+          },
+          decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(),
+              filled: true,
+              fillColor: AppColors.whiteColor,
+              alignLabelWithHint: true,
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              labelStyle: GoogleFonts.nunito(color: AppColors.brownColor),
+              // labelText: widget.hintText,
+              hintText: widget.hintText,
+              prefixIcon: Icon(
+                MaterialCommunityIcons.crosshairs,
+                color: AppColors.greyColor,
+              ),
+              suffixIcon: widget.textEditingController.text.isEmpty
+                  ? Icon(
+                      MaterialCommunityIcons.arrow_right_circle,
+                      color: AppColors.brownColor,
+                    )
+                  : InkWell(
+                      onTap: () {
+                        widget.textEditingController.clear();
+                        // bloc.addNewEvent(SearchEnum.isEmpty, true);
+                        setState(() {});
+                      },
+                      child: Icon(
+                        MaterialCommunityIcons.close_circle,
+                        color: AppColors.brownColor,
+                      ),
+                    )),
         );
       },
     );
