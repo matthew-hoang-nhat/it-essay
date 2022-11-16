@@ -9,50 +9,97 @@ import 'package:it_project/src/utils/repository/product_repository_impl.dart';
 
 part 'cart_state.dart';
 
-enum CartEnum { products }
+enum CartEnum { itemCarts }
 
-class CartCubit extends Cubit<CartState> implements ParentCubit<CartEnum> {
+mixin ActionCart {
+  AppShared appShared = getIt<AppShared>();
+
+  void updateItemCartMixin(List<ItemCart> itemCarts) {
+    appShared.setItemCardsValue(itemCarts);
+  }
+
+  void addItemCartMixin(ItemCart itemCart) {
+    final oldItemCarts = appShared.getItemCardsValue();
+    int indexNewItemCart =
+        oldItemCarts.indexWhere((element) => element.slug == itemCart.slug);
+    bool isHadItem = indexNewItemCart != -1;
+
+    if (isHadItem) {
+      final itemCarts = List<ItemCart>.from(oldItemCarts);
+      final oldItemCart = itemCarts.elementAt(indexNewItemCart);
+      final newItemCart =
+          oldItemCart.copyWith(quantity: oldItemCart.quantity + 1);
+      itemCarts[indexNewItemCart] = newItemCart;
+      appShared.setItemCardsValue(itemCarts);
+      return;
+    }
+
+    appShared.setItemCardsValue([...appShared.getItemCardsValue(), itemCart]);
+  }
+}
+
+class CartCubit extends Cubit<CartState>
+    with ActionCart
+    implements ParentCubit<CartEnum> {
   CartCubit()
       : super(const CartInitial(
-          itemCards: [],
+          itemCarts: [],
         ));
 
   ProductRepository productRepository = getIt<ProductRepositoryImpl>();
 
-  final appShared = getIt<AppShared>();
-
   loadLocal() {
-    appShared.setItemCardsValue([
-      ItemCart(
-          slug: '001',
-          name: 'Nhat',
-          quantity: 12,
-          sellerName: 'Baby World hehe',
-          discountPercent: 19,
-          mainCategory: 'Sách thiếu nhi',
-          productImage: '',
-          price: 98000),
-      ItemCart(
-          slug: '002',
-          name: 'Hoang',
-          quantity: 1,
-          sellerName: 'ABC shop',
-          discountPercent: 5,
-          mainCategory: 'Sách phát triển bản thân',
-          productImage: '',
-          price: 120000),
-    ]);
+    final tempList = appShared.getItemCardsValue();
+    final itemCarts = tempList.map((e) => e as ItemCart).toList();
+    addNewEvent(CartEnum.itemCarts, itemCarts);
+  }
 
-    final itemCards = appShared.getItemCardsValue() ?? [];
-    addNewEvent(CartEnum.products, itemCards);
+  plusQuantityItemCart(String slug) {
+    final itemCarts = [
+      for (var item in state.itemCarts)
+        if (item.slug == slug)
+          item.copyWith(quantity: item.quantity + 1)
+        else
+          item
+    ];
+
+    addNewEvent(CartEnum.itemCarts, itemCarts);
+    updateItemCartMixin(itemCarts);
+  }
+
+  minusQuantityItemCart(String slug) {
+    final itemCarts = [
+      for (var item in state.itemCarts)
+        if (item.slug == slug && item.quantity > 1)
+          item.copyWith(quantity: item.quantity - 1)
+        else
+          item
+    ];
+
+    addNewEvent(CartEnum.itemCarts, itemCarts);
+    updateItemCartMixin(itemCarts);
+  }
+
+  addItemCart(ItemCart itemCart) {
+    addItemCartMixin(itemCart);
+    addNewEvent(CartEnum.itemCarts, appShared.getItemCardsValue());
+  }
+
+  removeItemCart(String slug) {
+    final itemCarts = [
+      for (var item in state.itemCarts)
+        if (item.slug != slug) item
+    ];
+    addNewEvent(CartEnum.itemCarts, itemCarts);
+    updateItemCartMixin(itemCarts);
   }
 
   @override
   void addNewEvent(CartEnum key, value) {
     if (isClosed) return;
     switch (key) {
-      case CartEnum.products:
-        emit(NewCartState.fromOldSettingState(state, itemCards: value));
+      case CartEnum.itemCarts:
+        emit(NewCartState.fromOldSettingState(state, itemCarts: value));
         break;
     }
   }
