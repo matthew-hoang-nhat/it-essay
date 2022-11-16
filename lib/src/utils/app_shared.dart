@@ -12,9 +12,9 @@ class AppShared {
   final String keyTokenValue = "${keyName}_keyTokenValue";
   final String keyCartValue = "${keyName}_keyCartValue";
 
-  Future<void> setTokenValue(String value) => _box.put(keyTokenValue, value);
+  Future<void> setTokenValue(String? value) => _box.put(keyTokenValue, value);
   String? getTokenValue() => _box.get(keyTokenValue);
-  List<ItemCart>? getItemCardsValue() => _box.get(keyCartValue);
+  List<dynamic> getItemCardsValue() => _box.get(keyCartValue);
   Future<void>? setItemCardsValue(List<ItemCart> value) =>
       _box.put(keyCartValue, value);
 

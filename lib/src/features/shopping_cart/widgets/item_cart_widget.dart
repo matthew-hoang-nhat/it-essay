@@ -1,14 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:it_project/src/features/shopping_cart/cubit/cart_cubit.dart';
 import 'package:it_project/src/local/dao/item_cart.dart';
 import 'package:it_project/src/widgets/icon_heart.dart';
 
-import '../../../configs/constants/app_assets.dart';
 import '../../../configs/constants/app_colors.dart';
 import '../../../configs/constants/app_dimensions.dart';
 
-// ignore: must_be_immutable
+enum ActionCartEnum { get, edit, remove }
 
 class ItemCartWidget extends StatelessWidget {
   const ItemCartWidget({super.key, required this.product});
@@ -17,6 +20,9 @@ class ItemCartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formatCurrency = NumberFormat.simpleCurrency(locale: 'vi_VN');
+    bool isSaleOffProduct = product.discountPercent > 0;
+    final bloc = context.read<CartCubit>();
+
     return Column(
       children: [
         const SizedBox(height: 20),
@@ -25,14 +31,20 @@ class ItemCartWidget extends StatelessWidget {
           children: [
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(AppDimensions.dp5),
-                child: Image.asset(
-                  AppAssets.fkImHarryPotter1,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
-              ),
+                  borderRadius: BorderRadius.circular(AppDimensions.dp5),
+                  child:
+                      // Image.asset(
+                      //   AppAssets.fkImHarryPotter1,
+                      //   width: 100,
+                      //   height: 100,
+                      //   fit: BoxFit.cover,
+                      // ),
+                      CachedNetworkImage(
+                    imageUrl: product.productImage,
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  )),
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -56,8 +68,6 @@ class ItemCartWidget extends StatelessWidget {
                       ),
                       greyTextAndBlackText('Mã sản phẩm:', product.slug),
                       const SizedBox(height: 20),
-                      greyTextAndBlackText(
-                          'Số lượng:', product.quantity.toString()),
                       Row(
                         children: [
                           Text(
@@ -67,21 +77,123 @@ class ItemCartWidget extends StatelessWidget {
                             style: GoogleFonts.nunito(
                               fontWeight: FontWeight.bold,
                               fontSize: AppDimensions.dp20,
-                              // color: AppColors.redColor,
+                              color:
+                                  isSaleOffProduct ? AppColors.redColor : null,
                             ),
                           ),
                           const SizedBox(width: 10),
-                          Text(
-                            formatCurrency.format(product.price),
-                            style: GoogleFonts.nunito(
-                              decoration: TextDecoration.lineThrough,
-                              decorationThickness: 3,
-                              color: AppColors.redColor,
-                              // fontWeight: FontWeight.bold,
+                          if (isSaleOffProduct)
+                            Text(
+                              formatCurrency.format(product.price),
+                              style: GoogleFonts.nunito(
+                                decoration: TextDecoration.lineThrough,
+                                decorationThickness: 3,
+                                color: AppColors.greyColor,
+                              ),
                             ),
-                          ),
                         ],
                       ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              bloc.minusQuantityItemCart(product.slug);
+                              if (product.quantity == 1) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                      title: RichText(
+                                          text: TextSpan(
+                                              style: GoogleFonts.nunito(
+                                                  fontSize: 16,
+                                                  color: AppColors.brownColor),
+                                              children: [
+                                            const TextSpan(
+                                                text:
+                                                    'Bạn có muốn xóa sản phẩm '),
+                                            TextSpan(
+                                                text: '${product.name} ',
+                                                style: GoogleFonts.nunito(
+                                                    color: AppColors.redColor,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            TextSpan(
+                                                text: 'ra khỏi giỏ hàng?',
+                                                style: GoogleFonts.nunito()),
+                                          ])),
+                                      actions: [
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all<
+                                                          Color>(
+                                                      AppColors.redColor),
+                                              padding: MaterialStateProperty
+                                                  .all<EdgeInsets>(
+                                                      const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 20)),
+                                              shape: MaterialStateProperty.all<
+                                                      RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                              ))),
+                                          onPressed: () {
+                                            bloc.removeItemCart(product.slug);
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('Có'),
+                                        ),
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all<
+                                                          Color>(
+                                                      AppColors.blueColor),
+                                              padding: MaterialStateProperty
+                                                  .all<EdgeInsets>(
+                                                      const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 20)),
+                                              shape: MaterialStateProperty.all<
+                                                      RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                              ))),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('Không'),
+                                        ),
+                                      ],
+                                      actionsAlignment: MainAxisAlignment.end),
+                                );
+                              }
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    color: AppColors.whiteGreyColor),
+                                child:
+                                    const Icon(MaterialCommunityIcons.minus)),
+                          ),
+                          Container(
+                              width: 50,
+                              alignment: Alignment.center,
+                              child: Text(product.quantity.toString())),
+                          InkWell(
+                            onTap: () {
+                              bloc.plusQuantityItemCart(product.slug);
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    color: AppColors.whiteGreyColor),
+                                child: const Icon(MaterialCommunityIcons.plus)),
+                          )
+                        ],
+                      )
                     ],
                   ),
                 ),

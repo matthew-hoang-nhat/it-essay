@@ -1,25 +1,27 @@
 part of 'cart_cubit.dart';
 
 abstract class CartState extends Equatable {
-  const CartState({required this.itemCards});
+  const CartState({
+    required this.itemCarts,
+  });
 
-  final List<ItemCart> itemCards;
+  final List<ItemCart> itemCarts;
 
   @override
-  List<Object?> get props => [itemCards];
+  List<Object> get props => [itemCarts];
 }
 
 class CartInitial extends CartState {
   const CartInitial({
-    required super.itemCards,
+    required super.itemCarts,
   });
 }
 
 class NewCartState extends CartState {
   NewCartState.fromOldSettingState(
     CartState oldState, {
-    List<ItemCart>? itemCards,
+    List<ItemCart>? itemCarts,
   }) : super(
-          itemCards: itemCards ?? oldState.itemCards,
+          itemCarts: itemCarts ?? oldState.itemCarts,
         );
 }
