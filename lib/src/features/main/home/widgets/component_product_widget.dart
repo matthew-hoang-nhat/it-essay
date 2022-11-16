@@ -15,22 +15,22 @@ class ComponentProductWidget extends StatelessWidget {
         children: [
           ProductWidget(
               product: BriefProductModel(
-                  price: (mockProduct.price *
-                          (100 - mockProduct.discountPercent) /
+                  price: (mockSaleProduct.price *
+                          (100 - mockSaleProduct.discountPercent) /
                           100)
                       .round(),
-                  name: mockProduct.name,
-                  discountPercent: mockProduct.discountPercent,
+                  name: mockSaleProduct.name,
+                  discountPercent: mockSaleProduct.discountPercent,
                   productImage: null,
-                  mainCategory: mockProduct.category.name),
+                  mainCategory: mockSaleProduct.category.name),
               isHeart: false),
           ProductWidget(
               product: BriefProductModel(
-                  price: mockProduct.price,
-                  name: mockProduct.name,
-                  discountPercent: mockProduct.discountPercent,
+                  price: mockSaleProduct.price,
+                  name: mockSaleProduct.name,
+                  discountPercent: mockSaleProduct.discountPercent,
                   productImage: null,
-                  mainCategory: mockProduct.category.name),
+                  mainCategory: mockSaleProduct.category.name),
               isHeart: false),
         ],
       ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
@@ -15,198 +16,252 @@ import 'package:intl/intl.dart';
 
 class ProductScreen extends StatelessWidget {
   ProductScreen({super.key, required this.product});
+  // ProductScreen({super.key});
   final Product product;
+  // final Product product = mockSaleProduct;
   final formatCurrency = NumberFormat.simpleCurrency(locale: 'vi_VN');
   late final bloc = ProductCubit(product: product);
   // final bloc = ProductCubit();
 
   @override
   Widget build(BuildContext context) {
-    // bloc.getDetailProduct();
-    bloc.settingController();
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: topBar(),
-        body: BlocProvider(
-          create: (context) => bloc,
-          child: BlocBuilder<ProductCubit, ProductState>(
-            bloc: bloc,
-            builder: (context, state) {
-              return Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  SingleChildScrollView(
-                    controller: state.controller,
-                    physics: const BouncingScrollPhysics(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        imgPoster(),
-                        Container(
-                          height: 140,
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(state.product.category.name),
-                                  const Icon(
-                                      MaterialCommunityIcons.heart_outline),
-                                ],
-                              ),
-                              Text(
-                                product.name,
-                                maxLines: 2,
-                                style: GoogleFonts.nunito(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                              starAndReviewWidget(3, 128),
-                              priceProduct(),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        meDivider(),
-                        sellerInfo(),
-                        meDivider(),
-                        moreInfo(product),
-                        meDivider(),
-                        describeProduct(),
-                        meDivider(),
-                        const ComponentReviewWidget(),
-                        const SizedBox(height: 70),
-                      ],
-                    ),
+        body: BlocProvider<ProductCubit>(
+            create: (context) => bloc
+              ..getDetailProduct()
+              ..settingController(),
+            child: Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                SingleChildScrollView(
+                  controller: bloc.state.controller,
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      imgPoster(),
+                      topProductInfo(),
+                      const SizedBox(height: 20),
+                      meDivider(),
+                      sellerInfo(),
+                      meDivider(),
+                      moreInfo(product),
+                      meDivider(),
+                      describeProduct(),
+                      meDivider(),
+                      const ComponentReviewWidget(),
+                      const SizedBox(height: 70),
+                    ],
                   ),
-                  bottomBar(),
-                ],
-              );
-            },
-          ),
-        ));
+                ),
+                bottomBar(),
+              ],
+            )));
   }
 
-  sellerInfo() {
-    contentSellerInfo(title, sub) {
-      return Column(
-        children: [
-          Text(
-            title,
-            style: GoogleFonts.nunito(fontWeight: FontWeight.bold),
-          ),
-          Text(
-            sub,
-            style: GoogleFonts.nunito(color: AppColors.greyColor),
-          ),
-        ],
-      );
-    }
-
-    return Container(
-      height: 140,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      alignment: Alignment.center,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            SizedBox(
-                height: 70,
-                width: 70,
-                child: Image.asset(
-                  AppAssets.fkImHarryPotter2,
-                  fit: BoxFit.cover,
-                )),
-            const SizedBox(width: 10),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+  Widget topProductInfo() {
+    return BlocBuilder<ProductCubit, ProductState>(
+      bloc: bloc,
+      buildWhen: (previous, current) => false,
+      builder: (context, state) => Container(
+        constraints: const BoxConstraints(minHeight: 140),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  bloc.state.product.seller?.infoData.name ?? 'unknown',
-                  style: GoogleFonts.nunito(
-                      fontWeight: FontWeight.bold,
-                      fontSize: AppDimensions.dp16),
-                ),
-                Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    color: AppColors.primaryColor,
-                    child: Row(
-                      children: [
-                        Icon(
-                          MaterialCommunityIcons.check,
-                          color: AppColors.whiteColor,
-                        ),
-                        Text(
-                          'Official',
-                          style:
-                              GoogleFonts.nunito(color: AppColors.whiteColor),
-                        ),
-                      ],
-                    )),
+                Text(bloc.state.product.category.name),
+                const Icon(MaterialCommunityIcons.heart_outline),
               ],
             ),
-            const Spacer(),
-            const Icon(MaterialCommunityIcons.chevron_right),
-          ]),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: contentSellerInfo('4.9 / 5', '3k+ đánh giá'),
-              ),
-              Flexible(
-                child: contentSellerInfo('1.9k+', 'Người theo dõi'),
-              ),
-              Flexible(
-                child: contentSellerInfo('70%', 'Phản hồi Chat'),
-              ),
-            ],
-          )
-        ],
+            Text(
+              product.name,
+              maxLines: 2,
+              style:
+                  GoogleFonts.nunito(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            starAndReviewWidget(3, 128),
+            priceProduct(),
+          ],
+        ),
       ),
     );
   }
 
-  imgPoster() {
-    return Stack(
+  contentSellerInfo(title, sub) {
+    return Column(
       children: [
-        SizedBox(
-          height: 300,
-          width: double.infinity,
-          child: PageView.builder(
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              // itemCount: product.productImages.length,
-              itemCount: 3,
-              itemBuilder: (context, index) {
-                return ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(5),
-                    topRight: Radius.circular(5),
-                  ),
-                  child:
-                      // Image.network(
-                      //   product.productImages.elementAt(index).fileLink,
-                      //   height: 300,
-                      //   width: double.infinity,
-                      //   fit: BoxFit.cover,
-                      // )
-                      Image.asset(
-                    AppAssets.fkImHarryPotter1,
-                    width: double.infinity,
-                    height: 180,
-                    fit: BoxFit.cover,
-                  ),
-                );
-              }),
+        Text(
+          title,
+          style: GoogleFonts.nunito(fontWeight: FontWeight.bold),
+        ),
+        Text(
+          sub,
+          style: GoogleFonts.nunito(color: AppColors.greyColor),
         ),
       ],
+    );
+  }
+
+  sellerInfo() {
+    return BlocBuilder<ProductCubit, ProductState>(
+      bloc: bloc,
+      buildWhen: (previous, current) => previous.product != current.product,
+      builder: (context, state) {
+        return Container(
+          height: 140,
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                SizedBox(
+                  height: 70,
+                  width: 70,
+                  child: state.product.seller?.logoData?.fileLink == null
+                      ? Container()
+                      : CachedNetworkImage(
+                          imageUrl:
+                              state.product.seller?.logoData?.fileLink ?? '',
+                          errorWidget: (context, url, error) => Image.asset(
+                            AppAssets.fkImHarryPotter2,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+
+                  //     Image.network(
+                  //   product.seller!.logoData!.fileLink,
+                  //   height: 180,
+                  //   width: double.infinity,
+                  //   fit: BoxFit.cover,
+                  // ),
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      bloc.state.product.seller?.infoData.name ?? 'unknown',
+                      style: GoogleFonts.nunito(
+                          fontWeight: FontWeight.bold,
+                          fontSize: AppDimensions.dp16),
+                    ),
+                    Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        color: AppColors.primaryColor,
+                        child: Row(
+                          children: [
+                            Icon(
+                              MaterialCommunityIcons.check,
+                              color: AppColors.whiteColor,
+                            ),
+                            Text(
+                              'Official',
+                              style: GoogleFonts.nunito(
+                                  color: AppColors.whiteColor),
+                            ),
+                          ],
+                        )),
+                  ],
+                ),
+                const Spacer(),
+                const Icon(MaterialCommunityIcons.chevron_right),
+              ]),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Flexible(
+                    child: contentSellerInfo('4.9 / 5', '3k+ đánh giá'),
+                  ),
+                  Flexible(
+                    child: contentSellerInfo('1.9k+', 'Người theo dõi'),
+                  ),
+                  // Flexible(
+                  //   child: contentSellerInfo('70%', 'Phản hồi Chat'),
+                  // ),
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  imgPoster() {
+    return BlocBuilder<ProductCubit, ProductState>(
+      bloc: bloc,
+      buildWhen: ((previous, current) => previous.product != current.product),
+      builder: (context, state) {
+        return Stack(
+          alignment: Alignment.bottomRight,
+          children: [
+            SizedBox(
+              height: 300,
+              width: double.infinity,
+              child: PageView.builder(
+                  controller: bloc.state.pageController,
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  // itemCount: product.productImages.length,
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(5),
+                              topRight: Radius.circular(5),
+                            ),
+                            child: CachedNetworkImage(
+                              imageUrl: state.product.productImages
+                                  .elementAt(index)
+                                  .fileLink,
+                              width: double.infinity,
+                              height: 300,
+                              fit: BoxFit.cover,
+                            )),
+                      ],
+                    );
+                  }),
+            ),
+            BlocBuilder<ProductCubit, ProductState>(
+              bloc: bloc,
+              buildWhen: (previous, current) =>
+                  previous.indexImage != current.indexImage,
+              builder: (context, state) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(state.product.productImages.length,
+                      (index) {
+                    return Container(
+                      height: 10,
+                      width: 10,
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: state.indexImage == index
+                            ? AppColors.blueColor
+                            : AppColors.whiteColor,
+                      ),
+                    );
+                  }),
+                );
+              },
+            )
+          ],
+        );
+      },
     );
   }
 
@@ -254,7 +309,6 @@ class ProductScreen extends StatelessWidget {
           )
       ],
     );
-    return Container();
   }
 
   topBar() {
@@ -262,7 +316,7 @@ class ProductScreen extends StatelessWidget {
       preferredSize: const Size.fromHeight(56),
       child: BlocBuilder<ProductCubit, ProductState>(
         bloc: bloc,
-        // buildWhen: (previous, current) => previous.isTop != current.isTop,
+        buildWhen: (previous, current) => previous.isTop != current.isTop,
         builder: (context, state) {
           return state.isTop
               ? AppBar(
@@ -341,68 +395,98 @@ class ProductScreen extends StatelessWidget {
   }
 
   describeProduct() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Mô tả sản phẩm',
-            style:
-                GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            'Đắc nhân tâm của Dale Carnegie là quyển sách nổi tiếng nhất, bán chạy nhất và có tầm ảnh hưởng nhất của mọi thời đại. Tác phẩm đã được chuyển ngữ sang hầu hết các thứ tiếng trên thế giới và có mặt ở hàng trăm quốc gia. Đây là quyển sách duy nhất về thể loại self-help liên tục đứng đầu danh mục sách bán chạy nhất (best-selling Books) do báo The New York Times bình chọn suốt 10 năm liền.',
-            maxLines: 4,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 10),
-          Stack(children: <Widget>[
-            SizedBox(
-              height: 180,
-              child: Image.asset(
-                AppAssets.fkImHarryPotter2,
-                width: double.infinity,
-                height: 180,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Container(
-              height: 185.0,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  gradient: LinearGradient(
-                      begin: FractionalOffset.topCenter,
-                      end: FractionalOffset.bottomCenter,
-                      colors: [
-                        Colors.grey.withOpacity(0.0),
-                        AppColors.whiteColor,
-                        AppColors.whiteColor,
-                      ],
-                      stops: const [
-                        0.0,
-                        1.0,
-                        1.0
-                      ])),
-            )
-          ]),
-          Center(
-              child: InkWell(
-                  onTap: () {},
-                  child: Container(
-                      height: 30,
-                      width: 100,
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Xem tất cả',
-                        style: GoogleFonts.nunito(
-                            color: AppColors.blueColor,
-                            fontWeight: FontWeight.bold),
-                      )))),
-        ],
-      ),
+    return BlocBuilder<ProductCubit, ProductState>(
+      bloc: bloc,
+      buildWhen: (previous, current) =>
+          previous.isDescribeShowAll != current.isDescribeShowAll,
+      builder: (context, state) {
+        return state.isDescribeShowAll == true
+            ? Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Mô tả sản phẩm',
+                      style: GoogleFonts.nunito(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      state.product.description,
+                    ),
+                  ],
+                ),
+              )
+            : Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Mô tả sản phẩm',
+                      style: GoogleFonts.nunito(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      state.product.description,
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 10),
+                    Stack(children: <Widget>[
+                      SizedBox(
+                        height: 180,
+                        child: Image.asset(
+                          AppAssets.fkImHarryPotter2,
+                          width: double.infinity,
+                          height: 180,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Container(
+                        height: 185.0,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            gradient: LinearGradient(
+                                begin: FractionalOffset.topCenter,
+                                end: FractionalOffset.bottomCenter,
+                                colors: [
+                                  Colors.grey.withOpacity(0.0),
+                                  AppColors.whiteColor,
+                                  AppColors.whiteColor,
+                                ],
+                                stops: const [
+                                  0.0,
+                                  1.0,
+                                  1.0
+                                ])),
+                      )
+                    ]),
+                    Center(
+                        child: InkWell(
+                            onTap: () {
+                              bloc.addNewEvent(
+                                  ProductEnum.isDescribeShowAll, true);
+                            },
+                            child: Container(
+                                height: 30,
+                                width: 100,
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'Xem tất cả',
+                                  style: GoogleFonts.nunito(
+                                      color: AppColors.blueColor,
+                                      fontWeight: FontWeight.bold),
+                                )))),
+                  ],
+                ),
+              );
+      },
     );
   }
 
@@ -411,7 +495,9 @@ class ProductScreen extends StatelessWidget {
       return Container(
         height: 50,
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        color: index % 2 == 0 ? AppColors.whiteGreyColor : AppColors.whiteColor,
+        color: index % 2 == 0
+            ? AppColors.whiteGreyColor.withOpacity(0.1)
+            : AppColors.whiteColor,
         child: Row(
           children: [
             SizedBox(
@@ -444,19 +530,19 @@ class ProductScreen extends StatelessWidget {
           rowContent('Tác giả', product?.spec.author, 1),
           rowContent('Nhà xuất bản', product?.spec.publisher, 2),
           rowContent('Ngày xuất bản', product?.spec.publicationDate, 3),
-          Center(
-              child: InkWell(
-                  onTap: () {},
-                  child: Container(
-                      height: 30,
-                      width: 100,
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Xem tất cả',
-                        style: GoogleFonts.nunito(
-                            color: AppColors.blueColor,
-                            fontWeight: FontWeight.bold),
-                      )))),
+          // Center(
+          //     child: InkWell(
+          //         onTap: () {},
+          //         child: Container(
+          //             height: 30,
+          //             width: 100,
+          //             alignment: Alignment.center,
+          //             child: Text(
+          //               'Xem tất cả',
+          //               style: GoogleFonts.nunito(
+          //                   color: AppColors.blueColor,
+          //                   fontWeight: FontWeight.bold),
+          //             )))),
         ],
       ),
     );
@@ -464,7 +550,10 @@ class ProductScreen extends StatelessWidget {
 
   Widget bottomBar() {
     return Container(
-      height: 70,
+      height: 80,
+      // width: 120,
+      // margin: const EdgeInsets.only(bottom: 20, right: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       decoration: BoxDecoration(
         boxShadow: const [
           BoxShadow(
@@ -473,48 +562,52 @@ class ProductScreen extends StatelessWidget {
             blurRadius: 2,
           ),
         ],
+        borderRadius: BorderRadius.circular(10),
         color: AppColors.whiteColor,
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        // padding: const EdgeInsets.symmetric(horizontal: 0),
+        child:
             // Column(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: const [
-            //     Text('830.00'),
-            //     Text('819.19 QR'),
+            //   crossAxisAlignment: CrossAxisAlignment.center,
+            //   mainAxisAlignment: MainAxisAlignment.end,
+            //   children: [
+            // SizedBox(
+            //   width: double.infinity,
+            //   child: ElevatedButton(
+            //     style: ButtonStyle(
+            //         backgroundColor:
+            //             MaterialStateProperty.all<Color>(AppColors.whiteColor),
+            //         padding: MaterialStateProperty.all<EdgeInsets>(
+            //             const EdgeInsets.symmetric(horizontal: 20)),
+            //         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            //             RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(100),
+            //         ))),
+            //     onPressed: () {},
+            //     child: Icon(
+            //       MaterialCommunityIcons.cart_plus,
+            //       color: AppColors.brownColor,
+            //     ),
+            //  Row(
+            //   children: [
+            //     Icon(
+            //       MaterialCommunityIcons.cart_plus,
+            //       color: AppColors.brownColor,
+            //     ),
+            //     Text(
+            //       'Thêm vào giỏ hàng',
+            //       style: GoogleFonts.nunito(
+            //         color: AppColors.brownColor,
+            //         fontSize: 12,
+            //       ),
+            //     )
             //   ],
+            // )
+            //   ),
             // ),
-            ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(AppColors.whiteColor),
-                    padding: MaterialStateProperty.all<EdgeInsets>(
-                        const EdgeInsets.symmetric(horizontal: 20)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100),
-                    ))),
-                onPressed: () {},
-                child: Row(
-                  children: [
-                    Icon(
-                      MaterialCommunityIcons.cart,
-                      color: AppColors.brownColor,
-                    ),
-                    Text(
-                      'Thêm vào giỏ hàng',
-                      style: GoogleFonts.nunito(
-                        color: AppColors.brownColor,
-                        fontSize: 12,
-                      ),
-                    )
-                  ],
-                )),
-            const SizedBox(width: 20),
+            // const SizedBox(width: 20),
             ElevatedButton(
                 style: ButtonStyle(
                     backgroundColor:
@@ -523,13 +616,22 @@ class ProductScreen extends StatelessWidget {
                         const EdgeInsets.symmetric(horizontal: 20)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100),
+                      borderRadius: BorderRadius.circular(5),
                     ))),
                 onPressed: () {},
-                child: const Text('Mua ngay')),
-          ],
-        ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      MaterialCommunityIcons.cart_plus,
+                      color: AppColors.whiteColor,
+                    ),
+                    const Text('Thêm vào giỏ hàng'),
+                  ],
+                )),
+        // ],
       ),
+      // ),
     );
   }
 

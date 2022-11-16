@@ -59,7 +59,7 @@ class ComponentReviewWidget extends StatelessWidget {
               Row(
                 children: [...starWidget(3, 5, sizeStar: 20)],
               ),
-              Text('(423 reviews)',
+              Text('(423 đánh giá)',
                   style: GoogleFonts.nunito(color: AppColors.greyColor))
             ],
           ),
@@ -109,24 +109,51 @@ class ComponentReviewWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('SẮP XẾP THEO'),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: AppColors.greyColor.withOpacity(0.5)),
-                child: const Text('Default'),
-              ),
-            ],
-          ),
-          const ItemReviewWidget(),
-          const ItemReviewWidget(),
+          reviews(),
         ],
       ),
+    );
+  }
+
+  reviews() {
+    final items = [
+      'Mặc định',
+      'Hehe',
+      'hihi',
+    ];
+
+    var value = items.first;
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('SẮP XẾP THEO'),
+            DropdownButton<String>(
+                items: items
+                    .map((String e) => DropdownMenuItem<String>(
+                          value: e,
+                          child: Text(e),
+                        ))
+                    .toList(),
+                value: value,
+                onChanged: (value) {
+                  print(value);
+                }),
+            // Container(
+            //   padding:
+            //       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            //   decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.circular(100),
+            //       color: AppColors.greyColor.withOpacity(0.5)),
+            //   child: const Text('Default'),
+            // ),
+          ],
+        ),
+        const ItemReviewWidget(),
+        const ItemReviewWidget(),
+      ],
     );
   }
 }
