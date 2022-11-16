@@ -23,6 +23,10 @@ class Product {
   Seller? seller;
   @JsonKey(name: 'category')
   Category category;
+  @JsonKey(name: 'description')
+  String description;
+  @JsonKey(name: 'summary')
+  String summary;
   @JsonKey(name: 'productPictures')
   List<ProductPicture> productImages;
   @JsonKey(name: 'specs')
@@ -37,6 +41,8 @@ class Product {
       required this.productImages,
       required this.name,
       required this.spec,
+      required this.description,
+      required this.summary,
       required this.seller});
 
   factory Product.fromJson(Map<String, dynamic> json) =>
