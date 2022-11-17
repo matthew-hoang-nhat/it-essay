@@ -28,7 +28,8 @@ class DetailSearchScreen extends StatelessWidget {
                 textEditingController: TextEditingController()
                   ..text = textSearch,
               )),
-          actions: [cartButton(context)],
+          // actions: [cartButton(context)],
+          actions: const [CartButton()],
         ),
         body: SafeArea(
           child: SingleChildScrollView(

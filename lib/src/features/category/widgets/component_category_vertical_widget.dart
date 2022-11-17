@@ -23,7 +23,6 @@ class ComponentCategoryVerticalWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Wrap(
-                // alignment: WrapAlignment.center,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 spacing: 20,
                 runSpacing: 10,

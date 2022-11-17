@@ -33,17 +33,11 @@ class SearchCubit extends Cubit<SearchState>
   final SearchRepository _searchRepository = getIt<SearchRepositoryImpl>();
 
   searchContent(String text) async {
-    print('searchContent');
-    // addNewEvent(SearchEnum.isLoading, true);
     final searchContentsResponse = await _searchRepository.searchContent(text);
     if (searchContentsResponse.isSuccess) {
-      print('success');
       addNewEvent(SearchEnum.contentSearches, searchContentsResponse.data);
       return;
     }
-
-    print('false');
-    // addNewEvent(SearchEnum.isLoading, false);
   }
 
   @override

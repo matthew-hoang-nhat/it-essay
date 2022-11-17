@@ -19,13 +19,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  late final bloc;
-
-  @override
-  void initState() {
-    super.initState();
-    bloc = context.read<SearchCubit>();
-  }
+  late final bloc = context.read<SearchCubit>();
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +38,8 @@ class _SearchScreenState extends State<SearchScreen> {
             textEditingController: textEditingController,
             hintText: 'Chú dế mèn kêu',
           ),
-          actions: [cartButton(context)],
+          // actions: [cartButton(context)],
+          actions: const [CartButton()],
         ),
         body: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -70,7 +65,6 @@ class _SearchScreenState extends State<SearchScreen> {
       buildWhen: (previous, current) =>
           previous.contentSearches != current.contentSearches,
       builder: (context, state) {
-        print('rebuild resultbar');
         return Column(
           children: [
             ...state.contentSearches

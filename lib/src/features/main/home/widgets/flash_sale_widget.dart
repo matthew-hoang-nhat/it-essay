@@ -15,7 +15,7 @@ class FlashSaleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formatCurrency = NumberFormat.simpleCurrency(locale: 'vi_VN');
-
+    final size = MediaQuery.of(context).size.width * 2 / 8;
     return InkWell(
       onTap: () {
         context.push(Paths.productScreen, extra: product);
@@ -29,17 +29,26 @@ class FlashSaleWidget extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(5),
               child: Container(
-                width: 70,
-                height: 70,
+                width: size,
+                height: size,
+                // constraints:
+                //     const BoxConstraints(minHeight: 200, minWidth: 200),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(AppDimensions.dp5),
                   color: AppColors.whiteBrownColor,
                 ),
                 alignment: Alignment.topCenter,
-                child: Image.asset(
+                child:
+                    // CachedNetworkImage(
+                    //   imageUrl: product.productImages.first.fileLink,
+                    //   width: size,
+                    //   height: size,
+                    //   fit: BoxFit.cover,
+                    // )
+                    Image.asset(
                   AppAssets.fkImHarryPotter3,
-                  width: 70,
-                  height: 70,
+                  width: size,
+                  height: size,
                   fit: BoxFit.cover,
                 ),
               ),

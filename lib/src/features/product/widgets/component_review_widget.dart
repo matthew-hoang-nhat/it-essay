@@ -138,17 +138,7 @@ class ComponentReviewWidget extends StatelessWidget {
                         ))
                     .toList(),
                 value: value,
-                onChanged: (value) {
-                  print(value);
-                }),
-            // Container(
-            //   padding:
-            //       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            //   decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.circular(100),
-            //       color: AppColors.greyColor.withOpacity(0.5)),
-            //   child: const Text('Default'),
-            // ),
+                onChanged: (value) {}),
           ],
         ),
         const ItemReviewWidget(),

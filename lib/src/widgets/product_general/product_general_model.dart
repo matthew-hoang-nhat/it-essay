@@ -1,12 +1,13 @@
-var mockProductGeneralModel = BriefProductModel(
-    mainCategory: 'Sách thiếu nhi',
-    name: 'Chú dế mèn kêu phiêu lưu kí',
-    price: 29000,
-    discountPercent: 20,
-    productImage: null);
+// var mockProductGeneralModel = BriefProductModel(
+//     mainCategory: 'Sách thiếu nhi',
+//     name: 'Chú dế mèn kêu phiêu lưu kí',
+//     price: 29000,
+//     discountPercent: 20,
+//     productImage: null);
 
 class BriefProductModel {
   BriefProductModel({
+    required this.slug,
     required this.name,
     required this.mainCategory,
     required this.price,
@@ -14,6 +15,7 @@ class BriefProductModel {
     required this.productImage,
   });
   String name;
+  String slug;
   String mainCategory;
   int price;
   int discountPercent;

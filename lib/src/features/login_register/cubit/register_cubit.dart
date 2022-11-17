@@ -6,7 +6,6 @@ import 'package:it_project/src/configs/locates/me_locale_key.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
 
 import 'package:it_project/src/utils/helpers/validate.dart';
-import 'package:it_project/src/utils/remote/services/fresult.dart';
 import 'package:it_project/src/utils/repository/auth_repository.dart';
 import 'package:it_project/src/utils/repository/auth_repository_impl.dart';
 
