@@ -14,7 +14,7 @@ part 'auth_service.g.dart';
 abstract class AuthService {
   factory AuthService(Dio dio, {String baseUrl}) = _AuthService;
 
-  @POST("/auth/login")
+  @POST("/auth/login-mobile")
   Future<LoginResponse> manualLogin(@Body() LoginRequest loginRequest);
 
   @POST("/auth/mobile-register")
@@ -23,6 +23,13 @@ abstract class AuthService {
   @POST("/auth/otp-register")
   Future<SuccessResponse> otpRegister(
       @Body() OtpRegisterRequest otpRegisterRequest);
+
+  @GET("/profile/user-info-mobile")
+  Future<SuccessResponse> getInfo();
+
+  // @POST("/profile/update-profile-mobile")
+  // Future<SuccessResponse> updateProfileUser(
+  //     @Body() UpdateProfileUserRequest updateProfileUserRequest);
 
   // @GET("/api/oauth/google")
   // Future<> googleLogin(@Body() LoginRequest loginRequest);

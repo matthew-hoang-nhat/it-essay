@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:go_router/go_router.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
-import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/shopping_cart/cubit/cart_cubit.dart';
 import 'package:it_project/src/features/shopping_cart/widgets/component_cart_widget.dart';
 import 'package:intl/intl.dart';
@@ -121,7 +119,7 @@ class _CartScreenState extends State<CartScreen> {
                               borderRadius: BorderRadius.circular(100),
                             ))),
                         onPressed: () {
-                          context.push(Paths.payment);
+                          // context.push(Paths.payment);
                         },
                         child: const Text('Thanh toán')),
                   ],
