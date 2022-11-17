@@ -6,16 +6,24 @@ part 'info_data.g.dart';
 @JsonSerializable()
 class InfoData {
   @JsonKey(name: 'firstName')
-  String? firstName;
+  String firstName;
   @JsonKey(name: 'lastName')
-  String? lastName;
-  @JsonKey(name: 'name')
-  String? name;
+  String lastName;
+  @JsonKey(name: 'gender')
+  String gender;
+  @JsonKey(name: 'nickName')
+  String nickName;
+  @JsonKey(name: 'language')
+  String language;
   InfoData({
-    this.firstName,
-    this.lastName,
-    this.name,
+    required this.firstName,
+    required this.lastName,
+    required this.gender,
+    required this.nickName,
+    required this.language,
   });
+
+  
 
   factory InfoData.fromJson(Map<String, dynamic> json) =>
       _$InfoDataFromJson(json);

@@ -13,8 +13,7 @@ class ComponentCategoryHorizontalWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<HomeCubit>();
-    bloc.getCategories();
+    final bloc = context.read<HomeCubit>()..getCategories();
 
     final controller = ScrollController();
     controller.addListener(() {
@@ -55,10 +54,10 @@ class ComponentCategoryHorizontalWidget extends StatelessWidget {
           BlocBuilder<HomeCubit, HomeState>(
               bloc: bloc,
               builder: (context, state) {
-                if (bloc.state.categories.isEmpty) return Container();
-                final categories = bloc.state.categories;
+                if (state.categories.isEmpty) return Container();
+                final categories = state.categories;
                 return SizedBox(
-                  height: 120,
+                  height: 150,
                   child: ListView.builder(
                       controller: controller,
                       physics: const BouncingScrollPhysics(),

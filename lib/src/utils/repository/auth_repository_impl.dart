@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:it_project/src/utils/remote/model/login/login_request.dart';
+import 'package:it_project/src/utils/remote/model/login/login_response.dart';
 import 'package:it_project/src/utils/remote/model/register/otp_register_request.dart';
 import 'package:it_project/src/utils/remote/model/register/register_request.dart';
+import 'package:it_project/src/utils/remote/model/user/profile_user.dart';
 import 'package:it_project/src/utils/remote/services/fresult.dart';
 import 'package:it_project/src/utils/repository/auth_repository.dart';
 
@@ -12,12 +14,12 @@ class AuthRepositoryImpl extends AuthRepository {
   });
 
   @override
-  Future<FResult<String?>> manualLogin(
+  Future<FResult<LoginResponse?>> manualLogin(
       {required String email, required String password}) async {
     try {
       final result = await authService
           .manualLogin(LoginRequest(email: email, password: password));
-      return FResult.success(result.accessToken);
+      return FResult.success(result);
     } catch (ex) {
       log(ex.toString());
       return FResult.error(ex.toString());
@@ -61,6 +63,17 @@ class AuthRepositoryImpl extends AuthRepository {
     } catch (ex) {
       log(ex.toString());
 
+      return FResult.error(ex.toString());
+    }
+  }
+
+  @override
+  Future<FResult<ProfileUser>> getInfoUser() async {
+    try {
+      final result = await authService.getInfo();
+      return FResult.success(ProfileUser.fromJson(result.data));
+    } catch (ex) {
+      log(ex.toString());
       return FResult.error(ex.toString());
     }
   }

@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dio/native_imp.dart';
+import 'package:it_project/main.dart';
+import 'package:it_project/src/utils/app_shared.dart';
 
 const String keyAccept = 'Accept';
 const String keyAuth = 'Authorization';
@@ -19,11 +21,11 @@ class DioHttpClient extends DioForNative {
     if (options.headers.containsKey(keyAuth)) {
       options.headers.remove(keyAuth);
     }
-    // String? tokenValue = Get.find<AppShared>().getTokenValue();
+    String? tokenValue = getIt<AppShared>().getTokenValue();
 
-    // if (tokenValue != null) {
-    //   options.headers[keyAuth] = 'Bearer $tokenValue';
-    // }
+    if (tokenValue != null) {
+      options.headers[keyAuth] = 'Bearer $tokenValue';
+    }
 
     // options.headers[keyAccept] = 'application/json';
 

@@ -20,7 +20,8 @@ class OtpCheckScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     const otpLength = 6;
     final textEditingControllers =
-        List.generate(otpLength, (index) => TextEditingController());
+        List.generate(otpLength, (_) => TextEditingController());
+
     List<Widget> otpTextField = List.generate(
         otpLength,
         (index) => otpWidget(
@@ -154,10 +155,10 @@ class OtpCheckScreen extends StatelessWidget {
   Container otpWidget(
       context, index, otpLength, TextEditingController textEditingController) {
     final size = MediaQuery.of(context).size.width * 0.1;
-    final padding = MediaQuery.of(context).size.width * 0.005;
+    const padding = 2.0;
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: padding),
+      margin: const EdgeInsets.symmetric(horizontal: padding),
       height: size,
       width: size,
       alignment: Alignment.center,

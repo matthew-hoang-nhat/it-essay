@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 
-Widget concreteSearchBar(context, text) {
+Widget concreteSearchBar(context, {String text = ''}) {
+  log('rebuild');
   return Container(
     height: 50,
     margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),

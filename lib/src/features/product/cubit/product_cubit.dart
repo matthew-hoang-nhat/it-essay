@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/locates/lang_vi.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
+import 'package:it_project/src/features/shopping_cart/mixin/action_cart.dart';
+import 'package:it_project/src/local/dao/item_cart.dart';
 import 'package:it_project/src/utils/remote/model/product/product.dart';
 import 'package:it_project/src/utils/repository/product_repository.dart';
 import 'package:it_project/src/utils/repository/product_repository_impl.dart';
@@ -17,7 +19,12 @@ enum ProductEnum {
   isDescribeShowAll,
 }
 
+enum ProductCartActionEnum {
+  addItem,
+}
+
 class ProductCubit extends Cubit<ProductState>
+    with ActionCart
     implements ParentCubit<ProductEnum> {
   ProductCubit({required Product product})
       : super(ProductInitial(
@@ -37,14 +44,8 @@ class ProductCubit extends Cubit<ProductState>
 
     if (productResponse.isSuccess) {
       addNewEvent(ProductEnum.product, productResponse.data);
-      print(productResponse.data?.seller?.toJson());
       return;
     }
-
-    // print('get thất bại');
-
-    // final mockData = mockProduct;
-    // addNewEvent(ProductEnum.product, mockData);
   }
 
   settingController() {
@@ -68,9 +69,31 @@ class ProductCubit extends Cubit<ProductState>
     });
   }
 
+  actionCart(ProductCartActionEnum productCartAction) {
+    switch (productCartAction) {
+      case ProductCartActionEnum.addItem:
+        _addItemToLocalCart();
+        break;
+      default:
+    }
+  }
+
+  _addItemToLocalCart() {
+    final product = state.product;
+    ItemCart itemCart = ItemCart(
+        price: product.price,
+        slug: product.slug,
+        name: product.name,
+        quantity: 1,
+        sellerName: product.seller?.infoData.name ?? '',
+        discountPercent: product.discountPercent,
+        mainCategory: product.category.name,
+        productImage: product.productImages.first.fileLink);
+    addItemCartMixin(itemCart);
+  }
+
   @override
   void addNewEvent(ProductEnum key, value) {
-    print('addNewEvent ProductCubit');
     if (isClosed) return;
     switch (key) {
       case ProductEnum.isTop:
