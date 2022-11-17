@@ -7,9 +7,6 @@ import 'package:it_project/src/features/main/home/home_screen.dart';
 
 import 'package:it_project/src/features/main/main_screen.dart';
 import 'package:it_project/src/features/product/screens/product_screen.dart';
-import 'package:it_project/src/features/profile/screens/edit_field_profile_screen.dart';
-import 'package:it_project/src/features/profile/screens/profile_screen.dart';
-import 'package:it_project/src/features/profile/screens/detail_profile_screen.dart';
 import 'package:it_project/src/features/search/screens/detail_search_screen.dart';
 import 'package:it_project/src/features/search/screens/search_screen.dart';
 import 'package:it_project/src/features/shopping_cart/cart_screen.dart';
@@ -26,10 +23,10 @@ class AppPages {
       path: Paths.cartScreen,
       builder: (context, state) => const CartScreen(),
     ),
-    GoRoute(
-      path: Paths.payment,
-      builder: (context, state) => const CartScreen(),
-    ),
+    // GoRoute(
+    //   path: Paths.payment,
+    //   builder: (context, state) => const CartScreen(),
+    // ),
     GoRoute(
       path: Paths.loginScreen,
       builder: (context, state) => const LoginScreen(
@@ -55,20 +52,20 @@ class AppPages {
     GoRoute(
         path: Paths.mainScreen,
         builder: (context, state) => const MainScreen()),
-    GoRoute(
-        path: Paths.profileScreen,
-        builder: (context, state) => const ProfileScreen()),
-    GoRoute(
-        path: Paths.detailProfileScreen,
-        builder: (context, state) => const DetailProfileScreen()),
-    GoRoute(
-        path: Paths.editProfileScreen,
-        builder: (context, state) => EditFieldProfileScreen(
-              type: (state.extra as Map<String, dynamic>)['type']
-                  as EditFieldProfileEnum,
-              content:
-                  (state.extra as Map<String, dynamic>)['content'] as String?,
-            )),
+    // GoRoute(
+    //     path: Paths.profileScreen,
+    //     builder: (context, state) => const ProfileScreen()),
+    // GoRoute(
+    //     path: Paths.detailProfileScreen,
+    //     builder: (context, state) => const DetailProfileScreen()),
+    // GoRoute(
+    //     path: Paths.editProfileScreen,
+    //     builder: (context, state) => EditFieldProfileScreen(
+    //           type: (state.extra as Map<String, dynamic>)['type']
+    //               as EditFieldProfileEnum,
+    //           content:
+    //               (state.extra as Map<String, dynamic>)['content'] as String?,
+    //         )),
     GoRoute(
         path: Paths.detailCategoryScreen,
         builder: (context, state) => DetailCategoryScreen(
