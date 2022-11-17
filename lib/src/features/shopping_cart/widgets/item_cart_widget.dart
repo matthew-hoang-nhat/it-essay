@@ -11,8 +11,6 @@ import 'package:it_project/src/widgets/icon_heart.dart';
 import '../../../configs/constants/app_colors.dart';
 import '../../../configs/constants/app_dimensions.dart';
 
-enum ActionCartEnum { get, edit, remove }
-
 class ItemCartWidget extends StatelessWidget {
   const ItemCartWidget({super.key, required this.product});
   final ItemCart product;
@@ -98,7 +96,9 @@ class ItemCartWidget extends StatelessWidget {
                         children: [
                           InkWell(
                             onTap: () {
-                              bloc.minusQuantityItemCart(product.slug);
+                              bloc.actionCart(CartActionEnum.dec,
+                                  productSlug: product.slug);
+
                               if (product.quantity == 1) {
                                 showDialog(
                                   context: context,
@@ -141,7 +141,9 @@ class ItemCartWidget extends StatelessWidget {
                                                     BorderRadius.circular(100),
                                               ))),
                                           onPressed: () {
-                                            bloc.removeItemCart(product.slug);
+                                            bloc.actionCart(
+                                                CartActionEnum.removeItem,
+                                                productSlug: product.slug);
                                             Navigator.pop(context);
                                           },
                                           child: const Text('Có'),
@@ -185,7 +187,8 @@ class ItemCartWidget extends StatelessWidget {
                               child: Text(product.quantity.toString())),
                           InkWell(
                             onTap: () {
-                              bloc.plusQuantityItemCart(product.slug);
+                              bloc.actionCart(CartActionEnum.inc,
+                                  productSlug: product.slug);
                             },
                             child: Container(
                                 decoration: BoxDecoration(
