@@ -43,7 +43,10 @@ class _ProductWidgetState extends State<ProductWidget> {
             : null,
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        imageProduct(),
+        Hero(
+          tag: widget.product.slug,
+          child: imageProduct(),
+        ),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
@@ -97,8 +100,7 @@ class _ProductWidgetState extends State<ProductWidget> {
   }
 
   Widget priceWidget() {
-    final bool isHighDiscountPrice =
-        ((widget.product.discountPercent ?? 0) >= 15);
+    final bool isHighDiscountPrice = (widget.product.discountPercent >= 15);
 
     double priceAfterSaleOff =
         (100 - widget.product.discountPercent) * widget.product.price / 100;
@@ -127,29 +129,34 @@ class _ProductWidgetState extends State<ProductWidget> {
   }
 
   Widget imageProduct() {
-    return ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(5),
-          topRight: Radius.circular(5),
-        ),
-        child: widget.product.productImage == null
-            ? Image.asset(
-                AppAssets.fkImHarryPotter1,
-                width: double.infinity,
-                height: 180,
-                fit: BoxFit.cover,
-              )
-            : Image.network(
-                widget.product.productImage!,
-                height: 180,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ));
-    //     Image.asset(
-    //   AppAssets.fkImHarryPotter1,
-    //   width: double.infinity,
-    //   height: 180,
-    //   fit: BoxFit.cover,
-    // ));
+    return SizedBox(
+        height: 180,
+        width: double.infinity,
+        child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(5),
+              topRight: Radius.circular(5),
+            ),
+            child:
+                //       widget.product.productImage == null
+                //           ? Image.asset(
+                //               AppAssets.fkImHarryPotter1,
+                //               width: double.infinity,
+                //               height: 180,
+                //               fit: BoxFit.cover,
+                //             )
+                //           : Image.network(
+                //               widget.product.productImage!,
+                //               height: 180,
+                //               width: double.infinity,
+                //               fit: BoxFit.cover,
+                //             )),
+                // );
+                Image.asset(
+              AppAssets.fkImHarryPotter1,
+              width: double.infinity,
+              height: 180,
+              fit: BoxFit.cover,
+            )));
   }
 }

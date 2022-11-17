@@ -16,8 +16,10 @@ class CategoryScreen extends StatelessWidget {
         appBar: AppBar(
           foregroundColor: AppColors.whiteColor,
           backgroundColor: AppColors.primaryColor,
-          actions: [cartButton(context)],
-          title: const Text('Danh mục'),
+          actions: const [CartButton()],
+          title: const Text(
+            'Danh mục',
+          ),
         ),
         body: SafeArea(
             child: SingleChildScrollView(

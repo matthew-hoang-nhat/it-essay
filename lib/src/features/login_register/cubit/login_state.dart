@@ -2,8 +2,8 @@ part of 'login_cubit.dart';
 
 abstract class LoginState extends Equatable {
   const LoginState({
-    // required this.emailController,
-    // required this.passwordController,
+    required this.emailController,
+    required this.passwordController,
     required this.announcementLogin,
     required this.isClickedLogin,
     required this.isLoading,
@@ -14,6 +14,8 @@ abstract class LoginState extends Equatable {
   final String announcementLogin;
   final bool isClickedLogin;
   final bool isLoading;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
   // final Map<String, String> meLocalKey;
 
   @override
@@ -29,8 +31,8 @@ abstract class LoginState extends Equatable {
 
 class LoginInitial extends LoginState {
   const LoginInitial({
-    //   required super.emailController,
-    // required super.passwordController,
+    required super.emailController,
+    required super.passwordController,
     required super.announcementLogin,
     required super.isClickedLogin,
     required super.isLoading,
@@ -41,16 +43,15 @@ class LoginInitial extends LoginState {
 class NewLoginState extends LoginState {
   NewLoginState.fromOldSettingState(
     LoginState oldState, {
-    // TextEditingController? emailController,
-    // TextEditingController? passwordController,
+    TextEditingController? emailController,
+    TextEditingController? passwordController,
     String? announcementLogin,
     bool? isClickedLogin,
     bool? isLoading,
     // Map<String, String>? meLocalKey,
   }) : super(
-          // emailController: emailController ?? oldState.emailController,
-          // passwordController:
-          // passwordController ?? oldState.passwordController,
+          emailController: emailController ?? oldState.emailController,
+          passwordController: passwordController ?? oldState.passwordController,
           announcementLogin: announcementLogin ?? oldState.announcementLogin,
           isClickedLogin: isClickedLogin ?? oldState.isClickedLogin,
           isLoading: isLoading ?? oldState.isLoading,

@@ -1,3 +1,5 @@
+import 'package:it_project/src/utils/remote/model/login/login_response.dart';
+import 'package:it_project/src/utils/remote/model/user/profile_user.dart';
 import 'package:it_project/src/utils/remote/services/auth_service/auth_service.dart';
 import 'package:it_project/src/utils/remote/services/fresult.dart';
 
@@ -15,8 +17,9 @@ abstract class AuthRepository {
     required String userId,
     required int otpCode,
   });
-  Future<FResult<String?>> manualLogin({
+  Future<FResult<LoginResponse?>> manualLogin({
     required String email,
     required String password,
   });
+  Future<FResult<ProfileUser>> getInfoUser();
 }

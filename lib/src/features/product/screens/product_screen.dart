@@ -23,8 +23,19 @@ class ProductScreen extends StatelessWidget {
   late final bloc = ProductCubit(product: product);
   // final bloc = ProductCubit();
 
+  bool isPop = false;
+
   @override
   Widget build(BuildContext context) {
+    bloc.state.controller.addListener(() {
+      double currentScroll = bloc.state.controller.position.pixels;
+      if (isPop == true) return;
+      if (currentScroll + 100 <= 0) {
+        isPop = true;
+        context.pop();
+      }
+    });
+
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: topBar(),
@@ -204,35 +215,76 @@ class ProductScreen extends StatelessWidget {
         return Stack(
           alignment: Alignment.bottomRight,
           children: [
-            SizedBox(
-              height: 300,
-              width: double.infinity,
-              child: PageView.builder(
-                  controller: bloc.state.pageController,
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  // itemCount: product.productImages.length,
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(5),
-                              topRight: Radius.circular(5),
-                            ),
-                            child: CachedNetworkImage(
-                              imageUrl: state.product.productImages
-                                  .elementAt(index)
-                                  .fileLink,
-                              width: double.infinity,
-                              height: 300,
-                              fit: BoxFit.cover,
-                            )),
-                      ],
-                    );
-                  }),
+            Hero(
+              tag: product.slug,
+              child: SizedBox(
+                height: 300,
+                width: double.infinity,
+                child: PageView.builder(
+                    controller: bloc.state.pageController,
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    // itemCount: product.productImages.length,
+                    itemCount: 3,
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(5),
+                                  topRight: Radius.circular(5),
+                                ),
+                                child: CachedNetworkImage(
+                                  imageUrl: state.product.productImages
+                                      .elementAt(index)
+                                      .fileLink,
+                                  width: double.infinity,
+                                  height: 300,
+                                  fit: BoxFit.cover,
+                                )),
+                          ],
+                        );
+                        return Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(5),
+                                  topRight: Radius.circular(5),
+                                ),
+                                child: CachedNetworkImage(
+                                  imageUrl: state.product.productImages
+                                      .elementAt(index)
+                                      .fileLink,
+                                  width: double.infinity,
+                                  height: 300,
+                                  fit: BoxFit.cover,
+                                )),
+                          ],
+                        );
+                      }
+                      return Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(5),
+                                topRight: Radius.circular(5),
+                              ),
+                              child: CachedNetworkImage(
+                                imageUrl: state.product.productImages
+                                    .elementAt(index)
+                                    .fileLink,
+                                width: double.infinity,
+                                height: 300,
+                                fit: BoxFit.cover,
+                              )),
+                        ],
+                      );
+                    }),
+              ),
             ),
             BlocBuilder<ProductCubit, ProductState>(
               bloc: bloc,
@@ -551,14 +603,12 @@ class ProductScreen extends StatelessWidget {
   Widget bottomBar() {
     return Container(
       height: 80,
-      // width: 120,
-      // margin: const EdgeInsets.only(bottom: 20, right: 20),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       decoration: BoxDecoration(
         boxShadow: const [
           BoxShadow(
             color: Colors.grey,
-            offset: Offset(0.0, 1.0), //(x,y)
+            offset: Offset(0.0, 1.0),
             blurRadius: 2,
           ),
         ],
@@ -567,68 +617,30 @@ class ProductScreen extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5),
-        // padding: const EdgeInsets.symmetric(horizontal: 0),
-        child:
-            // Column(
-            //   crossAxisAlignment: CrossAxisAlignment.center,
-            //   mainAxisAlignment: MainAxisAlignment.end,
-            //   children: [
-            // SizedBox(
-            //   width: double.infinity,
-            //   child: ElevatedButton(
-            //     style: ButtonStyle(
-            //         backgroundColor:
-            //             MaterialStateProperty.all<Color>(AppColors.whiteColor),
-            //         padding: MaterialStateProperty.all<EdgeInsets>(
-            //             const EdgeInsets.symmetric(horizontal: 20)),
-            //         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            //             RoundedRectangleBorder(
-            //           borderRadius: BorderRadius.circular(100),
-            //         ))),
-            //     onPressed: () {},
-            //     child: Icon(
-            //       MaterialCommunityIcons.cart_plus,
-            //       color: AppColors.brownColor,
-            //     ),
-            //  Row(
-            //   children: [
-            //     Icon(
-            //       MaterialCommunityIcons.cart_plus,
-            //       color: AppColors.brownColor,
-            //     ),
-            //     Text(
-            //       'Thêm vào giỏ hàng',
-            //       style: GoogleFonts.nunito(
-            //         color: AppColors.brownColor,
-            //         fontSize: 12,
-            //       ),
-            //     )
-            //   ],
-            // )
-            //   ),
-            // ),
-            // const SizedBox(width: 20),
-            ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(AppColors.redColor),
-                    padding: MaterialStateProperty.all<EdgeInsets>(
-                        const EdgeInsets.symmetric(horizontal: 20)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ))),
-                onPressed: () {},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      MaterialCommunityIcons.cart_plus,
-                      color: AppColors.whiteColor,
-                    ),
-                    const Text('Thêm vào giỏ hàng'),
-                  ],
-                )),
+
+        child: ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(AppColors.redColor),
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                    const EdgeInsets.symmetric(horizontal: 20)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ))),
+            onPressed: () {
+              bloc.actionCart(ProductCartActionEnum.addItem);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  MaterialCommunityIcons.cart_plus,
+                  color: AppColors.whiteColor,
+                ),
+                const Text('Thêm vào giỏ hàng'),
+              ],
+            )),
         // ],
       ),
       // ),

@@ -45,6 +45,7 @@ class ComponentCategoryProductVerticalWidget extends StatelessWidget {
                             },
                             child: ProductWidget(
                               product: BriefProductModel(
+                                  slug: productOdd.slug,
                                   mainCategory: productOdd.category.name,
                                   name: productOdd.name,
                                   price: productOdd.price,
@@ -67,6 +68,7 @@ class ComponentCategoryProductVerticalWidget extends StatelessWidget {
                                   },
                                   child: ProductWidget(
                                     product: BriefProductModel(
+                                        slug: productEven.slug,
                                         mainCategory: productEven.category.name,
                                         name: productEven.name,
                                         price: productEven.price,

@@ -12,8 +12,8 @@ class CategoryWidget extends StatelessWidget {
   const CategoryWidget({
     Key? key,
     required this.category,
-    this.width = 50,
-    this.height = 50,
+    this.width = 80,
+    this.height = 80,
   }) : super(key: key);
 
   final Category category;
@@ -33,6 +33,7 @@ class CategoryWidget extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Container(
+                // constraints: BoxConstraints(minHeight: height, minWidth: width),
                 width: width,
                 height: height,
                 decoration: BoxDecoration(

@@ -4,8 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/routes/routers_app.dart';
+import 'package:it_project/src/features/app/cubit/app_cubit.dart';
+import 'package:it_project/src/features/main/cubit/main_cubit.dart';
 import 'package:it_project/src/features/main/home/cubit/home_cubit.dart';
 import 'package:it_project/src/features/search/cubit/search_cubit.dart';
+import 'package:it_project/src/features/shopping_cart/cubit/cart_cubit.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -15,8 +18,11 @@ class App extends StatelessWidget {
     final router = getIt<AppRouter>().router;
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => AppCubit()),
         BlocProvider(create: (context) => SearchCubit()),
         BlocProvider(create: (context) => HomeCubit()),
+        BlocProvider(create: (context) => CartCubit()..loadLocal()),
+        BlocProvider(create: (context) => MainCubit()..reloadMainScreen()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
@@ -38,6 +44,10 @@ class App extends StatelessWidget {
           backgroundColor: AppColors.whiteColor,
           foregroundColor: AppColors.brownColor,
           elevation: 0,
+          titleTextStyle: GoogleFonts.nunito(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
         ),
         bottomAppBarColor: Colors.transparent);
   }

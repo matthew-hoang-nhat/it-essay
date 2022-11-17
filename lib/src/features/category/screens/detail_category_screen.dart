@@ -22,7 +22,8 @@ class DetailCategoryScreen extends StatelessWidget {
           //     hintText: category.name,
           //     textEditingController: TextEditingController()),
           title: Text(category.name),
-          actions: [cartButton(context)],
+          // actions: [cartButton(context)],
+          actions: const [CartButton()],
         ),
         body: SafeArea(
             child: Column(
