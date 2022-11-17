@@ -59,6 +59,8 @@ jobs:
 
           Write-Host "Building $buildCommands $versionString"
 
+          flutter pub run build_runner build
+
           flutter build $buildCommands --release --build-name $versionString --build-number '${{ github.run_number }}'
           Write-Host "name=version::$versionString" >> $GITHUB_OUTPUT
 
