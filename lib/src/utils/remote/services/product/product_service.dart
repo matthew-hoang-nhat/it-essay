@@ -9,11 +9,8 @@ part 'product_service.g.dart';
 abstract class ProductService {
   factory ProductService(Dio dio, {String baseUrl}) = _ProductService;
 
-  // @GET("/products")
-  // Future<SuccessResponse> getProducts();
   @GET("/products")
   Future<SuccessResponse> getProductsPage({
-    @Query("sellerId") String? sellerId,
     @Query("name") String? name,
     @Query("limit") required int limit,
     @Query("currentPage") required int currentPage,

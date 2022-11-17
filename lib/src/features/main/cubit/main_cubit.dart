@@ -8,7 +8,6 @@ import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
 import 'package:it_project/src/features/main/home/home_screen.dart';
-import 'package:it_project/src/features/profile/screens/profile_screen.dart';
 import 'package:it_project/src/widgets/login_popup_widget.dart';
 
 part 'main_state.dart';
@@ -23,8 +22,8 @@ class MainCubit extends Cubit<MainState> implements ParentCubit<MainEnum> {
   MainCubit()
       : super(const MainInitial(tab: 0, barItems: [], tabs: [
           HomeScreen(),
-          ProfileScreen(),
-          ProfileScreen(),
+          HomeScreen(),
+          HomeScreen(),
         ]));
 
   bool get isLogin => getIt<AppCubit>().state.fUserLocal.isLogged;
@@ -66,8 +65,9 @@ class MainCubit extends Cubit<MainState> implements ParentCubit<MainEnum> {
     ]);
     addNewEvent(MainEnum.tabs, [
       const HomeScreen(),
-      isLogin == true ? const ProfileScreen() : const LoginPopup(),
-      isLogin == true ? const ProfileScreen() : const LoginPopup()
+      const LoginPopup(), const LoginPopup(),
+      // isLogin == true ? const ProfileScreen() : const LoginPopup(),
+      // isLogin == true ? const ProfileScreen() : const LoginPopup()
     ]);
     addNewEvent(MainEnum.tab, 0);
   }
