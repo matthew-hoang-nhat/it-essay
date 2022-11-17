@@ -13,8 +13,8 @@ Future<void> _registerRepositoriesModule() async {
   getIt.registerSingleton(CategoryRepositoryImpl(
     categoryService: getIt<CategoryService>(),
   ));
-  getIt.registerSingleton(
-      ProfileRepositoryImpl(profileService: getIt<AuthService>()));
+  // getIt.registerSingleton(
+  //     ProfileRepositoryImpl(profileService: getIt<AuthService>()));
 
   getIt.registerSingleton<AppCubit>(AppCubit());
 }

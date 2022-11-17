@@ -32,7 +32,6 @@ class _SearchBarState extends State<SearchBar> {
   _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
-      print(widget.textEditingController.text);
       if (widget.textEditingController.text.isNotEmpty) {
         bloc.searchContent(widget.textEditingController.text);
       }
