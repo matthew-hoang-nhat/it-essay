@@ -1,11 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/locates/lang_vi.dart';
 import 'package:it_project/src/configs/locates/me_locale_key.dart';
+import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
 
-import 'package:it_project/src/utils/app_shared.dart';
 import 'package:it_project/src/utils/helpers/validate.dart';
 import 'package:it_project/src/utils/repository/auth_repository.dart';
 import 'package:it_project/src/utils/repository/auth_repository_impl.dart';
@@ -16,22 +17,20 @@ enum LoginEnum { isLoading, isClickedLogin, announcementLogin }
 
 class LoginCubit extends Cubit<LoginState> implements ParentCubit<LoginEnum> {
   LoginCubit()
-      : super(const LoginInitial(
+      : super(LoginInitial(
           announcementLogin: '',
           isClickedLogin: false,
           isLoading: false,
+          emailController: TextEditingController(),
+          passwordController: TextEditingController(),
         ));
   final AuthRepository authRepository = getIt<AuthRepositoryImpl>();
-  final AppShared _appShared = getIt<AppShared>();
+  // final AppShared _appShared = getIt<AppShared>();
 
-  String? getTokenValue() => _appShared.getTokenValue();
-  void setTokenValue(String value) => _appShared.setTokenValue(value);
+  // String? getTokenValue() => _appShared.getTokenValue();
+  // void setTokenValue(String value) => _appShared.setTokenValue(value);
 
   final meLocalKey = viVN;
-
-  logOut() {
-    _appShared.clear();
-  }
 
   bool isEmptyFill(String emailText, String passwordText) {
     if (emailText.isEmpty) return true;
@@ -88,9 +87,12 @@ class LoginCubit extends Cubit<LoginState> implements ParentCubit<LoginEnum> {
       return false;
     }
 
-    final accessToken = responseManualLogin.data;
-    if (accessToken != null) {
-      _appShared.setTokenValue(accessToken);
+    final user = responseManualLogin.data;
+    if (user != null) {
+      getIt<AppCubit>().state.fUserLocal.setUser(
+          userId: user.data['_id']!,
+          refreshToken: user.refreshToken,
+          acceptToken: user.accessToken);
     } else {
       addNewEvent(LoginEnum.announcementLogin, 'Something error');
     }
@@ -99,6 +101,7 @@ class LoginCubit extends Cubit<LoginState> implements ParentCubit<LoginEnum> {
 
   @override
   void addNewEvent(LoginEnum key, value) {
+    if (isClosed) return;
     switch (key) {
       case LoginEnum.isLoading:
         emit(NewLoginState.fromOldSettingState(state, isLoading: value));

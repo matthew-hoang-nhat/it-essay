@@ -13,8 +13,6 @@ registerAppSharedAsync() async {
   Hive
     ..init(directory.path)
     ..registerAdapter(ItemCartAdapter());
-
   final Box box = await Hive.openBox(AppShared.keyBox);
-
   getIt.registerSingleton<AppShared>(AppShared(box));
 }

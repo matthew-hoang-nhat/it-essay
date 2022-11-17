@@ -53,7 +53,7 @@ class ComponentFlashSaleWidget extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: 120,
+                height: 200,
                 child: ListView.builder(
                     controller: controller,
                     scrollDirection: Axis.horizontal,

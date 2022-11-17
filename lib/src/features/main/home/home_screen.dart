@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:go_router/go_router.dart';
-import 'package:it_project/main.dart';
 
 import 'package:it_project/src/configs/constants/app_assets.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
@@ -13,9 +11,7 @@ import 'package:it_project/src/features/main/home/widgets/component_category_hor
 import 'package:it_project/src/features/main/home/widgets/component_flash_sale_widget.dart';
 import 'package:it_project/src/features/main/home/widgets/component_product_vertical.dart';
 import 'package:it_project/src/features/search/widgets/concrete_search_bar.dart';
-import 'package:it_project/src/utils/app_shared.dart';
-
-import 'package:it_project/src/widgets/product_general/product_general_model.dart';
+import 'package:it_project/src/widgets/cart_button.dart';
 
 import 'widgets/component_top_seller_widget.dart';
 
@@ -43,11 +39,6 @@ class HomeScreen extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              ElevatedButton(
-                  onPressed: () {
-                    getIt<AppShared>().clear();
-                  },
-                  child: const Text('Log out')),
               poster(),
               meDivider(),
               const ComponentCategoryHorizontalWidget(),
@@ -58,7 +49,6 @@ class HomeScreen extends StatelessWidget {
               meDivider(),
               Container(
                 color: AppColors.whiteGreyColor,
-                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: const ComponentProductVertical(),
               )
             ]),
@@ -99,16 +89,9 @@ class HomeScreen extends StatelessWidget {
                 onTap: () {
                   GoRouter.of(context).push(Paths.searchScreen);
                 },
-                child: concreteSearchBar(context, ''))),
-        InkWell(
-          onTap: () {
-            GoRouter.of(context)
-                .push(Paths.cartScreen, extra: mockProductGeneralModel);
-          },
-          child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Icon(MaterialCommunityIcons.cart)),
-        ),
+                child: concreteSearchBar(context))),
+        const CartButton()
+        // cartButton(context),
       ],
     );
   }
