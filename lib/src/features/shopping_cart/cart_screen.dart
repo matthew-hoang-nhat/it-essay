@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
+import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/shopping_cart/cubit/cart_cubit.dart';
 import 'package:it_project/src/features/shopping_cart/widgets/component_cart_widget.dart';
+import 'package:intl/intl.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -15,92 +18,118 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  final formatCurrency = NumberFormat.simpleCurrency(locale: 'vi_VN');
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<CartCubit>(
-      create: (context) => CartCubit()..loadLocal(),
-      child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: AppColors.primaryColor,
-            title: Text(
-              'Giỏ hàng',
-              style: GoogleFonts.nunito(
-                fontWeight: FontWeight.bold,
+    final bloc = context.read<CartCubit>().loadLocal();
+    return Scaffold(
+        appBar: AppBar(
+          foregroundColor: AppColors.whiteColor,
+          backgroundColor: AppColors.primaryColor,
+          title: Text(
+            'Giỏ hàng',
+            style: GoogleFonts.nunito(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          actions: const [
+            // Center(
+            //     child: Container(
+            //   padding: const EdgeInsets.symmetric(horizontal: 20),
+            //   child: Text(
+            //     'Edit',
+            //     style: GoogleFonts.nunito(
+            //         fontSize: 16, fontWeight: FontWeight.bold),
+            //   ),
+            // ))
+          ],
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    const ComponentCartWidget(),
+                    const SizedBox(height: 20),
+                    const SizedBox(height: 20),
+                    moreInformation(),
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
             ),
-            actions: const [
-              // Center(
-              //     child: Container(
-              //   padding: const EdgeInsets.symmetric(horizontal: 20),
-              //   child: Text(
-              //     'Edit',
-              //     style: GoogleFonts.nunito(
-              //         fontSize: 16, fontWeight: FontWeight.bold),
-              //   ),
-              // ))
-            ],
-          ),
-          body: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      const ComponentCartWidget(),
-                      const SizedBox(height: 20),
-                      const SizedBox(height: 20),
-                      moreInformation(),
-                      const SizedBox(height: 20),
-                    ],
+            Container(
+              height: 70,
+              decoration: BoxDecoration(
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.grey,
+                    offset: Offset(0.0, 1.0), //(x,y)
+                    blurRadius: 2,
                   ),
+                ],
+                color: AppColors.whiteColor,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    BlocBuilder<CartCubit, CartState>(
+                      bloc: bloc,
+                      builder: (context, state) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  formatCurrency
+                                      .format(state.priceAfterSaleOff),
+                                  style: GoogleFonts.nunito(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      color: AppColors.redColor),
+                                ),
+                                const SizedBox(width: 10),
+                                if (state.price != state.priceAfterSaleOff)
+                                  Text(
+                                    formatCurrency.format(state.price),
+                                    style: GoogleFonts.nunito(
+                                      decoration: TextDecoration.lineThrough,
+                                      decorationThickness: 3,
+                                      color: AppColors.greyColor,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                AppColors.blueColor),
+                            padding: MaterialStateProperty.all<EdgeInsets>(
+                                const EdgeInsets.symmetric(horizontal: 20)),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100),
+                            ))),
+                        onPressed: () {
+                          context.push(Paths.payment);
+                        },
+                        child: const Text('Thanh toán')),
+                  ],
                 ),
               ),
-              Container(
-                height: 70,
-                decoration: BoxDecoration(
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0.0, 1.0), //(x,y)
-                      blurRadius: 2,
-                    ),
-                  ],
-                  color: AppColors.whiteColor,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text('830.00'),
-                          Text('819.19 QR'),
-                        ],
-                      ),
-                      ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  AppColors.blueColor),
-                              padding: MaterialStateProperty.all<EdgeInsets>(
-                                  const EdgeInsets.symmetric(horizontal: 20)),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(100),
-                              ))),
-                          onPressed: () {},
-                          child: const Text('Thanh toán')),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          )),
-    );
+            )
+          ],
+        ));
   }
 
   moreInformation() => Padding(
