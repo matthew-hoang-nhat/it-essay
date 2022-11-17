@@ -83,7 +83,7 @@ jobs:
 
       - name: Firebase App Distribution
         run: |
-          $isRelease = '${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/developer' && github.event_name == 'push' }}'
+          $isRelease = '${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev' && github.event_name == 'push' }}'
 
           Write-Host "Changelog for ${{ steps.flutter-build.outputs.version }}"
 
