@@ -34,7 +34,7 @@ jobs:
         run: |
           $buildCommands = 'apk'
 
-          $isRelease = '${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/developer' && github.event_name == 'push' }}'
+          $isRelease = '${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev' && github.event_name == 'push' }}'
 
           $env:GIT_REDIRECT_STDERR = '2>&1'
           $lastRelease = $(git tag | sort -V | tail -1)
@@ -72,7 +72,7 @@ jobs:
         shell: pwsh
         env:
           CI_TOKEN: ${{ secrets.CI_TOKEN }}
-          username: 'mattheuhtn'
+          username: 'matthew-hoang-nhat'
 
       - name: setup firebase cli version v10.9.2
         run: |
