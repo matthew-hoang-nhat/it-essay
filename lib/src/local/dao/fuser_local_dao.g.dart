@@ -1,53 +1,50 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'item_cart.dart';
+part of 'fuser_local_dao.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class ItemCartAdapter extends TypeAdapter<ItemCart> {
+class FUserLocalDaoAdapter extends TypeAdapter<FUserLocalDao> {
   @override
-  final int typeId = 0;
+  final int typeId = 1;
 
   @override
-  ItemCart read(BinaryReader reader) {
+  FUserLocalDao read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return ItemCart(
-      price: fields[7] as int,
-      slug: fields[0] as String,
-      name: fields[1] as String,
-      quantity: fields[2] as int,
-      sellerName: fields[3] as String,
-      discountPercent: fields[4] as int,
-      mainCategory: fields[5] as String,
-      productImage: fields[6] as String,
+    return FUserLocalDao(
+      name: fields[0] as String?,
+      phoneNumber: fields[1] as String?,
+      email: fields[2] as String?,
+      avatar: fields[3] as String?,
+      accessToken: fields[4] as String?,
+      refreshToken: fields[5] as String?,
+      userId: fields[6] as String?,
     );
   }
 
   @override
-  void write(BinaryWriter writer, ItemCart obj) {
+  void write(BinaryWriter writer, FUserLocalDao obj) {
     writer
-      ..writeByte(8)
-      ..writeByte(0)
-      ..write(obj.slug)
-      ..writeByte(1)
-      ..write(obj.name)
-      ..writeByte(2)
-      ..write(obj.quantity)
-      ..writeByte(3)
-      ..write(obj.sellerName)
-      ..writeByte(4)
-      ..write(obj.discountPercent)
-      ..writeByte(5)
-      ..write(obj.mainCategory)
-      ..writeByte(6)
-      ..write(obj.productImage)
       ..writeByte(7)
-      ..write(obj.price);
+      ..writeByte(0)
+      ..write(obj.name)
+      ..writeByte(1)
+      ..write(obj.phoneNumber)
+      ..writeByte(2)
+      ..write(obj.email)
+      ..writeByte(3)
+      ..write(obj.avatar)
+      ..writeByte(4)
+      ..write(obj.accessToken)
+      ..writeByte(5)
+      ..write(obj.refreshToken)
+      ..writeByte(6)
+      ..write(obj.userId);
   }
 
   @override
@@ -56,7 +53,7 @@ class ItemCartAdapter extends TypeAdapter<ItemCart> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ItemCartAdapter &&
+      other is FUserLocalDaoAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

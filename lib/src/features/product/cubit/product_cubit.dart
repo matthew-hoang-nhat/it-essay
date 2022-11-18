@@ -5,7 +5,7 @@ import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/locates/lang_vi.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
 import 'package:it_project/src/features/shopping_cart/mixin/action_cart.dart';
-import 'package:it_project/src/local/dao/item_cart.dart';
+import 'package:it_project/src/local/dao/item_cart_dao.dart';
 import 'package:it_project/src/utils/remote/model/product/product.dart';
 import 'package:it_project/src/utils/repository/product_repository.dart';
 import 'package:it_project/src/utils/repository/product_repository_impl.dart';

@@ -11,10 +11,13 @@ class InfoData {
   String? lastName;
   @JsonKey(name: 'name')
   String? name;
+  @JsonKey(name: 'avatar')
+  String? avatar;
   InfoData({
     this.firstName,
     this.lastName,
     this.name,
+    this.avatar,
   });
 
   factory InfoData.fromJson(Map<String, dynamic> json) =>

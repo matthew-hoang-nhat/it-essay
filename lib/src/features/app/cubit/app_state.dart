@@ -1,32 +1,18 @@
 part of 'app_cubit.dart';
 
 abstract class AppState extends Equatable {
-  const AppState({
-    required this.fCartLocal,
-    required this.fUserLocal,
-  });
-
-  final FCartLocal fCartLocal;
-  final FUserLocal fUserLocal;
+  const AppState();
 
   @override
-  List<Object> get props => [fCartLocal, fUserLocal];
+  List<Object> get props => [];
 }
 
 class AppInitial extends AppState {
-  const AppInitial({
-    required super.fCartLocal,
-    required super.fUserLocal,
-  });
+  const AppInitial();
 }
 
 class NewAppState extends AppState {
-  NewAppState.fromOldSettingState(
-    AppState oldState, {
-    FCartLocal? fCartLocal,
-    FUserLocal? fUserLocal,
-  }) : super(
-          fCartLocal: fCartLocal ?? oldState.fCartLocal,
-          fUserLocal: fUserLocal ?? oldState.fUserLocal,
-        );
+  const NewAppState.fromOldSettingState(
+    AppState oldState,
+  ) : super();
 }

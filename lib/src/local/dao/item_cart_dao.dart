@@ -1,12 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:hive/hive.dart';
 
-part 'item_cart.g.dart';
+part 'item_cart_dao.g.dart';
 
 @HiveType(typeId: 0)
 class ItemCart extends HiveObject {
-
-  
   @HiveField(0)
   final String slug;
 
@@ -40,8 +38,6 @@ class ItemCart extends HiveObject {
     required this.mainCategory,
     required this.productImage,
   });
-
-  
 
   ItemCart copyWith({
     String? slug,
