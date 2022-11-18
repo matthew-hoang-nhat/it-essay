@@ -12,7 +12,10 @@ registerAppSharedAsync() async {
   final Directory directory = await getApplicationDocumentsDirectory();
   Hive
     ..init(directory.path)
-    ..registerAdapter(ItemCartAdapter());
-  final Box box = await Hive.openBox(AppShared.keyBox);
-  getIt.registerSingleton<AppShared>(AppShared(box));
+    ..registerAdapter(ItemCartAdapter())
+    ..registerAdapter(FUserLocalDaoAdapter());
+  final Box box = await Hive.openBox(AppConstants.keyBox);
+
+  getIt.registerSingleton<FCartLocal>(FCartLocal(box));
+  getIt.registerSingleton<FUserLocal>(FUserLocal(box));
 }

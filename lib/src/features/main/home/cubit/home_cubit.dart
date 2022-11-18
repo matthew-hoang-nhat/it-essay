@@ -20,13 +20,19 @@ class HomeCubit extends Cubit<HomeState> implements ParentCubit<HomeEnum> {
   ProductRepository productRepository = getIt<ProductRepositoryImpl>();
   CategoryRepository categoryRepository = getIt<CategoryRepositoryImpl>();
 
-  int _currentPageProducts = 1;
-  int _currentPageFlashSale = 1;
-  int _currentPageCategory = 1;
+  int _currentPageProducts = 0;
+  int _currentPageFlashSale = 0;
+  int _currentPageCategory = 0;
 
   bool isLoadingFlashSales = false;
   bool isLoadingCategories = false;
   bool isLoadingProducts = false;
+
+  initBloc() {
+    loadPage(HomeEnum.products);
+    loadPage(HomeEnum.categories);
+    loadPage(HomeEnum.flashSaleProducts);
+  }
 
   void loadPage(HomeEnum homeEnum) {
     switch (homeEnum) {
@@ -37,7 +43,6 @@ class HomeCubit extends Cubit<HomeState> implements ParentCubit<HomeEnum> {
         break;
       case HomeEnum.categories:
         if (isLoadingCategories) return;
-
         _currentPageCategory++;
         getCategories();
         break;

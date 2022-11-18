@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/main.dart';
@@ -8,7 +9,6 @@ import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/main/cubit/main_cubit.dart';
 import 'package:it_project/src/features/main/home/cubit/home_cubit.dart';
 import 'package:it_project/src/features/search/cubit/search_cubit.dart';
-import 'package:it_project/src/features/shopping_cart/cubit/cart_cubit.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -16,12 +16,15 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final router = getIt<AppRouter>().router;
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ));
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => AppCubit()),
         BlocProvider(create: (context) => SearchCubit()),
-        BlocProvider(create: (context) => HomeCubit()),
-        BlocProvider(create: (context) => CartCubit()..loadLocal()),
+        BlocProvider(create: (context) => HomeCubit()..initBloc()),
+        // BlocProvider(create: (context) => CartCubit()..loadLocal()),
         BlocProvider(create: (context) => MainCubit()..reloadMainScreen()),
       ],
       child: MaterialApp.router(
