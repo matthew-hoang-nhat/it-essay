@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/features/app/fuser_local.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
+import 'package:it_project/src/local/dao/fuser_local_dao.dart';
 import 'package:it_project/src/utils/repository/auth_repository.dart';
 import 'package:it_project/src/utils/repository/auth_repository_impl.dart';
 import 'package:it_project/src/utils/repository/category_repository.dart';
@@ -16,10 +17,13 @@ import 'package:it_project/src/utils/repository/search_repository_impl.dart';
 
 part 'app_state.dart';
 
-enum AppCubitEnum { fCart, fUser }
+enum AppCubitEnum { fUser }
 
 class AppCubit extends Cubit<AppState> implements ParentCubit<AppCubitEnum> {
-  AppCubit() : super(const AppInitial());
+  AppCubit()
+      : super(AppInitial(
+          fUser: getIt<FUserLocal>().fUser!,
+        ));
 
   final AuthRepository authRepo = getIt<AuthRepositoryImpl>();
   final ProfileRepository profileRepo = getIt<ProfileRepositoryImpl>();
@@ -31,12 +35,41 @@ class AppCubit extends Cubit<AppState> implements ParentCubit<AppCubitEnum> {
 
   bool get isLogged => _fUserLocal.isLogged;
 
-  logOut() {
-    _fUserLocal.logOut();
+  bool isLoadingProfileUser = false;
+
+  initCubit() {
+    fetchFUser();
+  }
+
+  Future<void> fetchFUser() async {
+    isLoadingProfileUser = true;
+    final response = await profileRepo.getProfileUser();
+    if (response.isSuccess) {
+      final profileUser = response.data;
+      if (response.isSuccess) {
+        final FUserLocalDao newProfileUser = _fUserLocal.fUser!.copyWith(
+          name: profileUser?.info.firstName,
+          phoneNumber: profileUser?.contact.phone,
+          email: profileUser?.local.email,
+          avatar: profileUser?.info.avatar,
+        );
+        _fUserLocal.fUser = newProfileUser;
+      }
+    }
+    addNewEvent(AppCubitEnum.fUser, null);
+
+    isLoadingProfileUser = false;
   }
 
   @override
   void addNewEvent(AppCubitEnum key, value) {
     if (isClosed) return;
+    switch (key) {
+      case AppCubitEnum.fUser:
+        emit(NewAppState.fromOldSettingState(state,
+            fUser: getIt<FUserLocal>().fUser?.copyWith()));
+        break;
+      default:
+    }
   }
 }

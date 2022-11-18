@@ -15,7 +15,7 @@ registerAppSharedAsync() async {
     ..registerAdapter(ItemCartAdapter())
     ..registerAdapter(FUserLocalDaoAdapter());
   final Box box = await Hive.openBox(AppConstants.keyBox);
-
-  getIt.registerSingleton<FCartLocal>(FCartLocal(box));
-  getIt.registerSingleton<FUserLocal>(FUserLocal(box));
+  getIt.registerSingleton<Box>(box);
+  getIt.registerSingleton<FCartLocal>(FCartLocal());
+  getIt.registerSingleton<FUserLocal>(FUserLocal());
 }
