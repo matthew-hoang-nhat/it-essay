@@ -8,6 +8,7 @@ import 'package:it_project/src/configs/constants/app_assets.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/constants/app_dimensions.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
+import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/product/cubit/product_cubit.dart';
 import 'package:it_project/src/features/product/widgets/component_review_widget.dart';
 import 'package:it_project/src/utils/remote/model/product/product.dart';
@@ -67,7 +68,52 @@ class ProductScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                bottomBar(),
+                Container(
+                  height: 80,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  decoration: BoxDecoration(
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset(0.0, 1.0),
+                        blurRadius: 2,
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(10),
+                    color: AppColors.whiteColor,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                AppColors.redColor),
+                            padding: MaterialStateProperty.all<EdgeInsets>(
+                                const EdgeInsets.symmetric(horizontal: 20)),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ))),
+                        onPressed: () {
+                          bloc.actionCart(ProductCartActionEnum.addItem);
+                          context.read<AppCubit>().reGetItemCartQuantity();
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              MaterialCommunityIcons.cart_plus,
+                              color: AppColors.whiteColor,
+                            ),
+                            const Text('Thêm vào giỏ hàng'),
+                          ],
+                        )),
+                    // ],
+                  ),
+                  // ),
+                )
               ],
             )));
   }
@@ -597,53 +643,6 @@ class ProductScreen extends StatelessWidget {
           //             )))),
         ],
       ),
-    );
-  }
-
-  Widget bottomBar() {
-    return Container(
-      height: 80,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      decoration: BoxDecoration(
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.grey,
-            offset: Offset(0.0, 1.0),
-            blurRadius: 2,
-          ),
-        ],
-        borderRadius: BorderRadius.circular(10),
-        color: AppColors.whiteColor,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
-
-        child: ElevatedButton(
-            style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(AppColors.redColor),
-                padding: MaterialStateProperty.all<EdgeInsets>(
-                    const EdgeInsets.symmetric(horizontal: 20)),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ))),
-            onPressed: () {
-              bloc.actionCart(ProductCartActionEnum.addItem);
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  MaterialCommunityIcons.cart_plus,
-                  color: AppColors.whiteColor,
-                ),
-                const Text('Thêm vào giỏ hàng'),
-              ],
-            )),
-        // ],
-      ),
-      // ),
     );
   }
 
