@@ -1,12 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:hive/hive.dart';
+import 'package:it_project/main.dart';
 import 'package:it_project/src/local/dao/fuser_local_dao.dart';
 import 'package:it_project/src/utils/app_shared.dart';
 
 class FUserLocal {
-  FUserLocal(this._box);
-  final Box<dynamic> _box;
+  final Box<dynamic> _box = getIt<Box>();
   late final _appShared = AppSharedUser(_box);
 
   void logOut() => _appShared.setFUserValue(null);

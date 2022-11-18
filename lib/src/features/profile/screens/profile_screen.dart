@@ -4,10 +4,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
+import 'package:it_project/src/configs/routes/routes_name_app.dart';
+import 'package:it_project/src/features/app/fuser_local.dart';
 import 'package:it_project/src/features/main/cubit/main_cubit.dart';
-import 'package:it_project/src/features/profile/cubit/profile_cubit.dart';
 import 'package:it_project/src/widgets/me_alert_dialog.dart';
 
 import '../../app/cubit/app_cubit.dart';
@@ -19,337 +22,328 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final sizeWidth = MediaQuery.of(context).size.width;
 
-    return BlocProvider(
-      create: (context) => ProfileCubit()..getProfileUser(),
-      child: Scaffold(
-        // appBar: AppBar(
-        //     backgroundColor: AppColors.blueColor,
-        //     title: const Text('Ví của tôi')),
-        backgroundColor: AppColors.whiteGreyColor.withOpacity(0.3),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  Container(
-                    height: 200,
-                    margin: const EdgeInsets.only(bottom: 50),
-                    child: ImageFiltered(
-                      imageFilter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
-                      child: ShaderMask(
-                        shaderCallback: (rect) {
-                          return LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.white,
-                                // Colors.white,
-                                // Colors.white,
-                                AppColors.primaryColor,
-                                AppColors.primaryColor,
-                                // AppColors.primaryColor,
+    return Scaffold(
+      // appBar: AppBar(
+      //     backgroundColor: AppColors.blueColor,
+      //     title: const Text('Ví của tôi')),
+      backgroundColor: AppColors.whiteGreyColor.withOpacity(0.3),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Container(
+                  height: 200,
+                  margin: const EdgeInsets.only(bottom: 50),
+                  child: ImageFiltered(
+                    imageFilter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+                    child: ShaderMask(
+                      shaderCallback: (rect) {
+                        return LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.white,
+                              // Colors.white,
+                              // Colors.white,
+                              AppColors.primaryColor,
+                              AppColors.primaryColor,
+                              // AppColors.primaryColor,
 
-                                Colors.black.withOpacity(0)
-                              ],
-                              stops: const [
-                                0.1,
-                                0.3,
-                                0.7,
-                                0.75
-                              ]).createShader(rect);
-                        },
-                        blendMode: BlendMode.dstIn,
-                        child: Container(
-                          width: double.infinity,
-                          height: 200,
-                          color: AppColors.primaryColor,
-                        ),
+                              Colors.black.withOpacity(0)
+                            ],
+                            stops: const [
+                              0.1,
+                              0.3,
+                              0.7,
+                              0.75
+                            ]).createShader(rect);
+                      },
+                      blendMode: BlendMode.dstIn,
+                      child: Container(
+                        width: double.infinity,
+                        height: 200,
+                        color: AppColors.primaryColor,
                       ),
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    child: InkWell(
-                      onTap: () {
-                        // context.push(Paths.detailProfileScreen);
-                      },
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        child: Container(
-                            height: 150,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 20),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              // color: AppColors.whiteColor,
-                            ),
-                            child: BlocBuilder<ProfileCubit, ProfileState>(
-                              builder: (context, state) {
-                                return Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                        padding: const EdgeInsets.all(2),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            color: AppColors.primaryColor),
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            child: state.profileUser.avatar ==
-                                                    null
-                                                ? Container(
-                                                    color: AppColors.brownColor,
-                                                  )
-                                                : CachedNetworkImage(
-                                                    imageUrl: state
-                                                        .profileUser.avatar!,
-                                                    errorWidget:
-                                                        (context, url, error) =>
-                                                            Container(
-                                                      color:
-                                                          AppColors.whiteColor,
-                                                    ),
-                                                    width: sizeWidth * 1 / 5,
-                                                    height: sizeWidth * 1 / 5,
-                                                    fit: BoxFit.cover,
-                                                  ))),
-                                    const SizedBox(width: 20),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          (state.profileUser.name ?? '')
-                                              .toUpperCase(),
-                                          style: GoogleFonts.nunito(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          state.profileUser.phoneNumber ?? '',
-                                          style: GoogleFonts.nunito(
-                                              color: AppColors.greyColor),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 5),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                              color: AppColors.primaryColor,
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  MaterialCommunityIcons
-                                                      .chess_king,
-                                                  color: AppColors.whiteColor,
-                                                  size: 15,
-                                                ),
-                                                Text(
-                                                  'Thành viên',
-                                                  style: GoogleFonts.nunito(
-                                                      color:
-                                                          AppColors.whiteColor,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 12),
-                                                ),
-                                              ],
-                                            ))
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              },
-                            )),
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  child: InkWell(
+                    onTap: () {
+                      context.push(Paths.detailProfileScreen,
+                          extra: getIt<FUserLocal>().fUser);
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
                       ),
+                      child: Container(
+                          height: 150,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 20),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            // color: AppColors.whiteColor,
+                          ),
+                          child: BlocBuilder<AppCubit, AppState>(
+                            bloc: context.read<AppCubit>(),
+                            builder: (context, state) {
+                              return Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                      padding: const EdgeInsets.all(2),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          color: AppColors.primaryColor),
+                                      child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          child: state.fUser.avatar == null
+                                              ? Container(
+                                                  color: AppColors.brownColor,
+                                                )
+                                              : CachedNetworkImage(
+                                                  imageUrl: state.fUser.avatar!,
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Container(
+                                                    color: AppColors.whiteColor,
+                                                  ),
+                                                  width: sizeWidth * 1 / 5,
+                                                  height: sizeWidth * 1 / 5,
+                                                  fit: BoxFit.cover,
+                                                ))),
+                                  const SizedBox(width: 20),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        (state.fUser.name ?? '').toUpperCase(),
+                                        style: GoogleFonts.nunito(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        state.fUser.phoneNumber ?? '',
+                                        style: GoogleFonts.nunito(
+                                            color: AppColors.greyColor),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 5),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            color: AppColors.primaryColor,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                MaterialCommunityIcons
+                                                    .chess_king,
+                                                color: AppColors.whiteColor,
+                                                size: 15,
+                                              ),
+                                              Text(
+                                                'Thành viên',
+                                                style: GoogleFonts.nunito(
+                                                    color: AppColors.whiteColor,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 12),
+                                              ),
+                                            ],
+                                          ))
+                                    ],
+                                  ),
+                                ],
+                              );
+                            },
+                          )),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Container(
+              color: AppColors.whiteColor,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Column(children: [
+                Row(
+                  children: [
+                    Icon(
+                      MaterialCommunityIcons.billboard,
+                      color: AppColors.primaryColor,
+                    ),
+                    const SizedBox(width: 10),
+                    const Text('Đơn mua'),
+                    const Spacer(),
+                    Text(
+                      'Xem lịch sử mua hàng',
+                      style: GoogleFonts.nunito(
+                          fontSize: 12, color: AppColors.greyColor),
+                    ),
+                    Icon(
+                      MaterialCommunityIcons.chevron_right,
+                      color: AppColors.greyColor,
+                    )
+                  ],
+                ),
+                const Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    iconText(
+                        'Chờ xác nhận', MaterialCommunityIcons.wallet_giftcard),
+                    iconText(
+                        'Chờ lấy hàng', MaterialCommunityIcons.boxing_glove),
+                    iconText('Đang giáo', MaterialCommunityIcons.bus),
+                    iconText('Đánh giá',
+                        MaterialCommunityIcons.star_box_multiple_outline),
+                  ],
+                )
+              ]),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 20),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: AppColors.whiteColor),
+                    child: Column(children: [
+                      ListTile(
+                        leading: Icon(
+                          MaterialCommunityIcons.account,
+                          color: AppColors.primaryColor,
+                        ),
+                        title: const Text('Thông tin cá nhân'),
+                        trailing:
+                            const Icon(MaterialCommunityIcons.chevron_right),
+                      ),
+                      const Divider(),
+                      ListTile(
+                        leading: Icon(
+                          MaterialCommunityIcons.clipboard_text_clock_outline,
+                          color: AppColors.primaryColor,
+                        ),
+                        title: const Text('Đơn hàng'),
+                        trailing: const Icon(
+                          MaterialCommunityIcons.chevron_right,
+                        ),
+                      ),
+                      const Divider(),
+                      ListTile(
+                        leading: Icon(
+                          MaterialCommunityIcons.map,
+                          color: AppColors.primaryColor,
+                        ),
+                        title: const Text('Địa chỉ'),
+                        trailing: const Icon(
+                          MaterialCommunityIcons.chevron_right,
+                        ),
+                      ),
+                    ]),
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 20),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: AppColors.whiteColor),
+                    child: Column(children: [
+                      ListTile(
+                        leading: Icon(
+                          MaterialCommunityIcons.projector_screen_variant,
+                          color: AppColors.primaryColor,
+                        ),
+                        title: const Text('Điều khoản và chính sách'),
+                        trailing:
+                            const Icon(MaterialCommunityIcons.chevron_right),
+                      ),
+                      const Divider(),
+                      ListTile(
+                        leading: Icon(
+                          MaterialCommunityIcons.chat_question,
+                          color: AppColors.primaryColor,
+                        ),
+                        title: const Text('Về chúng tôi'),
+                        trailing: const Icon(
+                          MaterialCommunityIcons.chevron_right,
+                        ),
+                      ),
+                    ]),
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: AppColors.whiteColor),
+                    child: ListTile(
+                      title: Text(
+                        'Đăng xuất',
+                        style: GoogleFonts.nunito(color: AppColors.redColor),
+                      ),
+                      trailing:
+                          const Icon(MaterialCommunityIcons.chevron_right),
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) => MeAlertDialog(
+                                    notificationTitle: RichText(
+                                        text: TextSpan(
+                                            style: GoogleFonts.nunito(
+                                                fontSize: 16,
+                                                color: AppColors.brownColor),
+                                            children: [
+                                          const TextSpan(text: 'Bạn có muốn '),
+                                          TextSpan(
+                                              text: 'đăng xuất?',
+                                              style: GoogleFonts.nunito(
+                                                color: AppColors.redColor,
+                                              )),
+                                        ])),
+                                    redActionTexts: {
+                                      'Có': () {
+                                        getIt<FUserLocal>().logOut();
+
+                                        Navigator.pop(context);
+                                        context
+                                            .read<MainCubit>()
+                                            .reloadMainScreen();
+                                      }
+                                    },
+                                    normalActionTexts: {
+                                      'Không': () {
+                                        Navigator.pop(context);
+                                      }
+                                    }));
+                      },
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-              Container(
-                color: AppColors.whiteColor,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Column(children: [
-                  Row(
-                    children: [
-                      Icon(
-                        MaterialCommunityIcons.billboard,
-                        color: AppColors.primaryColor,
-                      ),
-                      const SizedBox(width: 10),
-                      const Text('Đơn mua'),
-                      const Spacer(),
-                      Text(
-                        'Xem lịch sử mua hàng',
-                        style: GoogleFonts.nunito(
-                            fontSize: 12, color: AppColors.greyColor),
-                      ),
-                      Icon(
-                        MaterialCommunityIcons.chevron_right,
-                        color: AppColors.greyColor,
-                      )
-                    ],
-                  ),
-                  const Divider(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      iconText('Chờ xác nhận',
-                          MaterialCommunityIcons.wallet_giftcard),
-                      iconText(
-                          'Chờ lấy hàng', MaterialCommunityIcons.boxing_glove),
-                      iconText('Đang giáo', MaterialCommunityIcons.bus),
-                      iconText('Đánh giá',
-                          MaterialCommunityIcons.star_box_multiple_outline),
-                    ],
-                  )
-                ]),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 20),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 20),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: AppColors.whiteColor),
-                      child: Column(children: [
-                        ListTile(
-                          leading: Icon(
-                            MaterialCommunityIcons.account,
-                            color: AppColors.primaryColor,
-                          ),
-                          title: const Text('Thông tin cá nhân'),
-                          trailing:
-                              const Icon(MaterialCommunityIcons.chevron_right),
-                        ),
-                        const Divider(),
-                        ListTile(
-                          leading: Icon(
-                            MaterialCommunityIcons.clipboard_text_clock_outline,
-                            color: AppColors.primaryColor,
-                          ),
-                          title: const Text('Đơn hàng'),
-                          trailing: const Icon(
-                            MaterialCommunityIcons.chevron_right,
-                          ),
-                        ),
-                        const Divider(),
-                        ListTile(
-                          leading: Icon(
-                            MaterialCommunityIcons.map,
-                            color: AppColors.primaryColor,
-                          ),
-                          title: const Text('Địa chỉ'),
-                          trailing: const Icon(
-                            MaterialCommunityIcons.chevron_right,
-                          ),
-                        ),
-                      ]),
-                    ),
-                    const SizedBox(height: 20),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 20),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: AppColors.whiteColor),
-                      child: Column(children: [
-                        ListTile(
-                          leading: Icon(
-                            MaterialCommunityIcons.projector_screen_variant,
-                            color: AppColors.primaryColor,
-                          ),
-                          title: const Text('Điều khoản và chính sách'),
-                          trailing:
-                              const Icon(MaterialCommunityIcons.chevron_right),
-                        ),
-                        const Divider(),
-                        ListTile(
-                          leading: Icon(
-                            MaterialCommunityIcons.chat_question,
-                            color: AppColors.primaryColor,
-                          ),
-                          title: const Text('Về chúng tôi'),
-                          trailing: const Icon(
-                            MaterialCommunityIcons.chevron_right,
-                          ),
-                        ),
-                      ]),
-                    ),
-                    const SizedBox(height: 20),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: AppColors.whiteColor),
-                      child: ListTile(
-                        title: Text(
-                          'Đăng xuất',
-                          style: GoogleFonts.nunito(color: AppColors.redColor),
-                        ),
-                        trailing:
-                            const Icon(MaterialCommunityIcons.chevron_right),
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) => MeAlertDialog(
-                                      notificationTitle: RichText(
-                                          text: TextSpan(
-                                              style: GoogleFonts.nunito(
-                                                  fontSize: 16,
-                                                  color: AppColors.brownColor),
-                                              children: [
-                                            const TextSpan(
-                                                text: 'Bạn có muốn '),
-                                            TextSpan(
-                                                text: 'đăng xuất?',
-                                                style: GoogleFonts.nunito(
-                                                  color: AppColors.redColor,
-                                                )),
-                                          ])),
-                                      redActionTexts: {
-                                        'Có': () {
-                                          context.read<AppCubit>().logOut();
-                                          Navigator.pop(context);
-                                          context
-                                              .read<MainCubit>()
-                                              .reloadMainScreen();
-                                        }
-                                      },
-                                      normalActionTexts: {
-                                        'Không': () {
-                                          Navigator.pop(context);
-                                        }
-                                      }));
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).padding.bottom,
-              )
-            ],
-          ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).padding.bottom,
+            )
+          ],
         ),
       ),
     );

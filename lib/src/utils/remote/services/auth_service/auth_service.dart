@@ -4,6 +4,7 @@ import 'package:it_project/src/utils/remote/model/login/login_response.dart';
 import 'package:it_project/src/utils/remote/model/register/otp_register_request.dart';
 import 'package:it_project/src/utils/remote/model/register/register_request.dart';
 import 'package:it_project/src/utils/remote/model/register/register_response.dart';
+import 'package:it_project/src/utils/remote/model/user/update_profile_user_request.dart';
 import 'package:it_project/src/utils/remote/services/state_response/success_response.dart';
 
 import 'package:retrofit/retrofit.dart';
@@ -27,9 +28,9 @@ abstract class AuthService {
   @GET("/profile/user-info-mobile")
   Future<SuccessResponse> getInfo();
 
-  // @POST("/profile/update-profile-mobile")
-  // Future<SuccessResponse> updateProfileUser(
-  //     @Body() UpdateProfileUserRequest updateProfileUserRequest);
+  @POST("/profile/update-profile-mobile")
+  Future<SuccessResponse> updateProfileUser(
+      @Body() UpdateProfileUserRequest updateProfileUserRequest);
 
   // @GET("/api/oauth/google")
   // Future<> googleLogin(@Body() LoginRequest loginRequest);

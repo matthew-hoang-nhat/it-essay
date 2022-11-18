@@ -19,6 +19,12 @@ class FUserLocalDao extends HiveObject {
   final String? refreshToken;
   @HiveField(6)
   final String? userId;
+  @HiveField(7)
+  final String? address;
+  @HiveField(8)
+  final String? birthDay;
+  @HiveField(9)
+  final String? gender;
 
   FUserLocalDao({
     this.name,
@@ -28,6 +34,9 @@ class FUserLocalDao extends HiveObject {
     this.accessToken,
     this.refreshToken,
     this.userId,
+    this.address,
+    this.birthDay,
+    this.gender,
   });
 
   FUserLocalDao copyWith({
@@ -38,6 +47,9 @@ class FUserLocalDao extends HiveObject {
     String? accessToken,
     String? refreshToken,
     String? userId,
+    String? address,
+    String? birthDay,
+    String? gender,
   }) {
     return FUserLocalDao(
       name: name ?? this.name,
@@ -47,6 +59,9 @@ class FUserLocalDao extends HiveObject {
       accessToken: accessToken ?? this.accessToken,
       refreshToken: refreshToken ?? this.refreshToken,
       userId: userId ?? this.userId,
+      address: address ?? this.address,
+      birthDay: birthDay ?? this.birthDay,
+      gender: gender ?? this.gender,
     );
   }
 }

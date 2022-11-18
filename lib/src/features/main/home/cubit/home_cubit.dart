@@ -28,7 +28,7 @@ class HomeCubit extends Cubit<HomeState> implements ParentCubit<HomeEnum> {
   bool isLoadingCategories = false;
   bool isLoadingProducts = false;
 
-  initBloc() {
+  initCubit() {
     loadPage(HomeEnum.products);
     loadPage(HomeEnum.categories);
     loadPage(HomeEnum.flashSaleProducts);
