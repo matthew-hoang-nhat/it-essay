@@ -24,7 +24,6 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => AppCubit()..initCubit()),
         BlocProvider(create: (context) => SearchCubit()),
         BlocProvider(create: (context) => HomeCubit()..initCubit()),
-        // BlocProvider(create: (context) => CartCubit()..loadLocal()),
         BlocProvider(create: (context) => MainCubit()..reloadMainScreen()),
       ],
       child: MaterialApp.router(

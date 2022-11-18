@@ -51,7 +51,7 @@ class CartCubit extends Cubit<CartState>
     addNewEvent(CartEnum.priceAfterSaleOff, priceAfterSaleOff);
   }
 
-  loadLocal() {
+  initCubit() {
     final itemCarts = cart.itemCarts;
     addNewEvent(CartEnum.itemCarts, itemCarts);
     _reloadPrice();

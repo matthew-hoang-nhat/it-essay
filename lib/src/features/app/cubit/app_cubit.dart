@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:it_project/main.dart';
+import 'package:it_project/src/features/app/fcart_local.dart';
 import 'package:it_project/src/features/app/fuser_local.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
 import 'package:it_project/src/local/dao/fuser_local_dao.dart';
@@ -17,12 +18,13 @@ import 'package:it_project/src/utils/repository/search_repository_impl.dart';
 
 part 'app_state.dart';
 
-enum AppCubitEnum { fUser }
+enum AppCubitEnum { fUser, itemCartQuantity }
 
 class AppCubit extends Cubit<AppState> implements ParentCubit<AppCubitEnum> {
   AppCubit()
       : super(AppInitial(
           fUser: getIt<FUserLocal>().fUser!,
+          itemCartQuantity: getIt<FCartLocal>().itemCarts.length,
         ));
 
   final AuthRepository authRepo = getIt<AuthRepositoryImpl>();
@@ -32,6 +34,7 @@ class AppCubit extends Cubit<AppState> implements ParentCubit<AppCubitEnum> {
   final CategoryRepository categoryRepo = getIt<CategoryRepositoryImpl>();
 
   final _fUserLocal = getIt<FUserLocal>();
+  final _fCartLocal = getIt<FCartLocal>();
 
   bool get isLogged => _fUserLocal.isLogged;
 
@@ -39,6 +42,10 @@ class AppCubit extends Cubit<AppState> implements ParentCubit<AppCubitEnum> {
 
   initCubit() {
     fetchFUser();
+  }
+
+  reGetItemCartQuantity() {
+    addNewEvent(AppCubitEnum.itemCartQuantity, _fCartLocal.itemCarts.length);
   }
 
   Future<void> fetchFUser() async {
@@ -68,6 +75,9 @@ class AppCubit extends Cubit<AppState> implements ParentCubit<AppCubitEnum> {
       case AppCubitEnum.fUser:
         emit(NewAppState.fromOldSettingState(state,
             fUser: getIt<FUserLocal>().fUser?.copyWith()));
+        break;
+      case AppCubitEnum.itemCartQuantity:
+        emit(NewAppState.fromOldSettingState(state, itemCartQuantity: value));
         break;
       default:
     }
