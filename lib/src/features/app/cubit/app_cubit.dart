@@ -23,7 +23,7 @@ enum AppCubitEnum { fUser, itemCartQuantity }
 class AppCubit extends Cubit<AppState> implements ParentCubit<AppCubitEnum> {
   AppCubit()
       : super(AppInitial(
-          fUser: getIt<FUserLocal>().fUser!,
+          fUser: getIt<FUserLocal>().fUser,
           itemCartQuantity: getIt<FCartLocal>().itemCarts.length,
         ));
 
@@ -54,13 +54,22 @@ class AppCubit extends Cubit<AppState> implements ParentCubit<AppCubitEnum> {
     if (response.isSuccess) {
       final profileUser = response.data;
       if (response.isSuccess) {
-        final FUserLocalDao newProfileUser = _fUserLocal.fUser!.copyWith(
-          name: profileUser?.info.firstName,
-          phoneNumber: profileUser?.contact.phone,
-          email: profileUser?.local.email,
-          avatar: profileUser?.info.avatar,
-        );
-        _fUserLocal.fUser = newProfileUser;
+        if (_fUserLocal.fUser != null) {
+          final FUserLocalDao newProfileUser = _fUserLocal.fUser!.copyWith(
+            name: profileUser?.info.firstName,
+            phoneNumber: profileUser?.contact.phone,
+            email: profileUser?.local.email,
+            avatar: profileUser?.info.avatar,
+          );
+          _fUserLocal.fUser = newProfileUser;
+        } else {
+          _fUserLocal.fUser = FUserLocalDao(
+            name: profileUser?.info.firstName,
+            phoneNumber: profileUser?.contact.phone,
+            email: profileUser?.local.email,
+            avatar: profileUser?.info.avatar,
+          );
+        }
       }
     }
     addNewEvent(AppCubitEnum.fUser, null);

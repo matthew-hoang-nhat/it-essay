@@ -103,12 +103,13 @@ class ProfileScreen extends StatelessWidget {
                                       child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(100),
-                                          child: state.fUser.avatar == null
+                                          child: state.fUser!.avatar == null
                                               ? Container(
                                                   color: AppColors.brownColor,
                                                 )
                                               : CachedNetworkImage(
-                                                  imageUrl: state.fUser.avatar!,
+                                                  imageUrl:
+                                                      state.fUser!.avatar!,
                                                   errorWidget:
                                                       (context, url, error) =>
                                                           Container(
@@ -124,14 +125,14 @@ class ProfileScreen extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        (state.fUser.name ?? '').toUpperCase(),
+                                        (state.fUser!.name ?? '').toUpperCase(),
                                         style: GoogleFonts.nunito(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       Text(
-                                        state.fUser.phoneNumber ?? '',
+                                        state.fUser!.phoneNumber ?? '',
                                         style: GoogleFonts.nunito(
                                             color: AppColors.greyColor),
                                       ),

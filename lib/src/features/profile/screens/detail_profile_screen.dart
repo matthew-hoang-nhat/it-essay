@@ -95,20 +95,20 @@ class DetailProfileScreen extends StatelessWidget {
                 child: Column(children: [
                   rowContent(
                     'Tên',
-                    state.fUser.name,
+                    state.fUser?.name,
                     () {
                       context.push(Paths.editProfileScreen, extra: {
-                        'content': state.fUser.name,
+                        'content': state.fUser?.name,
                         'type': EditFieldProfileEnum.name,
                       });
                     },
                   ),
                   rowContent(
                     'Số điện thoại',
-                    state.fUser.phoneNumber,
+                    state.fUser?.phoneNumber,
                     () {
                       context.push(Paths.editProfileScreen, extra: {
-                        'content': state.fUser.phoneNumber,
+                        'content': state.fUser?.phoneNumber,
                         'type': EditFieldProfileEnum.phoneNumber,
                       });
                     },
