@@ -6,15 +6,18 @@ abstract class AppState extends Equatable {
     required this.itemCartQuantity,
   });
 
-  final FUserLocalDao fUser;
+  final FUserLocalDao? fUser;
   final int itemCartQuantity;
 
   @override
-  List<Object> get props => [fUser, itemCartQuantity];
+  List<Object?> get props => [fUser, itemCartQuantity];
 }
 
 class AppInitial extends AppState {
-  const AppInitial({required super.fUser, required super.itemCartQuantity});
+  const AppInitial({
+    required super.fUser,
+    required super.itemCartQuantity,
+  });
 }
 
 class NewAppState extends AppState {

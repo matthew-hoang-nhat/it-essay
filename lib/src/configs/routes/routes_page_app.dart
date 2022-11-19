@@ -9,6 +9,7 @@ import 'package:it_project/src/features/main/main_screen.dart';
 import 'package:it_project/src/features/product/screens/product_screen.dart';
 import 'package:it_project/src/features/profile/screens/detail_profile_screen.dart';
 import 'package:it_project/src/features/profile/screens/edit_field_profile_screen.dart';
+import 'package:it_project/src/features/search/screens/detail_search_screen.dart';
 import 'package:it_project/src/features/search/screens/search_screen.dart';
 import 'package:it_project/src/features/shopping_cart/cart_screen.dart';
 import 'package:it_project/src/utils/remote/model/category/category.dart';
@@ -34,13 +35,13 @@ class AppPages {
           // isShowRegister: state.extra as bool?,
           ),
     ),
-    // GoRoute(
-    //   path: Paths.detailSearchScreen,
-    //   builder: (context, state) => DetailSearchScreen(
-    //     textSearch: state.extra as String,
-    //   ),
-    //   // builder: (context, state) => const DetailSearchScreen(),
-    // ),
+    GoRoute(
+      path: Paths.detailSearchScreen,
+      builder: (context, state) => DetailSearchScreen(
+        textSearch: state.extra as String,
+      ),
+      // builder: (context, state) => const DetailSearchScreen(),
+    ),
     GoRoute(
       path: Paths.searchScreen,
       builder: (context, state) => const SearchScreen(),
