@@ -47,15 +47,18 @@ class MainCubit extends Cubit<MainState> implements ParentCubit<MainEnum> {
                       padding: const EdgeInsets.all(1),
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
-                          child: CachedNetworkImage(
-                            imageUrl: getIt<FUserLocal>().fUser!.avatar!,
-                            errorWidget: (context, url, error) => Container(
-                              color: AppColors.primaryColor,
-                            ),
-                            width: 20 + 5,
-                            height: 20 + 5,
-                            fit: BoxFit.cover,
-                          )
+                          child: getIt<FUserLocal>().fUser!.avatar == null
+                              ? Container()
+                              : CachedNetworkImage(
+                                  imageUrl: getIt<FUserLocal>().fUser!.avatar!,
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  width: 20 + 5,
+                                  height: 20 + 5,
+                                  fit: BoxFit.cover,
+                                )
                           // Image.asset(
                           //   AppAssets.fkImHarryPotter1,
                           //   height: 20.0 + 5,

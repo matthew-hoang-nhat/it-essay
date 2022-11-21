@@ -5,16 +5,8 @@ import 'package:it_project/src/features/app/fcart_local.dart';
 import 'package:it_project/src/features/app/fuser_local.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
 import 'package:it_project/src/local/dao/fuser_local_dao.dart';
-import 'package:it_project/src/utils/repository/auth_repository.dart';
-import 'package:it_project/src/utils/repository/auth_repository_impl.dart';
-import 'package:it_project/src/utils/repository/category_repository.dart';
-import 'package:it_project/src/utils/repository/category_repository_impl.dart';
-import 'package:it_project/src/utils/repository/product_repository.dart';
-import 'package:it_project/src/utils/repository/product_repository_impl.dart';
 import 'package:it_project/src/utils/repository/profile_respository.dart';
 import 'package:it_project/src/utils/repository/profile_respository_impl.dart';
-import 'package:it_project/src/utils/repository/search_repository.dart';
-import 'package:it_project/src/utils/repository/search_repository_impl.dart';
 
 part 'app_state.dart';
 
@@ -27,11 +19,7 @@ class AppCubit extends Cubit<AppState> implements ParentCubit<AppCubitEnum> {
           itemCartQuantity: getIt<FCartLocal>().itemCarts.length,
         ));
 
-  final AuthRepository authRepo = getIt<AuthRepositoryImpl>();
-  final ProfileRepository profileRepo = getIt<ProfileRepositoryImpl>();
-  final SearchRepository searchRepo = getIt<SearchRepositoryImpl>();
-  final ProductRepository productRepo = getIt<ProductRepositoryImpl>();
-  final CategoryRepository categoryRepo = getIt<CategoryRepositoryImpl>();
+  final ProfileRepository _profileRepo = getIt<ProfileRepositoryImpl>();
 
   final _fUserLocal = getIt<FUserLocal>();
   final _fCartLocal = getIt<FCartLocal>();
@@ -41,38 +29,47 @@ class AppCubit extends Cubit<AppState> implements ParentCubit<AppCubitEnum> {
   bool isLoadingProfileUser = false;
 
   initCubit() {
-    fetchFUser();
+    if (_fUserLocal.isLogged) {
+      fetchFUser();
+    }
   }
 
   reGetItemCartQuantity() {
     addNewEvent(AppCubitEnum.itemCartQuantity, _fCartLocal.itemCarts.length);
   }
 
+  logOut() {
+    _fUserLocal.logOut();
+    _fCartLocal.itemCarts = [];
+    addNewEvent(AppCubitEnum.itemCartQuantity, 0);
+  }
+
   Future<void> fetchFUser() async {
     isLoadingProfileUser = true;
-    final response = await profileRepo.getProfileUser();
+    final response = await _profileRepo.getProfileUser();
     if (response.isSuccess) {
       final profileUser = response.data;
       if (response.isSuccess) {
+        final FUserLocalDao newProfileUser;
         if (_fUserLocal.fUser != null) {
-          final FUserLocalDao newProfileUser = _fUserLocal.fUser!.copyWith(
+          newProfileUser = _fUserLocal.fUser!.copyWith(
             name: profileUser?.info.firstName,
             phoneNumber: profileUser?.contact.phone,
             email: profileUser?.local.email,
             avatar: profileUser?.info.avatar,
           );
-          _fUserLocal.fUser = newProfileUser;
+          // _fUserLocal.fUser = newProfileUser;
         } else {
-          _fUserLocal.fUser = FUserLocalDao(
+          newProfileUser = FUserLocalDao(
             name: profileUser?.info.firstName,
             phoneNumber: profileUser?.contact.phone,
             email: profileUser?.local.email,
             avatar: profileUser?.info.avatar,
           );
         }
+        addNewEvent(AppCubitEnum.fUser, newProfileUser);
       }
     }
-    addNewEvent(AppCubitEnum.fUser, null);
 
     isLoadingProfileUser = false;
   }
@@ -82,8 +79,8 @@ class AppCubit extends Cubit<AppState> implements ParentCubit<AppCubitEnum> {
     if (isClosed) return;
     switch (key) {
       case AppCubitEnum.fUser:
-        emit(NewAppState.fromOldSettingState(state,
-            fUser: getIt<FUserLocal>().fUser?.copyWith()));
+        _fUserLocal.fUser = value;
+        emit(NewAppState.fromOldSettingState(state, fUser: value));
         break;
       case AppCubitEnum.itemCartQuantity:
         emit(NewAppState.fromOldSettingState(state, itemCartQuantity: value));

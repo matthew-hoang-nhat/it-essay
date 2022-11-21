@@ -6,10 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
-import 'package:it_project/src/features/app/fuser_local.dart';
 import 'package:it_project/src/features/main/cubit/main_cubit.dart';
 import 'package:it_project/src/widgets/me_alert_dialog.dart';
 
@@ -69,29 +67,34 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  child: InkWell(
-                    onTap: () {
-                      context.push(Paths.detailProfileScreen,
-                          extra: getIt<FUserLocal>().fUser);
-                    },
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: Container(
-                          height: 150,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 20),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            // color: AppColors.whiteColor,
+                BlocBuilder<AppCubit, AppState>(
+                  builder: (context, state) {
+                    if (state.fUser == null) {
+                      return Container(
+                        height: 150,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 20),
+                      );
+                    }
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      child: InkWell(
+                        onTap: () {
+                          context.push(Paths.detailProfileScreen);
+                        },
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
                           ),
-                          child: BlocBuilder<AppCubit, AppState>(
-                            bloc: context.read<AppCubit>(),
-                            builder: (context, state) {
-                              return Row(
+                          child: Container(
+                              height: 150,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 20),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                // color: AppColors.whiteColor,
+                              ),
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
@@ -105,7 +108,13 @@ class ProfileScreen extends StatelessWidget {
                                               BorderRadius.circular(100),
                                           child: state.fUser!.avatar == null
                                               ? Container(
-                                                  color: AppColors.brownColor,
+                                                  color: AppColors.whiteColor,
+                                                  width: sizeWidth * 1 / 5,
+                                                  height: sizeWidth * 1 / 5,
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 20,
+                                                      vertical: 20),
                                                 )
                                               : CachedNetworkImage(
                                                   imageUrl:
@@ -132,7 +141,8 @@ class ProfileScreen extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        state.fUser!.phoneNumber ?? '',
+                                        state.fUser!.phoneNumber ??
+                                            'Số điện thoại',
                                         style: GoogleFonts.nunito(
                                             color: AppColors.greyColor),
                                       ),
@@ -165,11 +175,11 @@ class ProfileScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ],
-                              );
-                            },
-                          )),
-                    ),
-                  ),
+                              )),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -322,7 +332,7 @@ class ProfileScreen extends StatelessWidget {
                                         ])),
                                     redActionTexts: {
                                       'Có': () {
-                                        getIt<FUserLocal>().logOut();
+                                        context.read<AppCubit>().logOut();
 
                                         Navigator.pop(context);
                                         context
