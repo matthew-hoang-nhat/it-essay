@@ -24,13 +24,16 @@ class FUserLocalDaoAdapter extends TypeAdapter<FUserLocalDao> {
       accessToken: fields[4] as String?,
       refreshToken: fields[5] as String?,
       userId: fields[6] as String?,
+      address: fields[7] as String?,
+      birthDay: fields[8] as String?,
+      gender: fields[9] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, FUserLocalDao obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -44,7 +47,13 @@ class FUserLocalDaoAdapter extends TypeAdapter<FUserLocalDao> {
       ..writeByte(5)
       ..write(obj.refreshToken)
       ..writeByte(6)
-      ..write(obj.userId);
+      ..write(obj.userId)
+      ..writeByte(7)
+      ..write(obj.address)
+      ..writeByte(8)
+      ..write(obj.birthDay)
+      ..writeByte(9)
+      ..write(obj.gender);
   }
 
   @override

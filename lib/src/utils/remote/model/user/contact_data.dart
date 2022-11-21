@@ -5,10 +5,10 @@ part 'contact_data.g.dart';
 @JsonSerializable()
 class ContactData {
   @JsonKey(name: 'phone')
-  String phone;
+  String? phone;
 
   ContactData({
-    required this.phone,
+    this.phone,
   });
 
   factory ContactData.fromJson(Map<String, dynamic> json) =>

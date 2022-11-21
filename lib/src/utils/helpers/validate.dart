@@ -1,12 +1,12 @@
 class Validate {
   static final RegExp letterRegExp = RegExp('[a-zA-Z]');
 
-  bool isInvalidUserName(String value) {
-    String pattern = r"^[A-Za-z][A-Za-z0-9_]{5,11}$";
-    RegExp regExp = RegExp(pattern);
-    final invalidUserName = !regExp.hasMatch(value);
-    return invalidUserName;
-  }
+  // bool isInvalidUserName(String value) {
+  //   String pattern = r"^[A-Za-z][A-Za-z0-9_]{5,11}$";
+  //   RegExp regExp = RegExp(pattern);
+  //   final invalidUserName = !regExp.hasMatch(value);
+  //   return invalidUserName;
+  // }
 
   bool isInvalidPassword(String value) {
     String pattern =
@@ -22,7 +22,8 @@ class Validate {
   }
 
   bool isInvalidName(String value) {
-    RegExp regExp = RegExp(r'^[a-zA-Z]{1,30}$');
+    RegExp regExp = RegExp(
+        r'^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\W|_]+$');
     return !regExp.hasMatch(value);
   }
 

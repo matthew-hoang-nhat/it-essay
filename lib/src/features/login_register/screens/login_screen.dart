@@ -10,6 +10,7 @@ import 'package:it_project/src/configs/constants/app_dimensions.dart';
 import 'package:it_project/src/configs/locates/lang_vi.dart';
 import 'package:it_project/src/configs/locates/me_locale_key.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
+import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/login_register/cubit/login_cubit.dart';
 
 import 'package:it_project/src/features/login_register/screens/register_screen.dart';
@@ -144,6 +145,7 @@ class LoginScreen extends StatelessWidget {
                                   )
                                   .then((value) {
                                 if (value == true) {
+                                  context.read<AppCubit>().fetchFUser();
                                   context.go(Paths.mainScreen);
                                 }
                                 context.read<MainCubit>().reloadMainScreen();

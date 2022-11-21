@@ -17,7 +17,7 @@ class EditProfileCubit extends Cubit<EditProfileState>
   EditProfileCubit() : super(const EditProfileInitial(isLoading: false));
   final ProfileRepository profileRepository = getIt<ProfileRepositoryImpl>();
 
-  final fUserLocal = getIt<FUserLocal>();
+  final _fUserLocal = getIt<FUserLocal>();
 
   Future<bool> updateProfile({
     String? avatar,
@@ -41,7 +41,7 @@ class EditProfileCubit extends Cubit<EditProfileState>
     ));
 
     if (response.isSuccess) {
-      final FUserLocalDao newProfileUser = fUserLocal.fUser!.copyWith(
+      final FUserLocalDao newProfileUser = _fUserLocal.fUser!.copyWith(
         address: address ?? oldProfileUser.address,
         avatar: avatar ?? oldProfileUser.avatar,
         birthDay: birthDay ?? oldProfileUser.birthDay,
@@ -49,7 +49,7 @@ class EditProfileCubit extends Cubit<EditProfileState>
         name: name ?? oldProfileUser.name,
         phoneNumber: phone ?? oldProfileUser.phoneNumber,
       );
-      fUserLocal.fUser = newProfileUser;
+      _fUserLocal.fUser = newProfileUser;
       return true;
     }
 
