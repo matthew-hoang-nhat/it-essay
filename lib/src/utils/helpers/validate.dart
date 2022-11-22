@@ -16,6 +16,16 @@ class Validate {
     return invalidPassword;
   }
 
+  bool isInvalidNumber(String value) {
+    RegExp regExp = RegExp(r'^[0-9]{10}$');
+    return !regExp.hasMatch(value);
+  }
+
+  bool isInvalidName(String value) {
+    RegExp regExp = RegExp(r'^[a-zA-Z]{1,30}$');
+    return !regExp.hasMatch(value);
+  }
+
   bool isInvalidEmail(String? value) {
     String pattern =
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
