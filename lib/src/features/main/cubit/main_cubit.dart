@@ -5,9 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
-import 'package:it_project/src/features/app/cubit/app_cubit.dart';
+import 'package:it_project/src/features/app/fuser_local.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
 import 'package:it_project/src/features/main/home/home_screen.dart';
+import 'package:it_project/src/features/profile/screens/profile_screen.dart';
 import 'package:it_project/src/widgets/login_popup_widget.dart';
 
 part 'main_state.dart';
@@ -26,7 +27,7 @@ class MainCubit extends Cubit<MainState> implements ParentCubit<MainEnum> {
           HomeScreen(),
         ]));
 
-  bool get isLogin => getIt<AppCubit>().state.fUserLocal.isLogged;
+  bool get isLogin => getIt<FUserLocal>().isLogged;
 
   reloadMainScreen() {
     addNewEvent(MainEnum.barItems, [
@@ -47,8 +48,10 @@ class MainCubit extends Cubit<MainState> implements ParentCubit<MainEnum> {
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: CachedNetworkImage(
-                            imageUrl:
-                                'https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2022-08/220804-elon-musk-mjf-1318-f4a5bf.jpg',
+                            imageUrl: getIt<FUserLocal>().fUser!.avatar!,
+                            errorWidget: (context, url, error) => Container(
+                              color: AppColors.primaryColor,
+                            ),
                             width: 20 + 5,
                             height: 20 + 5,
                             fit: BoxFit.cover,
@@ -65,9 +68,8 @@ class MainCubit extends Cubit<MainState> implements ParentCubit<MainEnum> {
     ]);
     addNewEvent(MainEnum.tabs, [
       const HomeScreen(),
-      const LoginPopup(), const LoginPopup(),
-      // isLogin == true ? const ProfileScreen() : const LoginPopup(),
-      // isLogin == true ? const ProfileScreen() : const LoginPopup()
+      isLogin == true ? const ProfileScreen() : const LoginPopup(),
+      isLogin == true ? const ProfileScreen() : const LoginPopup()
     ]);
     addNewEvent(MainEnum.tab, 0);
   }

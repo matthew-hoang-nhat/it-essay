@@ -5,7 +5,7 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:it_project/src/features/shopping_cart/cubit/cart_cubit.dart';
-import 'package:it_project/src/local/dao/item_cart.dart';
+import 'package:it_project/src/local/dao/item_cart_dao.dart';
 import 'package:it_project/src/widgets/icon_heart.dart';
 
 import '../../../configs/constants/app_colors.dart';

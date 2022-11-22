@@ -1,32 +1,26 @@
 import 'dart:async';
 
 import 'package:hive/hive.dart';
-import 'package:it_project/src/local/dao/item_cart.dart';
+import 'package:it_project/src/configs/constants/app_constants.dart';
+import 'package:it_project/src/local/dao/fuser_local_dao.dart';
+import 'package:it_project/src/local/dao/item_cart_dao.dart';
 
-class AppShared {
+class AppSharedUser {
+  AppSharedUser(this._box);
   final Box<dynamic> _box;
-  AppShared(this._box);
-  static const String keyName = 'BookCommerce';
-  static const String keyBox = '${keyName}_shared';
-  final String keyTokenValue = "${keyName}_keyTokenValue";
-  final String keyRefreshTokenValue = "${keyName}_keyRefreshTokenValue";
-  final String keyUserIdValue = "${keyName}_keyUserIdValue";
-  final String keyCartValue = "${keyName}_keyCartValue";
+  final String _keyFUserValue = "${AppConstants.keyBox}_keyFUserValue";
 
-  Future<void> setTokenValue(String? value) => _box.put(keyTokenValue, value);
-  String? getTokenValue() => _box.get(keyTokenValue);
+  Future<void> setFUserValue(FUserLocalDao? value) =>
+      _box.put(_keyFUserValue, value);
+  FUserLocalDao? getFUserValue() => _box.get(_keyFUserValue);
+}
 
-  Future<void> setRefreshTokenValue(String? value) =>
-      _box.put(keyRefreshTokenValue, value);
-  String? getRefreshTokenValue() => _box.get(keyRefreshTokenValue);
+class AppSharedCart {
+  final Box<dynamic> _box;
+  AppSharedCart(this._box);
+  final String _keyCartValue = "${AppConstants.keyName}_keyCartValue";
 
-  Future<void> setUserIdValue(String? value) => _box.put(keyUserIdValue, value);
-  String? getUserIdValue() => _box.get(keyUserIdValue);
-
-  List<dynamic>? getItemCartsValue() => _box.get(keyCartValue);
-
+  List<dynamic>? getItemCartsValue() => _box.get(_keyCartValue);
   Future<void>? setItemCartsValue(List<ItemCart> value) =>
-      _box.put(keyCartValue, value);
-
-  Future<int> clear() => _box.clear();
+      _box.put(_keyCartValue, value);
 }
