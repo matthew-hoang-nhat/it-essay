@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/locates/lang_vi.dart';
 import 'package:it_project/src/configs/locates/me_locale_key.dart';
-import 'package:it_project/src/features/app/cubit/app_cubit.dart';
+import 'package:it_project/src/features/app/fuser_local.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
+import 'package:it_project/src/local/dao/fuser_local_dao.dart';
 
 import 'package:it_project/src/utils/helpers/validate.dart';
 import 'package:it_project/src/utils/repository/auth_repository.dart';
@@ -89,10 +90,14 @@ class LoginCubit extends Cubit<LoginState> implements ParentCubit<LoginEnum> {
 
     final user = responseManualLogin.data;
     if (user != null) {
-      getIt<AppCubit>().state.fUserLocal.setUser(
-          userId: user.data['_id']!,
-          refreshToken: user.refreshToken,
-          acceptToken: user.accessToken);
+      getIt<FUserLocal>().fUser = FUserLocalDao(
+        phoneNumber: '',
+        name: user.data['firstName'],
+        avatar: user.data['profilePicture'],
+        userId: user.data['_id']!,
+        refreshToken: user.refreshToken,
+        accessToken: user.accessToken,
+      );
     } else {
       addNewEvent(LoginEnum.announcementLogin, 'Something error');
     }

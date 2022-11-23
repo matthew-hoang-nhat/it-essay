@@ -9,9 +9,8 @@ class ComponentCartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<CartCubit>();
     return BlocBuilder<CartCubit, CartState>(
-      bloc: bloc,
+      bloc: context.read<CartCubit>(),
       builder: (context, state) {
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -21,10 +20,10 @@ class ComponentCartWidget extends StatelessWidget {
             color: AppColors.whiteColor,
           ),
           child: Column(
-              children: bloc.state.itemCarts
+              children: state.itemCarts
                   .map(
-                    (e) => ItemCartWidget(
-                      product: e,
+                    (product) => ItemCartWidget(
+                      product: product,
                     ),
                   )
                   .toList()),

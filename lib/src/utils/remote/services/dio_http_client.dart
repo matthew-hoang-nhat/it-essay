@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dio/native_imp.dart';
 import 'package:it_project/main.dart';
-import 'package:it_project/src/utils/app_shared.dart';
+import 'package:it_project/src/features/app/fuser_local.dart';
 
 const String keyAccept = 'Accept';
 const String keyAuth = 'Authorization';
@@ -21,7 +21,7 @@ class DioHttpClient extends DioForNative {
     if (options.headers.containsKey(keyAuth)) {
       options.headers.remove(keyAuth);
     }
-    String? tokenValue = getIt<AppShared>().getTokenValue();
+    String? tokenValue = getIt<FUserLocal>().acceptToken;
 
     if (tokenValue != null) {
       options.headers[keyAuth] = 'Bearer $tokenValue';

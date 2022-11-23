@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -29,29 +30,24 @@ class FlashSaleWidget extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(5),
               child: Container(
-                width: size,
-                height: size,
-                // constraints:
-                //     const BoxConstraints(minHeight: 200, minWidth: 200),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppDimensions.dp5),
-                  color: AppColors.whiteBrownColor,
-                ),
-                alignment: Alignment.topCenter,
-                child:
-                    // CachedNetworkImage(
-                    //   imageUrl: product.productImages.first.fileLink,
-                    //   width: size,
-                    //   height: size,
-                    //   fit: BoxFit.cover,
-                    // )
-                    Image.asset(
-                  AppAssets.fkImHarryPotter3,
                   width: size,
                   height: size,
-                  fit: BoxFit.cover,
-                ),
-              ),
+                  // constraints:
+                  //     const BoxConstraints(minHeight: 200, minWidth: 200),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(AppDimensions.dp5),
+                    color: AppColors.whiteBrownColor,
+                  ),
+                  alignment: Alignment.topCenter,
+                  child: CachedNetworkImage(
+                    imageUrl: product.productImages.first.fileLink,
+                    width: size,
+                    height: size,
+                    fit: BoxFit.cover,
+                    errorWidget: ((context, url, error) => Image.asset(
+                          AppAssets.fkImHarryPotter3,
+                        )),
+                  )),
             ),
             const SizedBox(height: 5),
             Text(

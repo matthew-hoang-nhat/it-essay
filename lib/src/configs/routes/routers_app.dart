@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
-import 'package:it_project/src/utils/app_shared.dart';
+import 'package:it_project/src/features/app/fuser_local.dart';
 import 'routes_page_app.dart';
 
 class AppRouter {
@@ -19,7 +19,7 @@ class AppRouter {
     final isNeedAuthenticatePage = AppPages.needAuthenticatedPages.contains(
       state.location,
     );
-    final isSigned = getIt<AppShared>().getTokenValue() != null;
+    final isSigned = getIt<FUserLocal>().isLogged;
     if ((isSigned == false) & (isNeedAuthenticatePage == true)) {
       return Paths.loginScreen;
     }

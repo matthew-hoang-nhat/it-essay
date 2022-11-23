@@ -1,9 +1,9 @@
 import 'package:it_project/main.dart';
-import 'package:it_project/src/features/app/cubit/app_cubit.dart';
-import 'package:it_project/src/local/dao/item_cart.dart';
+import 'package:it_project/src/features/app/fcart_local.dart';
+import 'package:it_project/src/local/dao/item_cart_dao.dart';
 
 mixin ActionCart {
-  final cart = getIt<AppCubit>().state.fCartLocal;
+  final cart = getIt<FCartLocal>();
   void updateItemCartMixin(List<ItemCart> itemCarts) {
     cart.itemCarts = itemCarts;
   }
