@@ -62,19 +62,39 @@ class DetailProfileScreen extends StatelessWidget {
     );
   }
 
+  bool isAllValidated(lastName, firstName, phoneNumber) {
+    final isInvalidated =
+        (validateFunc(lastName, type: EditFieldProfileEnum.lastName) != null ||
+            validateFunc(firstName, type: EditFieldProfileEnum.firstName) !=
+                null ||
+            validateFunc(phoneNumber, type: EditFieldProfileEnum.phoneNumber) !=
+                null);
+    return !isInvalidated;
+  }
+
   Widget updateProfileButton() {
     return BlocBuilder<DetailProfileCubit, DetailProfileState>(
       builder: (context, state) {
+        final isValidated =
+            isAllValidated(state.lastName, state.firstName, state.phoneNumber);
         return TextButton(
-            onPressed: () async {
-              await context
-                  .read<DetailProfileCubit>()
-                  .updateProfileClick()
-                  .then((value) {
-                context.read<AppCubit>().fetchFUser();
-                context.pop();
-              });
-            },
+            style: TextButton.styleFrom(
+              foregroundColor:
+                  isValidated ? AppColors.primaryColor : AppColors.greyColor,
+            ),
+            onPressed: isValidated
+                ? () async {
+                    if (isValidated) {
+                      await context
+                          .read<DetailProfileCubit>()
+                          .updateProfileClick()
+                          .then((value) {
+                        context.read<AppCubit>().fetchFUser();
+                        context.pop();
+                      });
+                    }
+                  }
+                : null,
             child: const Text('Lưu thay đổi'));
       },
     );
