@@ -13,12 +13,14 @@ class MeTextField extends StatefulWidget {
       required this.functionValidation,
       this.isCheckEmpty = false,
       this.text,
-      this.callFuncOnChange})
+      this.callFuncOnChange,
+      this.isEnabled = true})
       : super(key: key);
   final String? hintText;
   final bool isPassword;
   final Function()? callFuncOnChange;
   final String? text;
+  final bool? isEnabled;
   final TextEditingController textEditingController;
   final bool isCheckEmpty;
   final String? Function(String) functionValidation;
@@ -56,6 +58,7 @@ class _MeTextFieldState extends State<MeTextField> {
         TextField(
           controller: widget.textEditingController,
           obscureText: isHide,
+          enabled: widget.isEnabled,
           decoration: InputDecoration(
             alignLabelWithHint: true,
             // border: OutlineInputBorder(

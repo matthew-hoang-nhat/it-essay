@@ -16,5 +16,8 @@ Future<void> _registerRepositoriesModule() async {
   getIt.registerSingleton(
       ProfileRepositoryImpl(profileService: getIt<AuthService>()));
 
+  getIt.registerSingleton(
+      UpFileRepositoryImpl(upFileService: getIt<UpFileService>()));
+
   // getIt.registerSingleton<AppCubit>(AppCubit());
 }

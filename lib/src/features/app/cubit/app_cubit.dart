@@ -41,6 +41,7 @@ class AppCubit extends Cubit<AppState> implements ParentCubit<AppCubitEnum> {
   logOut() {
     _fUserLocal.logOut();
     _fCartLocal.itemCarts = [];
+
     addNewEvent(AppCubitEnum.itemCartQuantity, 0);
   }
 
@@ -53,20 +54,24 @@ class AppCubit extends Cubit<AppState> implements ParentCubit<AppCubitEnum> {
         final FUserLocalDao newProfileUser;
         if (_fUserLocal.fUser != null) {
           newProfileUser = _fUserLocal.fUser!.copyWith(
-            name: profileUser?.info.firstName,
-            phoneNumber: profileUser?.contact.phone,
-            email: profileUser?.local.email,
-            avatar: profileUser?.info.avatar,
-          );
-          // _fUserLocal.fUser = newProfileUser;
+              firstName: profileUser?.info.firstName,
+              lastName: profileUser?.info.lastName,
+              phoneNumber: profileUser?.contact.phone,
+              email: profileUser?.local.email,
+              avatar: profileUser?.info.avatar,
+              gender: profileUser?.info.gender,
+              birthDay: profileUser?.info.birthDay);
         } else {
           newProfileUser = FUserLocalDao(
-            name: profileUser?.info.firstName,
-            phoneNumber: profileUser?.contact.phone,
-            email: profileUser?.local.email,
-            avatar: profileUser?.info.avatar,
-          );
+              firstName: profileUser?.info.firstName,
+              lastName: profileUser?.info.lastName,
+              phoneNumber: profileUser?.contact.phone,
+              email: profileUser?.local.email,
+              avatar: profileUser?.info.avatar,
+              birthDay: profileUser?.info.birthDay,
+              gender: profileUser?.info.gender ?? 'male');
         }
+        _fUserLocal.fUser = newProfileUser;
         addNewEvent(AppCubitEnum.fUser, newProfileUser);
       }
     }

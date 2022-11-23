@@ -30,7 +30,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
   Future<FResult<String>> updateProfileUser(
       {required UpdateProfileUserData newProfileUserData}) async {
     try {
-      await profileService.updateProfileUser(
+      final response = await profileService.updateProfileUser(
           UpdateProfileUserRequest(profile: newProfileUserData));
       return FResult.success('Thành công');
     } catch (ex) {

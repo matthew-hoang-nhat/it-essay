@@ -6,7 +6,7 @@ part 'fuser_local_dao.g.dart';
 @HiveType(typeId: 1)
 class FUserLocalDao extends HiveObject {
   @HiveField(0)
-  final String? name;
+  final String? firstName;
   @HiveField(1)
   final String? phoneNumber;
   @HiveField(2)
@@ -25,9 +25,12 @@ class FUserLocalDao extends HiveObject {
   final String? birthDay;
   @HiveField(9)
   final String? gender;
+  @HiveField(10)
+  final String? lastName;
 
   FUserLocalDao({
-    this.name,
+    this.firstName,
+    this.lastName,
     this.phoneNumber,
     this.email,
     this.avatar,
@@ -36,11 +39,12 @@ class FUserLocalDao extends HiveObject {
     this.userId,
     this.address,
     this.birthDay,
-    this.gender,
+    required this.gender,
   });
 
   FUserLocalDao copyWith({
-    String? name,
+    String? firstName,
+    String? lastName,
     String? phoneNumber,
     String? email,
     String? avatar,
@@ -52,7 +56,8 @@ class FUserLocalDao extends HiveObject {
     String? gender,
   }) {
     return FUserLocalDao(
-      name: name ?? this.name,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       email: email ?? this.email,
       avatar: avatar ?? this.avatar,
