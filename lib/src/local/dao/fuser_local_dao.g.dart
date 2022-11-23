@@ -17,7 +17,8 @@ class FUserLocalDaoAdapter extends TypeAdapter<FUserLocalDao> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return FUserLocalDao(
-      name: fields[0] as String?,
+      firstName: fields[0] as String?,
+      lastName: fields[10] as String?,
       phoneNumber: fields[1] as String?,
       email: fields[2] as String?,
       avatar: fields[3] as String?,
@@ -33,9 +34,9 @@ class FUserLocalDaoAdapter extends TypeAdapter<FUserLocalDao> {
   @override
   void write(BinaryWriter writer, FUserLocalDao obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
-      ..write(obj.name)
+      ..write(obj.firstName)
       ..writeByte(1)
       ..write(obj.phoneNumber)
       ..writeByte(2)
@@ -53,7 +54,9 @@ class FUserLocalDaoAdapter extends TypeAdapter<FUserLocalDao> {
       ..writeByte(8)
       ..write(obj.birthDay)
       ..writeByte(9)
-      ..write(obj.gender);
+      ..write(obj.gender)
+      ..writeByte(10)
+      ..write(obj.lastName);
   }
 
   @override

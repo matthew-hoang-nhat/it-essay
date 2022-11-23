@@ -29,8 +29,8 @@ class DioHttpClient extends DioForNative {
 
     // options.headers[keyAccept] = 'application/json';
 
-    options.connectTimeout = 10000;
-    options.receiveTimeout = 10000;
+    options.connectTimeout = 20000;
+    options.receiveTimeout = 20000;
 
     // options.extra['withCredentials'] = true;
 

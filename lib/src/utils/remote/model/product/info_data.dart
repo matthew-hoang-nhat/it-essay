@@ -11,14 +11,19 @@ class InfoData {
   String? lastName;
   @JsonKey(name: 'name')
   String? name;
+  @JsonKey(name: 'birthDay')
+  String? birthDay;
+  @JsonKey(name: 'gender')
+  String? gender;
   @JsonKey(name: 'avatar')
   String? avatar;
-  InfoData({
-    this.firstName,
-    this.lastName,
-    this.name,
-    this.avatar,
-  });
+  InfoData(
+      {this.firstName,
+      this.lastName,
+      this.name,
+      this.avatar,
+      this.gender,
+      this.birthDay});
 
   factory InfoData.fromJson(Map<String, dynamic> json) =>
       _$InfoDataFromJson(json);
