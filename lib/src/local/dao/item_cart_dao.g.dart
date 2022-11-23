@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'item_cart.dart';
+part of 'item_cart_dao.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator

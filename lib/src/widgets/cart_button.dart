@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/app/cubit/app_cubit.dart';
@@ -29,6 +28,8 @@ class CartButton extends StatelessWidget {
           ),
           BlocBuilder<AppCubit, AppState>(
               bloc: context.read<AppCubit>(),
+              buildWhen: (previous, current) =>
+                  previous.itemCartQuantity != current.itemCartQuantity,
               builder: (context, state) {
                 return Container(
                     width: 20,
@@ -39,12 +40,7 @@ class CartButton extends StatelessWidget {
                         color: AppColors.whiteColor),
                     alignment: Alignment.center,
                     child: Text(
-                      getIt<AppCubit>()
-                          .state
-                          .fCartLocal
-                          .itemCarts
-                          .length
-                          .toString(),
+                      state.itemCartQuantity.toString(),
                       style: GoogleFonts.nunito(
                           fontSize: 16, color: AppColors.primaryColor),
                     ));

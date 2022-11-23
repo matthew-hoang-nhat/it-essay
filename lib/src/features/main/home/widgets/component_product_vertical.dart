@@ -14,7 +14,7 @@ class ComponentProductVertical extends StatelessWidget {
     final bloc = context.read<HomeCubit>();
 
     return BlocBuilder<HomeCubit, HomeState>(
-        bloc: bloc..getProducts(),
+        bloc: bloc,
         builder: (context, state) {
           if (bloc.state.products.isEmpty) return Container();
           final products = bloc.state.products;

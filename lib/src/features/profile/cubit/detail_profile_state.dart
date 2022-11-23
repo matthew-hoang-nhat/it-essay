@@ -5,7 +5,7 @@
 //     required this.profileUser,
 //   });
 
-//   final ProfileUser? profileUser;
+//   final FUserLocalDao? profileUser;
 
 //   @override
 //   List<Object?> get props => [
@@ -22,7 +22,7 @@
 // class NewDetailProfileState extends DetailProfileState {
 //   NewDetailProfileState.fromOldSettingState(
 //     DetailProfileState oldState, {
-//     ProfileUser? profileUser,
+//     FUserLocalDao? profileUser,
 //   }) : super(
 //           profileUser: profileUser ?? oldState.profileUser,
 //         );

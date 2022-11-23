@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
@@ -130,33 +131,35 @@ class _ProductWidgetState extends State<ProductWidget> {
 
   Widget imageProduct() {
     return SizedBox(
-        height: 180,
-        width: double.infinity,
-        child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(5),
-              topRight: Radius.circular(5),
-            ),
-            child:
-                //       widget.product.productImage == null
-                //           ? Image.asset(
-                //               AppAssets.fkImHarryPotter1,
-                //               width: double.infinity,
-                //               height: 180,
-                //               fit: BoxFit.cover,
-                //             )
-                //           : Image.network(
-                //               widget.product.productImage!,
-                //               height: 180,
-                //               width: double.infinity,
-                //               fit: BoxFit.cover,
-                //             )),
-                // );
-                Image.asset(
-              AppAssets.fkImHarryPotter1,
-              width: double.infinity,
-              height: 180,
-              fit: BoxFit.cover,
-            )));
+      height: 180,
+      width: double.infinity,
+      child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(5),
+            topRight: Radius.circular(5),
+          ),
+          child: widget.product.productImage == null
+              ? Image.asset(
+                  AppAssets.fkImHarryPotter1,
+                  width: double.infinity,
+                  height: 180,
+                  fit: BoxFit.cover,
+                )
+              : CachedNetworkImage(
+                  imageUrl: widget.product.productImage!,
+                  height: 180,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorWidget: ((context, url, error) => Image.asset(
+                        AppAssets.fkImHarryPotter3,
+                      )),
+                )),
+    );
+    //     Image.asset(
+    //   AppAssets.fkImHarryPotter1,
+    //   width: double.infinity,
+    //   height: 180,
+    //   fit: BoxFit.cover,
+    // )));
   }
 }

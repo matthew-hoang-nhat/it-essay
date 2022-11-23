@@ -4,8 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/shopping_cart/cubit/cart_cubit.dart';
-import 'package:it_project/src/local/dao/item_cart.dart';
+import 'package:it_project/src/local/dao/item_cart_dao.dart';
 import 'package:it_project/src/widgets/icon_heart.dart';
 
 import '../../../configs/constants/app_colors.dart';
@@ -19,7 +20,6 @@ class ItemCartWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final formatCurrency = NumberFormat.simpleCurrency(locale: 'vi_VN');
     bool isSaleOffProduct = product.discountPercent > 0;
-    final bloc = context.read<CartCubit>();
 
     return Column(
       children: [
@@ -30,14 +30,7 @@ class ItemCartWidget extends StatelessWidget {
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               ClipRRect(
                   borderRadius: BorderRadius.circular(AppDimensions.dp5),
-                  child:
-                      // Image.asset(
-                      //   AppAssets.fkImHarryPotter1,
-                      //   width: 100,
-                      //   height: 100,
-                      //   fit: BoxFit.cover,
-                      // ),
-                      CachedNetworkImage(
+                  child: CachedNetworkImage(
                     imageUrl: product.productImage,
                     width: 100,
                     height: 100,
@@ -96,13 +89,14 @@ class ItemCartWidget extends StatelessWidget {
                         children: [
                           InkWell(
                             onTap: () {
-                              bloc.actionCart(CartActionEnum.dec,
+                              context.read<CartCubit>().actionCart(
+                                  CartActionEnum.dec,
                                   productSlug: product.slug);
 
                               if (product.quantity == 1) {
                                 showDialog(
                                   context: context,
-                                  builder: (context) => AlertDialog(
+                                  builder: (dialogContext) => AlertDialog(
                                       title: RichText(
                                           text: TextSpan(
                                               style: GoogleFonts.nunito(
@@ -141,10 +135,16 @@ class ItemCartWidget extends StatelessWidget {
                                                     BorderRadius.circular(100),
                                               ))),
                                           onPressed: () {
-                                            bloc.actionCart(
-                                                CartActionEnum.removeItem,
-                                                productSlug: product.slug);
-                                            Navigator.pop(context);
+                                            context
+                                                .read<CartCubit>()
+                                                .actionCart(
+                                                    CartActionEnum.removeItem,
+                                                    productSlug: product.slug);
+                                            context
+                                                .read<AppCubit>()
+                                                .reGetItemCartQuantity();
+
+                                            Navigator.of(context).pop();
                                           },
                                           child: const Text('Có'),
                                         ),
@@ -187,8 +187,10 @@ class ItemCartWidget extends StatelessWidget {
                               child: Text(product.quantity.toString())),
                           InkWell(
                             onTap: () {
-                              bloc.actionCart(CartActionEnum.inc,
+                              context.read<CartCubit>().actionCart(
+                                  CartActionEnum.inc,
                                   productSlug: product.slug);
+                              context.read<AppCubit>().reGetItemCartQuantity();
                             },
                             child: Container(
                                 decoration: BoxDecoration(

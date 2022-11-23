@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:it_project/src/utils/remote/model/login/login_request.dart';
 import 'package:it_project/src/utils/remote/model/login/login_response.dart';
 import 'package:it_project/src/utils/remote/model/register/otp_register_request.dart';
@@ -45,6 +46,10 @@ class AuthRepositoryImpl extends AuthRepository {
       final userId = responseRegister.userId;
       return FResult.success(userId);
     } catch (ex) {
+      if (ex is DioError) {
+        log(ex.error);
+      }
+
       log(ex.toString());
 
       return FResult.error(ex.toString());
