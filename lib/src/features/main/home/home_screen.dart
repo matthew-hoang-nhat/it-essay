@@ -36,7 +36,7 @@ class HomeScreen extends StatelessWidget {
         body: SafeArea(
           child: SingleChildScrollView(
             controller: controller,
-            physics: const BouncingScrollPhysics(),
+            // physics: const BouncingScrollPhysics(),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               poster(),

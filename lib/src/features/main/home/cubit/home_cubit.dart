@@ -11,12 +11,23 @@ import 'package:it_project/src/utils/repository/product_repository_impl.dart';
 
 part 'home_state.dart';
 
-enum HomeEnum { products, categories, flashSaleProducts }
+enum HomeEnum {
+  products,
+  categories,
+  flashSaleProducts,
+  isFirstLoading,
+  isLoadingProducts
+}
 
 class HomeCubit extends Cubit<HomeState> implements ParentCubit<HomeEnum> {
   HomeCubit()
       : super(const HomeInitial(
-            products: [], categories: [], flashSaleProducts: []));
+          products: [],
+          categories: [],
+          flashSaleProducts: [],
+          isFirstLoading: false,
+          isLoadingProducts: false,
+        ));
   ProductRepository productRepository = getIt<ProductRepositoryImpl>();
   CategoryRepository categoryRepository = getIt<CategoryRepositoryImpl>();
 
@@ -26,20 +37,23 @@ class HomeCubit extends Cubit<HomeState> implements ParentCubit<HomeEnum> {
 
   bool isLoadingFlashSales = false;
   bool isLoadingCategories = false;
-  bool isLoadingProducts = false;
 
-  initCubit() {
-    loadPage(HomeEnum.products);
-    loadPage(HomeEnum.categories);
-    loadPage(HomeEnum.flashSaleProducts);
+  initCubit() async {
+    addNewEvent(HomeEnum.isFirstLoading, true);
+    await Future.wait([
+      loadPage(HomeEnum.products),
+      loadPage(HomeEnum.categories),
+      loadPage(HomeEnum.flashSaleProducts)
+    ]);
+    addNewEvent(HomeEnum.isFirstLoading, false);
   }
 
-  void loadPage(HomeEnum homeEnum) {
+  Future<void> loadPage(HomeEnum homeEnum) async {
     switch (homeEnum) {
       case HomeEnum.products:
-        if (isLoadingProducts) return;
+        if (state.isLoadingProducts) return;
         _currentPageProducts++;
-        getProducts();
+        await getProducts();
         break;
       case HomeEnum.categories:
         if (isLoadingCategories) return;
@@ -55,8 +69,9 @@ class HomeCubit extends Cubit<HomeState> implements ParentCubit<HomeEnum> {
     }
   }
 
-  void getProducts() async {
-    isLoadingProducts = true;
+  getProducts() async {
+    addNewEvent(HomeEnum.isLoadingProducts, true);
+
     final productsResponse =
         await productRepository.getProducts(numberPage: _currentPageProducts);
     if (productsResponse.isSuccess) {
@@ -68,7 +83,7 @@ class HomeCubit extends Cubit<HomeState> implements ParentCubit<HomeEnum> {
       _currentPageProducts--;
     }
 
-    isLoadingProducts = false;
+    addNewEvent(HomeEnum.isLoadingProducts, false);
   }
 
   void getCategories() async {
@@ -108,6 +123,12 @@ class HomeCubit extends Cubit<HomeState> implements ParentCubit<HomeEnum> {
         break;
       case HomeEnum.flashSaleProducts:
         emit(NewHomeState.fromOldSettingState(state, flashSaleProducts: value));
+        break;
+      case HomeEnum.isFirstLoading:
+        emit(NewHomeState.fromOldSettingState(state, isFirstLoading: value));
+        break;
+      case HomeEnum.isLoadingProducts:
+        emit(NewHomeState.fromOldSettingState(state, isLoadingProducts: value));
         break;
       default:
     }

@@ -41,15 +41,17 @@ class ComponentReviewWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Nike',
-                      style: GoogleFonts.nunito(color: AppColors.greyColor)),
-                  Text(product.name,
-                      style: GoogleFonts.nunito(
-                          fontSize: 16, fontWeight: FontWeight.bold)),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Nike',
+                        style: GoogleFonts.nunito(color: AppColors.greyColor)),
+                    Text(product.name,
+                        style: GoogleFonts.nunito(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                  ],
+                ),
               ),
             ],
           ),

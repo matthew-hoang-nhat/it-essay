@@ -53,10 +53,11 @@ class _ProductWidgetState extends State<ProductWidget> {
               : null,
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Hero(
-            tag: widget.tagHero,
-            child: _imageProduct(),
-          ),
+          // Hero(
+          //   tag: widget.tagHero,
+          //   child:
+          // ),
+          _imageProduct(),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(

@@ -8,6 +8,7 @@ abstract class SellerState extends Equatable {
     required this.profileSeller,
     required this.productsOfCategory,
     required this.categories,
+    required this.isLoadingProducts,
     required this.isLoading,
   });
 
@@ -16,6 +17,7 @@ abstract class SellerState extends Equatable {
   final List<Category> categories;
   final bool isEmpty;
   final bool isLoading;
+  final bool isLoadingProducts;
   final int tabIndex;
 
   final ProfileSeller profileSeller;
@@ -28,6 +30,7 @@ abstract class SellerState extends Equatable {
         tabIndex,
         categories,
         isLoading,
+        isLoadingProducts,
         productsOfCategory,
         profileSeller
       ];
@@ -38,6 +41,7 @@ class DetailSellerInitial extends SellerState {
     required super.products,
     required super.productsOfCategory,
     required super.categories,
+    required super.isLoadingProducts,
     required super.tabIndex,
     required super.isEmpty,
     required super.isLoading,
@@ -53,6 +57,7 @@ class NewSellerState extends SellerState {
     List<Category>? categories,
     bool? isEmpty,
     bool? isLoading,
+    bool? isLoadingProducts,
     Map<String, List<Product>>? productsOfCategory,
     int? tabIndex,
     ProfileSeller? profileSeller,
@@ -62,6 +67,7 @@ class NewSellerState extends SellerState {
           products: products ?? oldState.products,
           isEmpty: isEmpty ?? oldState.isEmpty,
           isLoading: isLoading ?? oldState.isLoading,
+          isLoadingProducts: isLoadingProducts ?? oldState.isLoadingProducts,
           tabIndex: tabIndex ?? oldState.tabIndex,
           profileSeller: profileSeller ?? oldState.profileSeller,
         );

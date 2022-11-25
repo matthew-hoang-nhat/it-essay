@@ -36,9 +36,9 @@ class DetailProfileScreen extends StatelessWidget {
         children: [
           Scaffold(
             appBar: AppBar(
-              title: Text(
+              title: const Text(
                 'Sửa hồ sơ',
-                style: GoogleFonts.nunito(color: AppColors.brownColor),
+                // style: GoogleFonts.nunito(color: AppColors.brownColor),
               ),
               actions: [updateProfileButton()],
             ),
@@ -54,7 +54,9 @@ class DetailProfileScreen extends StatelessWidget {
           BlocBuilder<DetailProfileCubit, DetailProfileState>(
             builder: (context, state) {
               if (state.isLoading == false) return Container();
-              return const LoadWidget();
+              return const LoadingWidget(
+                loadingType: LoadingTypeEnum.fast,
+              );
             },
           )
         ],
@@ -80,7 +82,7 @@ class DetailProfileScreen extends StatelessWidget {
         return TextButton(
             style: TextButton.styleFrom(
               foregroundColor:
-                  isValidated ? AppColors.primaryColor : AppColors.greyColor,
+                  isValidated ? AppColors.whiteColor : AppColors.greyColor,
             ),
             onPressed: isValidated
                 ? () async {

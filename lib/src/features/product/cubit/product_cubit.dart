@@ -17,6 +17,7 @@ enum ProductEnum {
   product,
   indexImage,
   isDescribeShowAll,
+  isLoading,
 }
 
 enum ProductCartActionEnum {
@@ -34,18 +35,20 @@ class ProductCubit extends Cubit<ProductState>
           indexImage: 0,
           pageController: PageController(),
           isDescribeShowAll: false,
+          isLoading: false,
         ));
 
   ProductRepository productRepository = getIt<ProductRepositoryImpl>();
   final meLocalKey = viVN;
   getDetailProduct() async {
+    addNewEvent(ProductEnum.isLoading, true);
     final productResponse =
         await productRepository.getDetailProduct(state.product.slug);
 
     if (productResponse.isSuccess) {
       addNewEvent(ProductEnum.product, productResponse.data);
-      return;
     }
+    addNewEvent(ProductEnum.isLoading, false);
   }
 
   settingController() {
@@ -111,6 +114,9 @@ class ProductCubit extends Cubit<ProductState>
         break;
       case ProductEnum.indexImage:
         emit(NewProductState.fromOldSettingState(state, indexImage: value));
+        break;
+      case ProductEnum.isLoading:
+        emit(NewProductState.fromOldSettingState(state, isLoading: value));
         break;
       default:
     }

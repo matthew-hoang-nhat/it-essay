@@ -8,15 +8,14 @@ import 'package:it_project/src/utils/repository/product_repository_impl.dart';
 
 part 'detail_search_state.dart';
 
-enum DetailSearchEnum {
-  products,
-}
+enum DetailSearchEnum { products, isLoading }
 
 class DetailSearchCubit extends Cubit<DetailSearchState>
     implements ParentCubit<DetailSearchEnum> {
   DetailSearchCubit()
       : super(const DetailSearchInitial(
           products: [],
+          isLoading: false,
         ));
 
   final ProductRepository _productRepository = getIt<ProductRepositoryImpl>();
@@ -25,21 +24,24 @@ class DetailSearchCubit extends Cubit<DetailSearchState>
   bool isLoadingProducts = false;
 
   String name = '';
-  loadPageProducts(String name) {
+  loadPageProducts(String name) async {
     if (isLoadingProducts) return;
-
+    addNewEvent(DetailSearchEnum.isLoading, true);
     if (name != this.name) {
       _currentPageProducts = 0;
       this.name = name;
-      getProducts();
+      await _getProducts();
+      addNewEvent(DetailSearchEnum.isLoading, false);
       return;
     }
 
     _currentPageProducts++;
-    getProducts();
+    _getProducts();
+
+    addNewEvent(DetailSearchEnum.isLoading, false);
   }
 
-  getProducts() async {
+  _getProducts() async {
     isLoadingProducts = true;
     final productsResponse = await _productRepository.getProducts(
         numberPage: _currentPageProducts, name: name);
@@ -57,6 +59,9 @@ class DetailSearchCubit extends Cubit<DetailSearchState>
     switch (key) {
       case DetailSearchEnum.products:
         emit(NewDetailSearchState.fromOldSettingState(state, products: value));
+        break;
+      case DetailSearchEnum.isLoading:
+        emit(NewDetailSearchState.fromOldSettingState(state, isLoading: value));
         break;
     }
   }
