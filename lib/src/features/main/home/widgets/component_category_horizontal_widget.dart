@@ -67,17 +67,29 @@ class ComponentCategoryHorizontalWidget extends StatelessWidget {
                         if (index == 0) {
                           return Padding(
                             padding: const EdgeInsets.only(left: 10),
-                            child: CategoryWidget(
-                              category: categories.elementAt(index),
-                              height: 80,
-                              width: 80,
+                            child: InkWell(
+                              onTap: () {
+                                context.push(Paths.detailCategoryScreen,
+                                    extra: categories[index]);
+                              },
+                              child: CategoryWidget(
+                                category: categories.elementAt(index),
+                                height: 80,
+                                width: 80,
+                              ),
                             ),
                           );
                         }
-                        return CategoryWidget(
-                          category: categories.elementAt(index),
-                          height: 80,
-                          width: 80,
+                        return InkWell(
+                          onTap: () {
+                            context.push(Paths.detailCategoryScreen,
+                                extra: categories[index]);
+                          },
+                          child: CategoryWidget(
+                            category: categories.elementAt(index),
+                            height: 80,
+                            width: 80,
+                          ),
                         );
                       }),
                 );

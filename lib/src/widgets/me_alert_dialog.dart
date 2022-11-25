@@ -27,13 +27,10 @@ class MeAlertDialog extends StatelessWidget {
   redActionWidget(String text, Function() func) {
     return ElevatedButton(
       style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(AppColors.redColor),
-          padding: MaterialStateProperty.all<EdgeInsets>(
-              const EdgeInsets.symmetric(horizontal: 20)),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
-          ))),
+        backgroundColor: MaterialStateProperty.all<Color>(AppColors.redColor),
+        padding: MaterialStateProperty.all<EdgeInsets>(
+            const EdgeInsets.symmetric(horizontal: 20)),
+      ),
       onPressed: func,
       child: Text(text),
     );
@@ -42,14 +39,10 @@ class MeAlertDialog extends StatelessWidget {
   normalActionWidget(String text, Function() func) {
     return ElevatedButton(
       style: ButtonStyle(
-          backgroundColor:
-              MaterialStateProperty.all<Color>(AppColors.blueColor),
-          padding: MaterialStateProperty.all<EdgeInsets>(
-              const EdgeInsets.symmetric(horizontal: 20)),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
-          ))),
+        backgroundColor: MaterialStateProperty.all<Color>(AppColors.blueColor),
+        padding: MaterialStateProperty.all<EdgeInsets>(
+            const EdgeInsets.symmetric(horizontal: 20)),
+      ),
       onPressed: func,
       child: Text(text),
     );

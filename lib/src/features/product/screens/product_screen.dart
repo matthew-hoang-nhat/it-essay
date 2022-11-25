@@ -15,6 +15,7 @@ import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/product/cubit/product_cubit.dart';
 import 'package:it_project/src/features/product/widgets/component_review_widget.dart';
 import 'package:it_project/src/utils/remote/model/product/product.dart';
+import 'package:it_project/src/widgets/load_widget.dart';
 import 'package:it_project/src/widgets/start_widget.dart';
 
 class ProductScreen extends StatelessWidget {
@@ -30,18 +31,9 @@ class ProductScreen extends StatelessWidget {
   late final bloc = ProductCubit(product: product);
   final String tagHero;
 
-  bool isPop = false;
-
   @override
   Widget build(BuildContext context) {
-    bloc.state.controller.addListener(() {
-      double currentScroll = bloc.state.controller.position.pixels;
-      if (isPop == true) return;
-      if (currentScroll + 100 <= 0) {
-        isPop = true;
-        // context.pop();
-      }
-    });
+    print('rebuildd product');
 
     return Scaffold(
         extendBodyBehindAppBar: true,
@@ -51,74 +43,90 @@ class ProductScreen extends StatelessWidget {
               ..getDetailProduct()
               ..settingController(),
             child: Stack(
-              alignment: Alignment.bottomRight,
               children: [
-                SingleChildScrollView(
-                  controller: bloc.state.controller,
-                  // physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      imgPoster(),
-                      topProductInfo(),
-                      const SizedBox(height: 20),
-                      meDivider(),
-                      sellerInfo(),
-                      meDivider(),
-                      moreInfo(product),
-                      meDivider(),
-                      describeProduct(),
-                      meDivider(),
-                      const ComponentReviewWidget(),
-                      const SizedBox(height: 70),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 80,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                  decoration: BoxDecoration(
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.grey,
-                        offset: Offset(0.0, 1.0),
-                        blurRadius: 2,
+                Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    SingleChildScrollView(
+                      controller: bloc.state.controller,
+                      // physics: const BouncingScrollPhysics(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          imgPoster(),
+                          topProductInfo(),
+                          const SizedBox(height: 20),
+                          meDivider(),
+                          sellerInfo(),
+                          meDivider(),
+                          moreInfo(product),
+                          meDivider(),
+                          describeProduct(),
+                          meDivider(),
+                          const ComponentReviewWidget(),
+                          const SizedBox(height: 70),
+                        ],
                       ),
-                    ],
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppColors.whiteColor,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    ),
+                    Container(
+                      height: 80,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 15),
+                      decoration: BoxDecoration(
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(0.0, 1.0),
+                            blurRadius: 2,
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(10),
+                        color: AppColors.whiteColor,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
 
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                AppColors.redColor),
-                            padding: MaterialStateProperty.all<EdgeInsets>(
-                                const EdgeInsets.symmetric(horizontal: 20)),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ))),
-                        onPressed: () {
-                          bloc.actionCart(ProductCartActionEnum.addItem);
-                          context.read<AppCubit>().reGetItemCartQuantity();
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              MaterialCommunityIcons.cart_plus,
-                              color: AppColors.whiteColor,
-                            ),
-                            const Text('Thêm vào giỏ hàng'),
-                          ],
-                        )),
-                    // ],
-                  ),
-                  // ),
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        AppColors.primaryColor),
+                                padding: MaterialStateProperty.all<EdgeInsets>(
+                                    const EdgeInsets.symmetric(horizontal: 20)),
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ))),
+                            onPressed: () {
+                              bloc.actionCart(ProductCartActionEnum.addItem);
+                              context.read<AppCubit>().reGetItemCartQuantity();
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  MaterialCommunityIcons.cart_plus,
+                                  color: AppColors.whiteColor,
+                                ),
+                                const Text('Thêm vào giỏ hàng'),
+                              ],
+                            )),
+                        // ],
+                      ),
+                      // ),
+                    )
+                  ],
+                ),
+                BlocBuilder<ProductCubit, ProductState>(
+                  buildWhen: (previous, current) =>
+                      previous.isLoading != current.isLoading,
+                  builder: (context, state) {
+                    if (state.isLoading) {
+                      return const Center(child: LoadingWidget());
+                    }
+                    return Container();
+                  },
                 )
               ],
             )));
@@ -192,7 +200,9 @@ class ProductScreen extends StatelessWidget {
                     height: 70,
                     width: 70,
                     child: state.product.seller?.logo?.fileLink == null
-                        ? Container()
+                        ? Container(
+                            color: AppColors.whiteGreyColor,
+                          )
                         : CachedNetworkImage(
                             imageUrl:
                                 state.product.seller?.logo?.fileLink ?? '',
@@ -201,13 +211,6 @@ class ProductScreen extends StatelessWidget {
                               fit: BoxFit.cover,
                             ),
                           ),
-
-                    //     Image.network(
-                    //   product.seller!.logoData!.fileLink,
-                    //   height: 180,
-                    //   width: double.infinity,
-                    //   fit: BoxFit.cover,
-                    // ),
                   ),
                   const SizedBox(width: 10),
                   Column(
@@ -215,7 +218,7 @@ class ProductScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        state.product.seller?.info.name ?? 'unknown',
+                        state.product.seller?.info.name ?? '',
                         style: GoogleFonts.nunito(
                             fontWeight: FontWeight.bold,
                             fontSize: AppDimensions.dp16),
@@ -272,56 +275,20 @@ class ProductScreen extends StatelessWidget {
         return Stack(
           alignment: Alignment.bottomRight,
           children: [
-            Hero(
-              tag: tagHero,
-              child: SizedBox(
-                height: 300,
-                width: double.infinity,
-                child: PageView.builder(
-                    controller: bloc.state.pageController,
-                    physics: const BouncingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: product.productImages.length,
-                    // itemCount: 3,
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
-                        return Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            ClipRRect(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(5),
-                                  topRight: Radius.circular(5),
-                                ),
-                                child: CachedNetworkImage(
-                                  imageUrl: state.product.productImages
-                                      .elementAt(index)
-                                      .fileLink,
-                                  width: double.infinity,
-                                  height: 300,
-                                  fit: BoxFit.fitHeight,
-                                )),
-                          ],
-                        );
-                        // return Stack(
-                        //   alignment: Alignment.bottomRight,
-                        //   children: [
-                        //     ClipRRect(
-                        //         borderRadius: const BorderRadius.only(
-                        //           topLeft: Radius.circular(5),
-                        //           topRight: Radius.circular(5),
-                        //         ),
-                        //         child: CachedNetworkImage(
-                        //           imageUrl: state.product.productImages
-                        //               .elementAt(index)
-                        //               .fileLink,
-                        //           width: double.infinity,
-                        //           height: 300,
-                        //           fit: BoxFit.cover,
-                        //         )),
-                        //   ],
-                        // );
-                      }
+            // Hero(
+            //   tag: tagHero,
+            //   child:
+            SizedBox(
+              height: 300,
+              width: double.infinity,
+              child: PageView.builder(
+                  controller: bloc.state.pageController,
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: product.productImages.length,
+                  // itemCount: 3,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
                       return Stack(
                         alignment: Alignment.bottomRight,
                         children: [
@@ -340,9 +307,46 @@ class ProductScreen extends StatelessWidget {
                               )),
                         ],
                       );
-                    }),
-              ),
+                      // return Stack(
+                      //   alignment: Alignment.bottomRight,
+                      //   children: [
+                      //     ClipRRect(
+                      //         borderRadius: const BorderRadius.only(
+                      //           topLeft: Radius.circular(5),
+                      //           topRight: Radius.circular(5),
+                      //         ),
+                      //         child: CachedNetworkImage(
+                      //           imageUrl: state.product.productImages
+                      //               .elementAt(index)
+                      //               .fileLink,
+                      //           width: double.infinity,
+                      //           height: 300,
+                      //           fit: BoxFit.cover,
+                      //         )),
+                      //   ],
+                      // );
+                    }
+                    return Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(5),
+                              topRight: Radius.circular(5),
+                            ),
+                            child: CachedNetworkImage(
+                              imageUrl: state.product.productImages
+                                  .elementAt(index)
+                                  .fileLink,
+                              width: double.infinity,
+                              height: 300,
+                              fit: BoxFit.fitHeight,
+                            )),
+                      ],
+                    );
+                  }),
             ),
+            // ),
             BlocBuilder<ProductCubit, ProductState>(
               bloc: bloc,
               buildWhen: (previous, current) =>
@@ -548,14 +552,14 @@ class ProductScreen extends StatelessWidget {
                     const SizedBox(height: 10),
                     Stack(children: <Widget>[
                       SizedBox(
-                        height: 180,
-                        child: Image.asset(
-                          AppAssets.fkImHarryPotter2,
-                          width: double.infinity,
                           height: 180,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                state.product.productImages.first.fileLink,
+                            width: double.infinity,
+                            height: 180,
+                            fit: BoxFit.cover,
+                          )),
                       Container(
                         height: 185.0,
                         width: double.infinity,

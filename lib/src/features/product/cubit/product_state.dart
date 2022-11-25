@@ -6,6 +6,7 @@ abstract class ProductState extends Equatable {
       // required this.slug,
       required this.product,
       required this.isTop,
+      required this.isLoading,
       required this.indexImage,
       required this.isDescribeShowAll,
       required this.pageController,
@@ -13,6 +14,7 @@ abstract class ProductState extends Equatable {
 
   final Product product;
   final bool isTop;
+  final bool isLoading;
   final bool isDescribeShowAll;
   final int indexImage;
 
@@ -25,6 +27,7 @@ abstract class ProductState extends Equatable {
         isTop,
         indexImage,
         isDescribeShowAll,
+        isLoading,
       ];
 }
 
@@ -32,6 +35,7 @@ class ProductInitial extends ProductState {
   const ProductInitial(
       {required super.product,
       // required super.slug,
+      required super.isLoading,
       required super.isTop,
       required super.indexImage,
       required super.isDescribeShowAll,
@@ -46,6 +50,7 @@ class NewProductState extends ProductState {
     // String? slug,
     bool? isTop,
     bool? isDescribeShowAll,
+    bool? isLoading,
     int? indexImage,
     PageController? pageController,
     ScrollController? controller,
@@ -55,6 +60,7 @@ class NewProductState extends ProductState {
           indexImage: indexImage ?? oldState.indexImage,
           // slug: slug ?? oldState.slug,
           controller: controller ?? oldState.controller,
+          isLoading: isLoading ?? oldState.isLoading,
           isDescribeShowAll: isDescribeShowAll ?? oldState.isDescribeShowAll,
           pageController: pageController ?? oldState.pageController,
         );

@@ -17,7 +17,7 @@ enum SellerEnum {
   isLoading,
   tabIndex,
   categories,
-
+  isLoadingProducts,
   productsOfCategory,
 }
 
@@ -31,11 +31,12 @@ class SellerCubit extends Cubit<SellerState>
           isEmpty: false,
           tabIndex: 0,
           isLoading: false,
+          isLoadingProducts: false,
           categories: const [],
         ));
   final SellerRepository _sellerRepository = getIt<SellerRepositoryImpl>();
   int _currentPageProducts = 0;
-  bool _isLoadingProducts = false;
+  // bool _isLoadingProducts = false;
   bool _isLoadingCategories = false;
 
   final controller = ScrollController();
@@ -85,13 +86,14 @@ class SellerCubit extends Cubit<SellerState>
   }
 
   loadProducts() {
-    if (_isLoadingProducts) return;
+    if (state.isLoadingProducts) return;
     _currentPageProducts++;
     Future.value(_getProducts());
   }
 
   _getProducts() async {
-    _isLoadingProducts = true;
+    addNewEvent(SellerEnum.isLoadingProducts, true);
+    // _isLoadingProducts = true;
     final productsResponse = await _sellerRepository.getProducts(
       sellerId: state.profileSeller.id,
       currentPage: _currentPageProducts,
@@ -106,7 +108,8 @@ class SellerCubit extends Cubit<SellerState>
       _currentPageProducts--;
     }
 
-    _isLoadingProducts = false;
+    addNewEvent(SellerEnum.isLoadingProducts, false);
+    // _isLoadingProducts = false;
   }
 
   bool _isLoadedCategories = false;
@@ -162,6 +165,10 @@ class SellerCubit extends Cubit<SellerState>
         break;
       case SellerEnum.profileSeller:
         emit(NewSellerState.fromOldSettingState(state, profileSeller: value));
+        break;
+      case SellerEnum.isLoadingProducts:
+        emit(NewSellerState.fromOldSettingState(state,
+            isLoadingProducts: value));
         break;
       default:
     }

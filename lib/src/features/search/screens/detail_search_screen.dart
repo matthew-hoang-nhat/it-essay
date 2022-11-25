@@ -6,6 +6,7 @@ import 'package:it_project/src/features/search/cubit/detail_search_cubit.dart';
 import 'package:it_project/src/features/search/widgets/component_search_product_vertical.dart';
 import 'package:it_project/src/features/search/widgets/search_bar.dart';
 import 'package:it_project/src/widgets/cart_button.dart';
+import 'package:it_project/src/widgets/load_widget.dart';
 
 class DetailSearchScreen extends StatelessWidget {
   const DetailSearchScreen({super.key, required this.textSearch});
@@ -15,7 +16,6 @@ class DetailSearchScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => DetailSearchCubit()..loadPageProducts(textSearch),
-      // create: (context) => DetailSearchCubit(),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: AppColors.primaryColor,
@@ -32,13 +32,28 @@ class DetailSearchScreen extends StatelessWidget {
           actions: const [CartButton()],
         ),
         body: SafeArea(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              children: const [
-                ComponentSearchProductVertical(),
-              ],
-            ),
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  children: const [
+                    ComponentSearchProductVertical(),
+                  ],
+                ),
+              ),
+              BlocBuilder<DetailSearchCubit, DetailSearchState>(
+                buildWhen: (previous, current) =>
+                    previous.isLoading != current.isLoading,
+                builder: (context, state) {
+                  if (state.isLoading) {
+                    return const LoadingWidget(
+                      loadingType: LoadingTypeEnum.fast,
+                    );
+                  }
+                  return Container();
+                },
+              )
+            ],
           ),
         ),
       ),

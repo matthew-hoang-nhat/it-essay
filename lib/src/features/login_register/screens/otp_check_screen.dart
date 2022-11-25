@@ -143,7 +143,7 @@ class OtpCheckScreen extends StatelessWidget {
             bloc: bloc,
             builder: (context, state) {
               return bloc.state.isLoading == true
-                  ? const LoadWidget()
+                  ? const LoadingWidget()
                   : Container();
             })
       ],

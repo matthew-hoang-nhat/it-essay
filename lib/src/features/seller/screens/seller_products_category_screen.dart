@@ -4,6 +4,7 @@ import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/features/seller/cubit/category_product_cubit.dart';
 import 'package:it_project/src/features/seller/widgets/component_product_vertial_widget.dart';
 import 'package:it_project/src/utils/remote/model/category/category.dart';
+import 'package:it_project/src/widgets/load_widget.dart';
 
 class SellerProductsInCategoryScreen extends StatelessWidget {
   const SellerProductsInCategoryScreen({
@@ -25,15 +26,28 @@ class SellerProductsInCategoryScreen extends StatelessWidget {
           backgroundColor: AppColors.primaryColor,
           title: Text(category.name),
         ),
-        body: BlocBuilder<CategoryProductCubit, CategoryProductState>(
-          builder: (context, state) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ComponentProductVerticalWidget(
-                products: state.products,
-              ),
-            );
-          },
+        body: Stack(
+          children: [
+            BlocBuilder<CategoryProductCubit, CategoryProductState>(
+              builder: (context, state) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ComponentProductVerticalWidget(
+                    products: state.products,
+                  ),
+                );
+              },
+            ),
+            BlocBuilder<CategoryProductCubit, CategoryProductState>(
+              buildWhen: (previous, current) =>
+                  previous.isLoading != current.isLoading,
+              builder: (context, state) {
+                if (state.isLoading) return const LoadingWidget();
+
+                return Container();
+              },
+            )
+          ],
         ),
       ),
     );

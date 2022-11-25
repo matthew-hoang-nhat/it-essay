@@ -8,7 +8,7 @@ import 'package:it_project/src/utils/repository/seller_repository_impl.dart';
 
 part 'category_product_state.dart';
 
-enum CategoryProductEnum { products }
+enum CategoryProductEnum { products, isLoading }
 
 class CategoryProductCubit extends Cubit<CategoryProductState>
     implements ParentCubit<CategoryProductEnum> {
@@ -19,14 +19,17 @@ class CategoryProductCubit extends Cubit<CategoryProductState>
           products: const [],
           categoryId: categoryId,
           sellerId: sellerId,
+          isLoading: false,
         ));
   final SellerRepository _sellerRepository = getIt<SellerRepositoryImpl>();
 
   bool _isLoadingProducts = false;
 
-  void loadProducts() {
+  loadProducts() async {
+    addNewEvent(CategoryProductEnum.isLoading, true);
     if (_isLoadingProducts) return;
-    _getProducts();
+    await _getProducts();
+    addNewEvent(CategoryProductEnum.isLoading, false);
   }
 
   _getProducts() async {
@@ -51,6 +54,9 @@ class CategoryProductCubit extends Cubit<CategoryProductState>
     switch (key) {
       case CategoryProductEnum.products:
         emit(NewSellerState.fromOldSettingState(state, products: value));
+        break;
+      case CategoryProductEnum.isLoading:
+        emit(NewSellerState.fromOldSettingState(state, isLoading: value));
         break;
 
       default:

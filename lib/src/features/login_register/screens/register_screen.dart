@@ -282,7 +282,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ],
             ),
-            bloc.state.isLoading == true ? const LoadWidget() : Container()
+            bloc.state.isLoading == true ? const LoadingWidget() : Container()
           ],
         );
       },
