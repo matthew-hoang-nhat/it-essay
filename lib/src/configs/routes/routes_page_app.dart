@@ -10,9 +10,12 @@ import 'package:it_project/src/features/product/screens/product_screen.dart';
 import 'package:it_project/src/features/profile/screens/detail_profile_screen.dart';
 import 'package:it_project/src/features/search/screens/detail_search_screen.dart';
 import 'package:it_project/src/features/search/screens/search_screen.dart';
+import 'package:it_project/src/features/seller/screens/seller_products_category_screen.dart';
+import 'package:it_project/src/features/seller/screens/seller_screen.dart';
 import 'package:it_project/src/features/shopping_cart/cart_screen.dart';
 import 'package:it_project/src/utils/remote/model/category/category.dart';
 import 'package:it_project/src/utils/remote/model/product/product.dart';
+import 'package:it_project/src/utils/remote/model/seller/profile_seller.dart';
 
 class AppPages {
   static const List<String> needAuthenticatedPages = [
@@ -46,8 +49,10 @@ class AppPages {
     ),
     GoRoute(
       path: Paths.productScreen,
-      builder: (context, state) =>
-          ProductScreen(product: state.extra as Product),
+      builder: (context, state) => ProductScreen(
+        product: (state.extra as Map)['product'] as Product,
+        tagHero: (state.extra as Map)['tagHero'] as String,
+      ),
     ),
     GoRoute(
         path: Paths.mainScreen,
@@ -62,12 +67,16 @@ class AppPages {
         builder: (context, state) => DetailCategoryScreen(
               category: state.extra as Category,
             )),
-    // GoRoute(
-    //     path: Paths.sellerScreen,
-    //     // builder: (context, state) => SellerScreen(
-    //     //       seller: state.extra as Seller,
-    //     //     )),
-    //     builder: (context, state) => SellerScreen()),
+    GoRoute(
+        path: Paths.sellerScreen,
+        builder: (context, state) =>
+            SellerScreen(profileSeller: state.extra as ProfileSeller)),
+    GoRoute(
+        path: Paths.sellerProductsOfCategoryScreen,
+        builder: (context, state) => SellerProductsInCategoryScreen(
+              sellerId: (state.extra as Map)['sellerId'] as String,
+              category: (state.extra as Map)['category'] as Category,
+            )),
     GoRoute(
         path: Paths.categoryScreen,
         builder: (context, state) => const CategoryScreen()),

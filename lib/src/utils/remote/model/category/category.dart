@@ -3,15 +3,15 @@ part 'category.g.dart';
 
 @JsonSerializable()
 class Category {
-  // @JsonKey(name: '_id')
-  // String id;
+  @JsonKey(name: '_id')
+  String? id;
   @JsonKey(name: 'name')
   String name;
   @JsonKey(name: 'slug')
   String slug;
 
   Category({
-    // required this.id,
+    required this.id,
     required this.name,
     required this.slug,
   });

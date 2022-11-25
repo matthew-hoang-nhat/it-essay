@@ -69,11 +69,15 @@ class ComponentCategoryHorizontalWidget extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 10),
                             child: CategoryWidget(
                               category: categories.elementAt(index),
+                              height: 80,
+                              width: 80,
                             ),
                           );
                         }
                         return CategoryWidget(
                           category: categories.elementAt(index),
+                          height: 80,
+                          width: 80,
                         );
                       }),
                 );

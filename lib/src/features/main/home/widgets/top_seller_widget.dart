@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/src/configs/constants/app_assets.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
-import 'package:it_project/src/configs/routes/routes_name_app.dart';
 
 class TopSellerWidget extends StatelessWidget {
   const TopSellerWidget({super.key});
@@ -12,7 +10,7 @@ class TopSellerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.push(Paths.sellerScreen);
+        // context.push(Paths.sellerScreen);
       },
       child: Container(
         height: 150,

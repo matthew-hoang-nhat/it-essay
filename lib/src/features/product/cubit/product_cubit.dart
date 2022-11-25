@@ -85,7 +85,7 @@ class ProductCubit extends Cubit<ProductState>
         slug: product.slug,
         name: product.name,
         quantity: 1,
-        sellerName: product.seller?.infoData.name ?? '',
+        sellerName: product.seller?.info.name ?? '',
         discountPercent: product.discountPercent,
         mainCategory: product.category.name,
         productImage: product.productImages.first.fileLink);

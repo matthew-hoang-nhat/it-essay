@@ -1,15 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/src/configs/constants/app_assets.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/constants/app_dimensions.dart';
-import 'package:it_project/src/configs/locates/lang_vi.dart';
-import 'package:it_project/src/widgets/product_general/product_general_model.dart';
+import 'package:it_project/src/configs/routes/routes_name_app.dart';
+import 'package:it_project/src/utils/remote/model/product/product.dart';
+
+import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class ProductWidget extends StatefulWidget {
@@ -17,53 +19,61 @@ class ProductWidget extends StatefulWidget {
       {super.key,
       required this.product,
       required this.isHeart,
+      required this.tagHero,
       this.isBorder = false});
-  final BriefProductModel product;
+  final Product product;
   bool isHeart;
   bool isBorder;
+  final String tagHero;
   @override
   State<ProductWidget> createState() => _ProductWidgetState();
 }
 
 class _ProductWidgetState extends State<ProductWidget> {
-  final meLocalKey = viVN;
-  bool isFollow = false;
-  final formatCurrency = NumberFormat.simpleCurrency(locale: 'vi_VN');
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 300,
-      // width: 180,
-      constraints: const BoxConstraints(minWidth: 180),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: AppColors.whiteColor,
-        border: widget.isBorder
-            ? Border.all(color: AppColors.whiteGreyColor)
-            : null,
-      ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Hero(
-          tag: widget.product.slug,
-          child: imageProduct(),
+    return InkWell(
+      onTap: () {
+        context.push(
+          Paths.productScreen,
+          extra: {
+            'product': widget.product,
+            'tagHero': widget.tagHero,
+          },
+        );
+      },
+      child: Container(
+        height: 300,
+        constraints: const BoxConstraints(minWidth: 180),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: AppColors.whiteColor,
+          border: widget.isBorder
+              ? Border.all(color: AppColors.whiteGreyColor)
+              : null,
         ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              infoProduct(),
-              const SizedBox(height: 5),
-              priceWidget(),
-              const SizedBox(
-                height: 10,
-              )
-            ],
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Hero(
+            tag: widget.tagHero,
+            child: _imageProduct(),
           ),
-        )
-      ]),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 10),
+                infoProduct(),
+                const SizedBox(height: 5),
+                priceWidget(),
+                const SizedBox(
+                  height: 10,
+                )
+              ],
+            ),
+          )
+        ]),
+      ),
     );
   }
 
@@ -92,7 +102,7 @@ class _ProductWidgetState extends State<ProductWidget> {
               ),
               Icon(MaterialCommunityIcons.star,
                   size: 15, color: AppColors.yellowColor),
-              Text(' Đã bán 1000+',
+              Text(' Đã bán 100+',
                   style: GoogleFonts.nunito(color: AppColors.greyColor))
             ],
           ),
@@ -101,6 +111,8 @@ class _ProductWidgetState extends State<ProductWidget> {
   }
 
   Widget priceWidget() {
+    final formatCurrency = NumberFormat.simpleCurrency(locale: 'vi_VN');
+
     final bool isHighDiscountPrice = (widget.product.discountPercent >= 15);
 
     double priceAfterSaleOff =
@@ -129,7 +141,7 @@ class _ProductWidgetState extends State<ProductWidget> {
     );
   }
 
-  Widget imageProduct() {
+  Widget _imageProduct() {
     return SizedBox(
       height: 180,
       width: double.infinity,
@@ -138,18 +150,18 @@ class _ProductWidgetState extends State<ProductWidget> {
             topLeft: Radius.circular(5),
             topRight: Radius.circular(5),
           ),
-          child: widget.product.productImage == null
+          child: widget.product.productImages.isEmpty
               ? Image.asset(
                   AppAssets.fkImHarryPotter1,
                   width: double.infinity,
                   height: 180,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fitHeight,
                 )
               : CachedNetworkImage(
-                  imageUrl: widget.product.productImage!,
+                  imageUrl: widget.product.productImages.first.fileLink,
                   height: 180,
                   width: double.infinity,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fitHeight,
                   errorWidget: ((context, url, error) => Image.asset(
                         AppAssets.fkImHarryPotter3,
                       )),

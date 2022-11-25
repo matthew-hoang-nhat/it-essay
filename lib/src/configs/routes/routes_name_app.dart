@@ -9,6 +9,8 @@ class Paths {
   static const String otpScreen = "/otp-screen";
   static const String productScreen = "/product-screen";
   static const String sellerScreen = "/seller-screen";
+  static const String sellerProductsOfCategoryScreen =
+      "/seller-products-of-category-screen";
   static const String profileScreen = "/profile-screen";
   static const String detailProfileScreen = "/detail-profile-screen";
   static const String editProfileScreen = "/edit-profile-screen";

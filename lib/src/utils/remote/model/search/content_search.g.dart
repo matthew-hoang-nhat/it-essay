@@ -9,6 +9,7 @@ part of 'content_search.dart';
 ContentSearch _$ContentSearchFromJson(Map<String, dynamic> json) =>
     ContentSearch(
       name: json['name'] as String,
+      id: json['_id'] as String,
       slug: json['slug'] as String,
       type: json['type'] as String,
     );
@@ -18,4 +19,5 @@ Map<String, dynamic> _$ContentSearchToJson(ContentSearch instance) =>
       'name': instance.name,
       'slug': instance.slug,
       'type': instance.type,
+      'id': instance.id,
     };

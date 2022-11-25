@@ -43,8 +43,8 @@ class App extends StatelessWidget {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         appBarTheme: AppBarTheme(
-          backgroundColor: AppColors.whiteColor,
-          foregroundColor: AppColors.brownColor,
+          backgroundColor: AppColors.primaryColor,
+          foregroundColor: AppColors.whiteColor,
           elevation: 0,
           titleTextStyle: GoogleFonts.nunito(
             fontWeight: FontWeight.bold,
