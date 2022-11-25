@@ -21,7 +21,7 @@ Product _$ProductFromJson(Map<String, dynamic> json) => Product(
       summary: json['summary'] as String,
       seller: json['seller'] == null
           ? null
-          : Seller.fromJson(json['seller'] as Map<String, dynamic>),
+          : ProfileSeller.fromJson(json['seller'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{

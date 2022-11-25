@@ -16,10 +16,9 @@ class _SellerService implements SellerService {
   String? baseUrl;
 
   @override
-  Future<SuccessResponse> getCategoriesOfSeller({sellerId}) async {
+  Future<SuccessResponse> getCategoriesOfSeller({required sellerId}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'sellerId': sellerId};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -33,10 +32,9 @@ class _SellerService implements SellerService {
   }
 
   @override
-  Future<SuccessResponse> getInfoSeller(sellerId) async {
+  Future<SuccessResponse> getInfoSeller({required sellerId}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'sellerId': sellerId};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -51,7 +49,10 @@ class _SellerService implements SellerService {
 
   @override
   Future<SuccessResponse> getProductsOfCategory(
-      {sellerId, categoryId, required limit, required currentPage}) async {
+      {required sellerId,
+      categoryId,
+      required limit,
+      required currentPage}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'sellerId': sellerId,

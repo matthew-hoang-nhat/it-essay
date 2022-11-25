@@ -1,6 +1,6 @@
 import 'package:it_project/src/utils/remote/model/category/category.dart';
-import 'package:it_project/src/utils/remote/model/product/seller.dart';
 import 'package:it_project/src/utils/remote/model/product/spec.dart';
+import 'package:it_project/src/utils/remote/model/seller/profile_seller.dart';
 
 import 'package:json_annotation/json_annotation.dart';
 
@@ -20,7 +20,7 @@ class Product {
   @JsonKey(name: 'slug')
   String slug;
   @JsonKey(name: 'seller')
-  Seller? seller;
+  ProfileSeller? seller;
   @JsonKey(name: 'category')
   Category category;
   @JsonKey(name: 'description')
