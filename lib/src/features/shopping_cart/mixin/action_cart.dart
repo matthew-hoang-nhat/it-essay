@@ -32,7 +32,7 @@ mixin ActionCart {
             name: product.name,
             quantity: e.quantity!,
             // sellerName: e.seller!.info.name,
-            sellerName: 'hoangtrungnhat',
+            sellerName: product.seller!.info.name,
             discountPercent: product.discountPercent,
             mainCategory: product.category.name,
             productImage: firstImage);
