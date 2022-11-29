@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/category/cubit/detail_category_cubit.dart';
-import 'package:it_project/src/widgets/product_general/product_general_model.dart';
 import 'package:it_project/src/widgets/product_general/product_widget.dart';
 
 class ComponentCategoryProductVerticalWidget extends StatelessWidget {
@@ -13,9 +12,7 @@ class ComponentCategoryProductVerticalWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<DetailCategoryCubit, DetailCategoryState>(
         bloc: context.read<DetailCategoryCubit>(),
-        // buildWhen: (previous, current) => previous.products != current.products,
         builder: (context, state) {
-          // if (state.isShowProducts == false) return Container();
           final products = state.products;
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -44,14 +41,8 @@ class ComponentCategoryProductVerticalWidget extends StatelessWidget {
                                   extra: productOdd);
                             },
                             child: ProductWidget(
-                              product: BriefProductModel(
-                                  slug: productOdd.slug,
-                                  mainCategory: productOdd.category.name,
-                                  name: productOdd.name,
-                                  price: productOdd.price,
-                                  productImage:
-                                      productOdd.productImages.first.fileLink,
-                                  discountPercent: productOdd.discountPercent),
+                              tagHero: 'product${productOdd.slug}',
+                              product: productOdd,
                               isHeart: false,
                               isBorder: true,
                             ),
@@ -67,15 +58,8 @@ class ComponentCategoryProductVerticalWidget extends StatelessWidget {
                                         extra: productEven);
                                   },
                                   child: ProductWidget(
-                                    product: BriefProductModel(
-                                        slug: productEven.slug,
-                                        mainCategory: productEven.category.name,
-                                        name: productEven.name,
-                                        price: productEven.price,
-                                        productImage: productEven
-                                            .productImages.first.fileLink,
-                                        discountPercent:
-                                            productEven.discountPercent),
+                                    tagHero: 'product${productOdd.slug}',
+                                    product: productEven,
                                     isHeart: false,
                                     isBorder: true,
                                   ),

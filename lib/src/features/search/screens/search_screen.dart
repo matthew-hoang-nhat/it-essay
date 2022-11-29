@@ -98,7 +98,9 @@ class _SearchScreenState extends State<SearchScreen> {
               case ContentTypeEnum.category:
                 GoRouter.of(context).push(Paths.detailCategoryScreen,
                     extra: Category(
-                        name: contentSearch.name, slug: contentSearch.slug));
+                        name: contentSearch.name,
+                        slug: contentSearch.slug,
+                        id: contentSearch.id));
                 break;
               default:
             }

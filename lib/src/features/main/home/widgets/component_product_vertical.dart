@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/main/home/cubit/home_cubit.dart';
-import 'package:it_project/src/widgets/product_general/product_general_model.dart';
 import 'package:it_project/src/widgets/product_general/product_widget.dart';
 
 class ComponentProductVertical extends StatelessWidget {
@@ -36,18 +35,23 @@ class ComponentProductVertical extends StatelessWidget {
                       Flexible(
                         child: InkWell(
                           onTap: () {
-                            context.push(Paths.productScreen,
-                                extra: productOdd);
+                            context.push(Paths.productScreen, extra: {
+                              'product': productOdd,
+                              'tagHero': productOdd.slug
+                            });
                           },
                           child: ProductWidget(
-                              product: BriefProductModel(
-                                  slug: productOdd.slug,
-                                  mainCategory: productOdd.category.name,
-                                  name: productOdd.name,
-                                  price: productOdd.price,
-                                  productImage:
-                                      productOdd.productImages.first.fileLink,
-                                  discountPercent: productOdd.discountPercent),
+                              tagHero: 'product${productOdd.slug}',
+                              product: productOdd,
+                              // product: BriefProductModel(
+                              //     slug: productOdd.slug,
+                              //     mainCategory: productOdd.category.name,
+                              //     name: productOdd.name,
+                              //     price: productOdd.price,
+                              //     productImage:
+                              //         productOdd.productImages.first.fileLink,
+                              //     discountPercent: productOdd.
+                              //     discountPercent),
                               isHeart: false),
                         ),
                       ),
@@ -57,19 +61,23 @@ class ComponentProductVertical extends StatelessWidget {
                           : Flexible(
                               child: InkWell(
                                 onTap: () {
-                                  context.push(Paths.productScreen,
-                                      extra: productEven);
+                                  context.push(Paths.productScreen, extra: {
+                                    'product': productEven,
+                                    'tagHero': productEven.slug
+                                  });
                                 },
                                 child: ProductWidget(
-                                    product: BriefProductModel(
-                                        slug: productEven.slug,
-                                        mainCategory: productEven.category.name,
-                                        name: productEven.name,
-                                        price: productEven.price,
-                                        productImage: productEven
-                                            .productImages.first.fileLink,
-                                        discountPercent:
-                                            productEven.discountPercent),
+                                    tagHero: 'product${productEven.slug}',
+                                    product: productEven,
+                                    // product: BriefProductModel(
+                                    //     slug: productEven.slug,
+                                    //     mainCategory: productEven.category.name,
+                                    //     name: productEven.name,
+                                    //     price: productEven.price,
+                                    //     productImage: productEven
+                                    //         .productImages.first.fileLink,
+                                    //     discountPercent:
+                                    //         productEven.discountPercent),
                                     isHeart: false),
                               ),
                             ),

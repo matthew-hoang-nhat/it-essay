@@ -1,9 +1,12 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+
 import 'package:it_project/src/configs/constants/app_assets.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/constants/app_dimensions.dart';
@@ -13,16 +16,19 @@ import 'package:it_project/src/features/product/cubit/product_cubit.dart';
 import 'package:it_project/src/features/product/widgets/component_review_widget.dart';
 import 'package:it_project/src/utils/remote/model/product/product.dart';
 import 'package:it_project/src/widgets/start_widget.dart';
-import 'package:intl/intl.dart';
 
 class ProductScreen extends StatelessWidget {
-  ProductScreen({super.key, required this.product});
+  ProductScreen({
+    Key? key,
+    required this.product,
+    required this.tagHero,
+  }) : super(key: key);
   // ProductScreen({super.key});
   final Product product;
   // final Product product = mockSaleProduct;
   final formatCurrency = NumberFormat.simpleCurrency(locale: 'vi_VN');
   late final bloc = ProductCubit(product: product);
-  // final bloc = ProductCubit();
+  final String tagHero;
 
   bool isPop = false;
 
@@ -33,7 +39,7 @@ class ProductScreen extends StatelessWidget {
       if (isPop == true) return;
       if (currentScroll + 100 <= 0) {
         isPop = true;
-        context.pop();
+        // context.pop();
       }
     });
 
@@ -49,7 +55,7 @@ class ProductScreen extends StatelessWidget {
               children: [
                 SingleChildScrollView(
                   controller: bloc.state.controller,
-                  physics: const BouncingScrollPhysics(),
+                  // physics: const BouncingScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -170,83 +176,88 @@ class ProductScreen extends StatelessWidget {
       bloc: bloc,
       buildWhen: (previous, current) => previous.product != current.product,
       builder: (context, state) {
-        return Container(
-          height: 140,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                SizedBox(
-                  height: 70,
-                  width: 70,
-                  child: state.product.seller?.logoData?.fileLink == null
-                      ? Container()
-                      : CachedNetworkImage(
-                          imageUrl:
-                              state.product.seller?.logoData?.fileLink ?? '',
-                          errorWidget: (context, url, error) => Image.asset(
-                            AppAssets.fkImHarryPotter2,
-                            fit: BoxFit.cover,
+        return InkWell(
+          onTap: () {
+            context.push(Paths.sellerScreen, extra: state.product.seller);
+          },
+          child: Container(
+            height: 140,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                  SizedBox(
+                    height: 70,
+                    width: 70,
+                    child: state.product.seller?.logo?.fileLink == null
+                        ? Container()
+                        : CachedNetworkImage(
+                            imageUrl:
+                                state.product.seller?.logo?.fileLink ?? '',
+                            errorWidget: (context, url, error) => Image.asset(
+                              AppAssets.fkImHarryPotter2,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
 
-                  //     Image.network(
-                  //   product.seller!.logoData!.fileLink,
-                  //   height: 180,
-                  //   width: double.infinity,
-                  //   fit: BoxFit.cover,
-                  // ),
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                    //     Image.network(
+                    //   product.seller!.logoData!.fileLink,
+                    //   height: 180,
+                    //   width: double.infinity,
+                    //   fit: BoxFit.cover,
+                    // ),
+                  ),
+                  const SizedBox(width: 10),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        state.product.seller?.info.name ?? 'unknown',
+                        style: GoogleFonts.nunito(
+                            fontWeight: FontWeight.bold,
+                            fontSize: AppDimensions.dp16),
+                      ),
+                      Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          color: AppColors.primaryColor,
+                          child: Row(
+                            children: [
+                              Icon(
+                                MaterialCommunityIcons.check,
+                                color: AppColors.whiteColor,
+                              ),
+                              Text(
+                                'Official',
+                                style: GoogleFonts.nunito(
+                                    color: AppColors.whiteColor),
+                              ),
+                            ],
+                          )),
+                    ],
+                  ),
+                  const Spacer(),
+                  const Icon(MaterialCommunityIcons.chevron_right),
+                ]),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      bloc.state.product.seller?.infoData.name ?? 'unknown',
-                      style: GoogleFonts.nunito(
-                          fontWeight: FontWeight.bold,
-                          fontSize: AppDimensions.dp16),
+                    Flexible(
+                      child: contentSellerInfo('4.9 / 5', '3k+ đánh giá'),
                     ),
-                    Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        color: AppColors.primaryColor,
-                        child: Row(
-                          children: [
-                            Icon(
-                              MaterialCommunityIcons.check,
-                              color: AppColors.whiteColor,
-                            ),
-                            Text(
-                              'Official',
-                              style: GoogleFonts.nunito(
-                                  color: AppColors.whiteColor),
-                            ),
-                          ],
-                        )),
+                    Flexible(
+                      child: contentSellerInfo('1.9k+', 'Người theo dõi'),
+                    ),
+                    // Flexible(
+                    //   child: contentSellerInfo('70%', 'Phản hồi Chat'),
+                    // ),
                   ],
-                ),
-                const Spacer(),
-                const Icon(MaterialCommunityIcons.chevron_right),
-              ]),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Flexible(
-                    child: contentSellerInfo('4.9 / 5', '3k+ đánh giá'),
-                  ),
-                  Flexible(
-                    child: contentSellerInfo('1.9k+', 'Người theo dõi'),
-                  ),
-                  // Flexible(
-                  //   child: contentSellerInfo('70%', 'Phản hồi Chat'),
-                  // ),
-                ],
-              )
-            ],
+                )
+              ],
+            ),
           ),
         );
       },
@@ -262,7 +273,7 @@ class ProductScreen extends StatelessWidget {
           alignment: Alignment.bottomRight,
           children: [
             Hero(
-              tag: product.slug,
+              tag: tagHero,
               child: SizedBox(
                 height: 300,
                 width: double.infinity,
@@ -270,8 +281,8 @@ class ProductScreen extends StatelessWidget {
                     controller: bloc.state.pageController,
                     physics: const BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
-                    // itemCount: product.productImages.length,
-                    itemCount: 3,
+                    itemCount: product.productImages.length,
+                    // itemCount: 3,
                     itemBuilder: (context, index) {
                       if (index == 0) {
                         return Stack(
@@ -288,28 +299,28 @@ class ProductScreen extends StatelessWidget {
                                       .fileLink,
                                   width: double.infinity,
                                   height: 300,
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.fitHeight,
                                 )),
                           ],
                         );
-                        return Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            ClipRRect(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(5),
-                                  topRight: Radius.circular(5),
-                                ),
-                                child: CachedNetworkImage(
-                                  imageUrl: state.product.productImages
-                                      .elementAt(index)
-                                      .fileLink,
-                                  width: double.infinity,
-                                  height: 300,
-                                  fit: BoxFit.cover,
-                                )),
-                          ],
-                        );
+                        // return Stack(
+                        //   alignment: Alignment.bottomRight,
+                        //   children: [
+                        //     ClipRRect(
+                        //         borderRadius: const BorderRadius.only(
+                        //           topLeft: Radius.circular(5),
+                        //           topRight: Radius.circular(5),
+                        //         ),
+                        //         child: CachedNetworkImage(
+                        //           imageUrl: state.product.productImages
+                        //               .elementAt(index)
+                        //               .fileLink,
+                        //           width: double.infinity,
+                        //           height: 300,
+                        //           fit: BoxFit.cover,
+                        //         )),
+                        //   ],
+                        // );
                       }
                       return Stack(
                         alignment: Alignment.bottomRight,
@@ -325,7 +336,7 @@ class ProductScreen extends StatelessWidget {
                                     .fileLink,
                                 width: double.infinity,
                                 height: 300,
-                                fit: BoxFit.cover,
+                                fit: BoxFit.fitHeight,
                               )),
                         ],
                       );
