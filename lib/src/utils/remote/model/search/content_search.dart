@@ -12,6 +12,8 @@ Map<String, ContentTypeEnum> contentSearchType = {
 class ContentSearch {
   // @JsonKey(name: 'email')
   // String? email;
+  @JsonKey(name: '_id')
+  String id;
   @JsonKey(name: 'name')
   String name;
   @JsonKey(name: 'slug')
@@ -21,6 +23,7 @@ class ContentSearch {
 
   ContentSearch({
     // this.email,
+    required this.id,
     required this.name,
     required this.slug,
     required this.type,

@@ -19,7 +19,7 @@ Map<String, dynamic> _$InfoDataToJson(InfoData instance) => <String, dynamic>{
       'firstName': instance.firstName,
       'lastName': instance.lastName,
       'name': instance.name,
+      'birthDay': instance.birthDay,
       'gender': instance.gender,
       'avatar': instance.avatar,
-      'birthDay': instance.birthDay,
     };

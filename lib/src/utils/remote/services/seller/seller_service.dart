@@ -11,17 +11,17 @@ abstract class SellerService {
 
   @GET("/seller/categories")
   Future<SuccessResponse> getCategoriesOfSeller({
-    @Query("sellerId") String? sellerId,
+    @Query("sellerId") required String sellerId,
   });
 
   @GET("/seller/info")
-  Future<SuccessResponse> getInfoSeller(
-    @Query("sellerId") String? sellerId,
-  );
+  Future<SuccessResponse> getInfoSeller({
+    @Query("sellerId") required String sellerId,
+  });
 
   @GET("/seller")
   Future<SuccessResponse> getProductsOfCategory({
-    @Query("sellerId") String? sellerId,
+    @Query("sellerId") required String sellerId,
     @Query("categoryId") String? categoryId,
     @Query("limit") required int limit,
     @Query("currentPage") required int currentPage,
