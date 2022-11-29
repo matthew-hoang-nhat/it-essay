@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,103 +20,51 @@ import 'package:it_project/src/widgets/load_widget.dart';
 import 'package:it_project/src/widgets/start_widget.dart';
 
 class ProductScreen extends StatelessWidget {
-  ProductScreen({
+  const ProductScreen({
     Key? key,
     required this.product,
-    required this.tagHero,
   }) : super(key: key);
-  // ProductScreen({super.key});
   final Product product;
-  // final Product product = mockSaleProduct;
-  final formatCurrency = NumberFormat.simpleCurrency(locale: 'vi_VN');
-  late final bloc = ProductCubit(product: product);
-  final String tagHero;
 
   @override
   Widget build(BuildContext context) {
-    print('rebuildd product');
-
-    return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: topBar(),
-        body: BlocProvider<ProductCubit>(
-            create: (context) => bloc
-              ..getDetailProduct()
-              ..settingController(),
-            child: Stack(
+    return BlocProvider<ProductCubit>(
+        create: (context) => ProductCubit(product: product)..initCubit(),
+        child: Scaffold(
+            extendBodyBehindAppBar: true,
+            appBar: topBar(),
+            body: Stack(
               children: [
                 Stack(
                   alignment: Alignment.bottomRight,
                   children: [
-                    SingleChildScrollView(
-                      controller: bloc.state.controller,
-                      // physics: const BouncingScrollPhysics(),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          imgPoster(),
-                          topProductInfo(),
-                          const SizedBox(height: 20),
-                          meDivider(),
-                          sellerInfo(),
-                          meDivider(),
-                          moreInfo(product),
-                          meDivider(),
-                          describeProduct(),
-                          meDivider(),
-                          const ComponentReviewWidget(),
-                          const SizedBox(height: 70),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: 80,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 15),
-                      decoration: BoxDecoration(
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(0.0, 1.0),
-                            blurRadius: 2,
+                    BlocBuilder<ProductCubit, ProductState>(
+                      buildWhen: (previous, current) => false,
+                      builder: (context, state) {
+                        return SingleChildScrollView(
+                          controller: context.read<ProductCubit>().controller,
+                          // physics: const BouncingScrollPhysics(),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              imgPoster(),
+                              topProductInfo(),
+                              const SizedBox(height: 20),
+                              meDivider(),
+                              sellerInfo(),
+                              meDivider(),
+                              moreInfo(product),
+                              meDivider(),
+                              describeProduct(),
+                              meDivider(),
+                              const ComponentReviewWidget(),
+                              const SizedBox(height: 70),
+                            ],
                           ),
-                        ],
-                        borderRadius: BorderRadius.circular(10),
-                        color: AppColors.whiteColor,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-
-                        child: ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        AppColors.primaryColor),
-                                padding: MaterialStateProperty.all<EdgeInsets>(
-                                    const EdgeInsets.symmetric(horizontal: 20)),
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ))),
-                            onPressed: () {
-                              bloc.actionCart(ProductCartActionEnum.addItem);
-                              context.read<AppCubit>().reGetItemCartQuantity();
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  MaterialCommunityIcons.cart_plus,
-                                  color: AppColors.whiteColor,
-                                ),
-                                const Text('Thêm vào giỏ hàng'),
-                              ],
-                            )),
-                        // ],
-                      ),
-                      // ),
-                    )
+                        );
+                      },
+                    ),
+                    addCartButton()
                   ],
                 ),
                 BlocBuilder<ProductCubit, ProductState>(
@@ -132,9 +81,64 @@ class ProductScreen extends StatelessWidget {
             )));
   }
 
+  Container addCartButton() {
+    return Container(
+      height: 80,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      decoration: BoxDecoration(
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.grey,
+            offset: Offset(0.0, 1.0),
+            blurRadius: 2,
+          ),
+        ],
+        borderRadius: BorderRadius.circular(10),
+        color: AppColors.whiteColor,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+
+        child: BlocBuilder<ProductCubit, ProductState>(
+          buildWhen: (previous, current) => false,
+          builder: (context, state) {
+            return ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        AppColors.primaryColor),
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                        const EdgeInsets.symmetric(horizontal: 20)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ))),
+                onPressed: () {
+                  context
+                      .read<ProductCubit>()
+                      .actionCart(ProductCartActionEnum.addItem);
+                  context.read<AppCubit>().reGetItemCartQuantity();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      MaterialCommunityIcons.cart_plus,
+                      color: AppColors.whiteColor,
+                    ),
+                    const Text('Thêm vào giỏ hàng'),
+                  ],
+                ));
+          },
+        ),
+        // ],
+      ),
+      // ),
+    );
+  }
+
   Widget topProductInfo() {
     return BlocBuilder<ProductCubit, ProductState>(
-      bloc: bloc,
+      // bloc: bloc,
       buildWhen: (previous, current) => false,
       builder: (context, state) => Container(
         constraints: const BoxConstraints(minHeight: 140),
@@ -146,7 +150,7 @@ class ProductScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(bloc.state.product.category.name),
+                Text(state.product.category.name),
                 const Icon(MaterialCommunityIcons.heart_outline),
               ],
             ),
@@ -181,7 +185,7 @@ class ProductScreen extends StatelessWidget {
 
   sellerInfo() {
     return BlocBuilder<ProductCubit, ProductState>(
-      bloc: bloc,
+      // bloc: bloc,
       buildWhen: (previous, current) => previous.product != current.product,
       builder: (context, state) {
         return InkWell(
@@ -269,20 +273,17 @@ class ProductScreen extends StatelessWidget {
 
   imgPoster() {
     return BlocBuilder<ProductCubit, ProductState>(
-      bloc: bloc,
+      // bloc: bloc,
       buildWhen: ((previous, current) => previous.product != current.product),
       builder: (context, state) {
         return Stack(
           alignment: Alignment.bottomRight,
           children: [
-            // Hero(
-            //   tag: tagHero,
-            //   child:
             SizedBox(
               height: 300,
               width: double.infinity,
               child: PageView.builder(
-                  controller: bloc.state.pageController,
+                  controller: context.read<ProductCubit>().pageController,
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   itemCount: product.productImages.length,
@@ -348,7 +349,7 @@ class ProductScreen extends StatelessWidget {
             ),
             // ),
             BlocBuilder<ProductCubit, ProductState>(
-              bloc: bloc,
+              // bloc: bloc,
               buildWhen: (previous, current) =>
                   previous.indexImage != current.indexImage,
               builder: (context, state) {
@@ -379,48 +380,53 @@ class ProductScreen extends StatelessWidget {
   }
 
   priceProduct() {
-    final priceAfterSaleOff = bloc.state.product.price *
-        (100 - (bloc.state.product.discountPercent)) /
-        100;
+    final formatCurrency = NumberFormat.simpleCurrency(locale: 'vi_VN');
 
-    final isDiscount = bloc.state.product.discountPercent != 0;
-    return Row(
-      children: [
-        Text(
-          formatCurrency.format(priceAfterSaleOff),
-          style: GoogleFonts.nunito(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: isDiscount ? AppColors.redColor : null,
-          ),
-        ),
-        const SizedBox(width: 10),
-        if (isDiscount)
-          Row(
-            children: [
-              Text(
-                bloc.state.product.price.toString(),
-                style: GoogleFonts.nunito(
-                  color: AppColors.greyColor,
-                  decoration: TextDecoration.lineThrough,
-                  decorationThickness: 3,
-                ),
+    return BlocBuilder<ProductCubit, ProductState>(
+      builder: (context, state) {
+        final priceAfterSaleOff =
+            state.product.price * (100 - (state.product.discountPercent)) / 100;
+
+        final isDiscount = state.product.discountPercent != 0;
+        return Row(
+          children: [
+            Text(
+              formatCurrency.format(priceAfterSaleOff),
+              style: GoogleFonts.nunito(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: isDiscount ? AppColors.redColor : null,
               ),
-              const SizedBox(width: 10),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                decoration: BoxDecoration(
-                    color: AppColors.redColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(1),
-                    border: Border.all(color: AppColors.redColor)),
-                child: Text(
-                  '-${bloc.state.product.discountPercent.toString()}%',
-                  style: GoogleFonts.nunito(color: AppColors.redColor),
-                ),
+            ),
+            const SizedBox(width: 10),
+            if (isDiscount)
+              Row(
+                children: [
+                  Text(
+                    state.product.price.toString(),
+                    style: GoogleFonts.nunito(
+                      color: AppColors.greyColor,
+                      decoration: TextDecoration.lineThrough,
+                      decorationThickness: 3,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                        color: AppColors.redColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(1),
+                        border: Border.all(color: AppColors.redColor)),
+                    child: Text(
+                      '-${state.product.discountPercent.toString()}%',
+                      style: GoogleFonts.nunito(color: AppColors.redColor),
+                    ),
+                  )
+                ],
               )
-            ],
-          )
-      ],
+          ],
+        );
+      },
     );
   }
 
@@ -428,7 +434,6 @@ class ProductScreen extends StatelessWidget {
     return PreferredSize(
       preferredSize: const Size.fromHeight(56),
       child: BlocBuilder<ProductCubit, ProductState>(
-        bloc: bloc,
         buildWhen: (previous, current) => previous.isTop != current.isTop,
         builder: (context, state) {
           return state.isTop
@@ -509,7 +514,6 @@ class ProductScreen extends StatelessWidget {
 
   describeProduct() {
     return BlocBuilder<ProductCubit, ProductState>(
-      bloc: bloc,
       buildWhen: (previous, current) =>
           previous.isDescribeShowAll != current.isDescribeShowAll,
       builder: (context, state) {
@@ -583,7 +587,7 @@ class ProductScreen extends StatelessWidget {
                     Center(
                         child: InkWell(
                             onTap: () {
-                              bloc.addNewEvent(
+                              context.read<ProductCubit>().addNewEvent(
                                   ProductEnum.isDescribeShowAll, true);
                             },
                             child: Container(

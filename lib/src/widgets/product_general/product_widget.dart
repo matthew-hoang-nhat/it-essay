@@ -19,12 +19,11 @@ class ProductWidget extends StatefulWidget {
       {super.key,
       required this.product,
       required this.isHeart,
-      required this.tagHero,
       this.isBorder = false});
   final Product product;
   bool isHeart;
   bool isBorder;
-  final String tagHero;
+
   @override
   State<ProductWidget> createState() => _ProductWidgetState();
 }
@@ -36,10 +35,7 @@ class _ProductWidgetState extends State<ProductWidget> {
       onTap: () {
         context.push(
           Paths.productScreen,
-          extra: {
-            'product': widget.product,
-            'tagHero': widget.tagHero,
-          },
+          extra: widget.product,
         );
       },
       child: Container(
@@ -53,10 +49,6 @@ class _ProductWidgetState extends State<ProductWidget> {
               : null,
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          // Hero(
-          //   tag: widget.tagHero,
-          //   child:
-          // ),
           _imageProduct(),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),

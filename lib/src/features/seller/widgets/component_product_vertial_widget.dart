@@ -30,7 +30,6 @@ class ComponentProductVerticalWidget extends StatelessWidget {
                   Flexible(
                     child: ProductWidget(
                       isBorder: true,
-                      tagHero: 'product${productOdd.slug}',
                       product: productOdd,
                       isHeart: false,
                     ),
@@ -45,7 +44,6 @@ class ComponentProductVerticalWidget extends StatelessWidget {
                                 //     extra: productEven);
                               },
                               child: ProductWidget(
-                                tagHero: 'product${productEven.slug}',
                                 product: productEven,
                                 isBorder: true,
                                 isHeart: false,

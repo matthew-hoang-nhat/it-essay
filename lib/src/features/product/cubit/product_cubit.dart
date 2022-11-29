@@ -30,17 +30,24 @@ class ProductCubit extends Cubit<ProductState>
   ProductCubit({required Product product})
       : super(ProductInitial(
           isTop: true,
-          controller: ScrollController(),
           product: product,
           indexImage: 0,
-          pageController: PageController(),
           isDescribeShowAll: false,
           isLoading: false,
         ));
 
+  final controller = ScrollController();
+  final pageController = PageController();
+
   ProductRepository productRepository = getIt<ProductRepositoryImpl>();
   final meLocalKey = viVN;
-  getDetailProduct() async {
+
+  initCubit() async {
+    _getDetailProduct();
+    _settingController();
+  }
+
+  _getDetailProduct() async {
     addNewEvent(ProductEnum.isLoading, true);
     final productResponse =
         await productRepository.getDetailProduct(state.product.slug);
@@ -51,15 +58,15 @@ class ProductCubit extends Cubit<ProductState>
     addNewEvent(ProductEnum.isLoading, false);
   }
 
-  settingController() {
-    state.pageController.addListener(() {
-      final newIndex = state.pageController.page?.round() ?? 0;
+  _settingController() {
+    pageController.addListener(() {
+      final newIndex = pageController.page?.round() ?? 0;
       if (newIndex == state.indexImage) return;
       addNewEvent(ProductEnum.indexImage, newIndex);
     });
 
-    state.controller.addListener(() {
-      double currentScroll = state.controller.position.pixels;
+    controller.addListener(() {
+      double currentScroll = controller.position.pixels;
       if (currentScroll - 20 <= 0) {
         if (state.isTop == false) {
           addNewEvent(ProductEnum.isTop, true);
