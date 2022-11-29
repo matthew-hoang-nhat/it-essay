@@ -19,10 +19,7 @@ class FlashSaleWidget extends StatelessWidget {
     final size = MediaQuery.of(context).size.width * 2 / 8;
     return InkWell(
       onTap: () {
-        context.push(Paths.productScreen, extra: {
-          'product': product,
-          'tagHero': 'flashSale:${product.slug}'
-        });
+        context.push(Paths.productScreen, extra: product);
       },
       child: Container(
         margin: const EdgeInsets.only(right: 10),
