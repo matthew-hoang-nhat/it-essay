@@ -8,6 +8,7 @@ void _registerApiModule() {
   getIt.registerSingleton(SearchService(getIt<DioHttpClient>()));
   getIt.registerSingleton(SellerService(getIt<DioHttpClient>()));
   getIt.registerSingleton(CartService(getIt<DioHttpClient>()));
+  getIt.registerSingleton(DeliveryService(getIt<DioHttpClient>()));
   getIt.registerSingleton(
       UpFileService(getIt<DioHttpClient>(instanceName: 'upFileServer')));
 }
