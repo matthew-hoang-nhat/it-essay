@@ -42,7 +42,7 @@ class AppCubit extends Cubit<AppState>
 
   _loadItemCartsServer() async {
     await updateItemCartsMixin(
-        itemCarts: FCartLocal().itemCarts, type: ActionCartTypeEnum.local);
+        itemCarts: FCartLocal().itemCarts, type: ActionCartTypeEnum.server);
     await fetchItemCartsServerMixin();
     reGetItemCartQuantity();
   }
