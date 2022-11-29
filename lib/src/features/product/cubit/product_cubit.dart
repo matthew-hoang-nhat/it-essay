@@ -103,8 +103,9 @@ class ProductCubit extends Cubit<ProductState>
             .map((e) => ProductPicture.fromJson(e))
             .first
             .fileLink);
-    addItemToCartLocal(itemCart);
-    await addItemToCartServer(itemCart);
+    addItemToCartMixin(itemCart: itemCart, type: ActionCartTypeEnum.local);
+    await addItemToCartMixin(
+        itemCart: itemCart, type: ActionCartTypeEnum.server);
   }
 
   @override

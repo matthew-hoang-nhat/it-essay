@@ -10,7 +10,13 @@ import 'package:it_project/src/utils/repository/product_repository_impl.dart';
 part 'cart_state.dart';
 
 // enum CartEnum { itemCarts, price, priceAfterSaleOff, itemQuantity }
-enum CartEnum { itemCarts, price, priceAfterSaleOff, isLoading }
+enum CartEnum {
+  itemCarts,
+  price,
+  priceAfterSaleOff,
+  isLoading,
+  itemCartsChecked
+}
 
 enum CartActionEnum { inc, dec, removeItem }
 
@@ -19,12 +25,11 @@ class CartCubit extends Cubit<CartState>
     implements ParentCubit<CartEnum> {
   CartCubit()
       : super(const CartInitial(
-          itemCarts: [],
-          price: 0,
-          priceAfterSaleOff: 0,
-          isLoading: false,
-          // itemQuantity: 0,
-        ));
+            itemCarts: [],
+            price: 0,
+            priceAfterSaleOff: 0,
+            isLoading: false,
+            itemCartsChecked: []));
 
   ProductRepository productRepository = getIt<ProductRepositoryImpl>();
 
@@ -39,10 +44,14 @@ class CartCubit extends Cubit<CartState>
 
   void _reloadPrice() {
     final itemCarts = cartLocal.itemCarts;
-    var price = _sumArray(itemCarts.map((e) => e.quantity * e.price).toList());
-    var priceAfterSaleOff = _sumArray((itemCarts
-            .map((e) => e.quantity * e.price * (100 - e.discountPercent) / 100))
+    var price = _sumArray(itemCarts
+        .map((e) =>
+            state.itemCartsChecked.contains(e.id) ? e.quantity * e.price : 0)
         .toList());
+    var priceAfterSaleOff = _sumArray((itemCarts.map((e) =>
+        state.itemCartsChecked.contains(e.id)
+            ? e.quantity * e.price * (100 - e.discountPercent) / 100
+            : 0)).toList());
 
     addNewEvent(CartEnum.price, price);
     addNewEvent(CartEnum.priceAfterSaleOff, priceAfterSaleOff);
@@ -72,13 +81,13 @@ class CartCubit extends Cubit<CartState>
     switch (cartAction) {
       case CartActionEnum.inc:
         _plusQuantityItemCart(id);
-        updateItemCartServer(
+        updateAnItemCartServer(
             cartLocal.itemCarts.firstWhere((element) => element.id == id));
 
         break;
       case CartActionEnum.dec:
         _minusQuantityItemCart(id);
-        updateItemCartServer(
+        updateAnItemCartServer(
             cartLocal.itemCarts.firstWhere((element) => element.id == id));
 
         break;
@@ -100,7 +109,7 @@ class CartCubit extends Cubit<CartState>
     ];
 
     addNewEvent(CartEnum.itemCarts, itemCarts);
-    updateItemCartsLocal(itemCarts);
+    updateItemCartsMixin(itemCarts: itemCarts, type: ActionCartTypeEnum.local);
   }
 
   _minusQuantityItemCart(String id) {
@@ -113,7 +122,7 @@ class CartCubit extends Cubit<CartState>
     ];
 
     addNewEvent(CartEnum.itemCarts, itemCarts);
-    updateItemCartsLocal(itemCarts);
+    updateItemCartsMixin(itemCarts: itemCarts, type: ActionCartTypeEnum.local);
   }
 
   _removeItemCart(String id) {
@@ -122,7 +131,40 @@ class CartCubit extends Cubit<CartState>
         if (item.id != id) item
     ];
     addNewEvent(CartEnum.itemCarts, itemCarts);
-    updateItemCartsLocal(itemCarts);
+    updateItemCartsMixin(itemCarts: itemCarts, type: ActionCartTypeEnum.local);
+  }
+
+  checkItemCart(String id) {
+    final itemCartsChecked = state.itemCartsChecked;
+    List<String> newItemCartsChecked = List.from(itemCartsChecked);
+
+    final isContainedItemCartChecked = itemCartsChecked.contains(id);
+    switch (isContainedItemCartChecked) {
+      case true:
+        newItemCartsChecked.remove(id);
+        break;
+
+      case false:
+        newItemCartsChecked.add(id);
+        break;
+    }
+
+    addNewEvent(CartEnum.itemCartsChecked, newItemCartsChecked);
+    _reloadPrice();
+
+    // if (itemCartsChecked.contains(id)) {
+    //   newItemCartsChecked.remove(id);
+    //   addNewEvent(CartEnum.itemCartsChecked, newItemCartsChecked);
+    //   print('xóa nha');
+    //   _reloadPrice();
+    //   return;
+    // }
+
+    // print('thêm vào');
+    // newItemCartsChecked.add(id);
+    // addNewEvent(CartEnum.itemCartsChecked, newItemCartsChecked);
+
+    // _reloadPrice();
   }
 
   @override
@@ -140,6 +182,9 @@ class CartCubit extends Cubit<CartState>
         break;
       case CartEnum.isLoading:
         emit(NewCartState.fromOldSettingState(state, isLoading: value));
+        break;
+      case CartEnum.itemCartsChecked:
+        emit(NewCartState.fromOldSettingState(state, itemCartsChecked: value));
         break;
       // case CartEnum.itemQuantity:
       //   emit(NewCartState.fromOldSettingState(state, itemQuantity: value));
