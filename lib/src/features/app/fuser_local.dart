@@ -19,7 +19,8 @@ class FUserLocal {
   String? get acceptToken => _appShared.getFUserValue()?.accessToken;
   String? get phoneNumber => _appShared.getFUserValue()?.phoneNumber;
   String? get avatar => _appShared.getFUserValue()?.avatar;
-  String? get name => _appShared.getFUserValue()?.name;
+  String? get firstName => _appShared.getFUserValue()?.firstName;
+  String? get lastName => _appShared.getFUserValue()?.lastName;
 
   bool get isLogged => _appShared.getFUserValue() != null;
 }

@@ -91,13 +91,14 @@ class LoginCubit extends Cubit<LoginState> implements ParentCubit<LoginEnum> {
     final user = responseManualLogin.data;
     if (user != null) {
       getIt<FUserLocal>().fUser = FUserLocalDao(
-        phoneNumber: '',
-        name: user.data['firstName'],
-        avatar: user.data['profilePicture'],
-        userId: user.data['_id']!,
-        refreshToken: user.refreshToken,
-        accessToken: user.accessToken,
-      );
+          phoneNumber: '',
+          firstName: user.data['firstName'],
+          lastName: user.data['lastName'],
+          avatar: user.data['profilePicture'],
+          userId: user.data['_id']!,
+          refreshToken: user.refreshToken,
+          accessToken: user.accessToken,
+          gender: 'male');
     } else {
       addNewEvent(LoginEnum.announcementLogin, 'Something error');
     }

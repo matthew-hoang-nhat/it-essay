@@ -100,16 +100,16 @@ class _AuthService implements AuthService {
   }
 
   @override
-  Future<SuccessResponse> logOut(loginRequest) async {
+  Future<SuccessResponse> changePassword(changePasswordRequest) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(loginRequest.toJson());
+    _data.addAll(changePasswordRequest);
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<SuccessResponse>(
-            Options(method: 'GET', headers: _headers, extra: _extra)
-                .compose(_dio.options, '/auth/logout',
+            Options(method: 'POST', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/profile/change-password-mobile',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = SuccessResponse.fromJson(_result.data!);
