@@ -16,7 +16,7 @@ class Validate {
     return invalidPassword;
   }
 
-  bool isInvalidNumber(String value) {
+  bool isInvalidPhoneNumber(String value) {
     RegExp regExp = RegExp(r'^[0-9]{10}$');
     return !regExp.hasMatch(value);
   }

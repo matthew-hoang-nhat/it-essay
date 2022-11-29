@@ -48,6 +48,10 @@ abstract class AuthService {
   // @GET("/api/me")
   // Future<GetMeResponse> getMe();
 
-  @GET("/auth/logout")
-  Future<SuccessResponse> logOut(@Body() LoginRequest loginRequest);
+  // @GET("/auth/logout")
+  // Future<SuccessResponse> logOut(@Body() LoginRequest loginRequest);
+
+  @POST("/profile/change-password-mobile")
+  Future<SuccessResponse> changePassword(
+      @Body() Map<String, String> changePasswordRequest);
 }
