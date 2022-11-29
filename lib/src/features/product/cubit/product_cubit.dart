@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/locates/lang_vi.dart';
+import 'package:it_project/src/features/app/fcart_local.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
 import 'package:it_project/src/features/shopping_cart/mixin/action_cart.dart';
 import 'package:it_project/src/local/dao/item_cart_dao.dart';
@@ -105,7 +106,10 @@ class ProductCubit extends Cubit<ProductState>
             .fileLink);
     addItemToCartMixin(itemCart: itemCart, type: ActionCartTypeEnum.local);
     await addItemToCartMixin(
-        itemCart: itemCart, type: ActionCartTypeEnum.server);
+        itemCart: getIt<FCartLocal>()
+            .itemCarts
+            .firstWhere((element) => element.id == itemCart.id),
+        type: ActionCartTypeEnum.server);
   }
 
   @override
