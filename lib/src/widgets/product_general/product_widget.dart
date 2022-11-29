@@ -12,6 +12,7 @@ import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/utils/remote/model/product/product.dart';
 
 import 'package:intl/intl.dart';
+import 'package:it_project/src/utils/remote/model/product/product_picture.dart';
 
 // ignore: must_be_immutable
 class ProductWidget extends StatefulWidget {
@@ -135,6 +136,10 @@ class _ProductWidgetState extends State<ProductWidget> {
   }
 
   Widget _imageProduct() {
+    final firstImage = (widget.product.productImages as List)
+        .map((e) => ProductPicture.fromJson(e))
+        .first
+        .fileLink;
     return SizedBox(
       height: 180,
       width: double.infinity,
@@ -151,7 +156,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                   fit: BoxFit.fitHeight,
                 )
               : CachedNetworkImage(
-                  imageUrl: widget.product.productImages.first.fileLink,
+                  imageUrl: firstImage,
                   height: 180,
                   width: double.infinity,
                   fit: BoxFit.fitHeight,

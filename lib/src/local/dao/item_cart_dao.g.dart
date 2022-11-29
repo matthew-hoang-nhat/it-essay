@@ -18,7 +18,7 @@ class ItemCartAdapter extends TypeAdapter<ItemCart> {
     };
     return ItemCart(
       price: fields[7] as int,
-      slug: fields[0] as String,
+      id: fields[0] as String,
       name: fields[1] as String,
       quantity: fields[2] as int,
       sellerName: fields[3] as String,
@@ -33,7 +33,7 @@ class ItemCartAdapter extends TypeAdapter<ItemCart> {
     writer
       ..writeByte(8)
       ..writeByte(0)
-      ..write(obj.slug)
+      ..write(obj.id)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)

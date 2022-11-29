@@ -7,6 +7,7 @@ import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
 import 'package:it_project/src/features/shopping_cart/mixin/action_cart.dart';
 import 'package:it_project/src/local/dao/item_cart_dao.dart';
 import 'package:it_project/src/utils/remote/model/product/product.dart';
+import 'package:it_project/src/utils/remote/model/product/product_picture.dart';
 import 'package:it_project/src/utils/repository/product_repository.dart';
 import 'package:it_project/src/utils/repository/product_repository_impl.dart';
 
@@ -82,24 +83,28 @@ class ProductCubit extends Cubit<ProductState>
   actionCart(ProductCartActionEnum productCartAction) {
     switch (productCartAction) {
       case ProductCartActionEnum.addItem:
-        _addItemToLocalCart();
+        _addItemToCart();
         break;
       default:
     }
   }
 
-  _addItemToLocalCart() {
+  _addItemToCart() async {
     final product = state.product;
     ItemCart itemCart = ItemCart(
         price: product.price,
-        slug: product.slug,
+        id: product.id,
         name: product.name,
         quantity: 1,
         sellerName: product.seller?.info.name ?? '',
         discountPercent: product.discountPercent,
         mainCategory: product.category.name,
-        productImage: product.productImages.first.fileLink);
-    addItemCartMixin(itemCart);
+        productImage: (product.productImages as List)
+            .map((e) => ProductPicture.fromJson(e))
+            .first
+            .fileLink);
+    addItemToCartLocal(itemCart);
+    await addItemToCartServer(itemCart);
   }
 
   @override

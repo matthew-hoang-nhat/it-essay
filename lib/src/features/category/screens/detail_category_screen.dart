@@ -14,7 +14,7 @@ class DetailCategoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          DetailCategoryCubit(slugCategory: category.slug)..loadProducts(),
+          DetailCategoryCubit(slugCategory: category.slug!)..loadProducts(),
       child: Scaffold(
         appBar: AppBar(
           foregroundColor: AppColors.whiteColor,

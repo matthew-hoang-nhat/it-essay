@@ -12,13 +12,11 @@ Product _$ProductFromJson(Map<String, dynamic> json) => Product(
       slug: json['slug'] as String,
       id: json['_id'] as String,
       price: json['price'] as int,
-      productImages: (json['productPictures'] as List<dynamic>)
-          .map((e) => ProductPicture.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      productImages: json['productPictures'],
       name: json['name'] as String,
       spec: Spec.fromJson(json['specs'] as Map<String, dynamic>),
-      description: json['description'] as String,
-      summary: json['summary'] as String,
+      description: json['description'] as String?,
+      summary: json['summary'] as String?,
       seller: json['seller'] == null
           ? null
           : ProfileSeller.fromJson(json['seller'] as Map<String, dynamic>),
