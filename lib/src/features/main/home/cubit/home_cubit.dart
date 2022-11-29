@@ -48,9 +48,12 @@ class HomeCubit extends Cubit<HomeState> implements ParentCubit<HomeEnum> {
     addNewEvent(HomeEnum.isFirstLoading, false);
   }
 
+  bool isLastProduct = false;
+
   Future<void> loadPage(HomeEnum homeEnum) async {
     switch (homeEnum) {
       case HomeEnum.products:
+        if (isLastProduct) return;
         if (state.isLoadingProducts) return;
         _currentPageProducts++;
         await getProducts();
@@ -81,6 +84,7 @@ class HomeCubit extends Cubit<HomeState> implements ParentCubit<HomeEnum> {
 
     if (productsResponse.isError) {
       _currentPageProducts--;
+      isLastProduct = true;
     }
 
     addNewEvent(HomeEnum.isLoadingProducts, false);
