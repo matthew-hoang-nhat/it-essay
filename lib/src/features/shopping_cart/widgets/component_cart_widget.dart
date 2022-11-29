@@ -11,6 +11,7 @@ class ComponentCartWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CartCubit, CartState>(
       bloc: context.read<CartCubit>(),
+      buildWhen: (previous, current) => previous.itemCarts != current.itemCarts,
       builder: (context, state) {
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 10),

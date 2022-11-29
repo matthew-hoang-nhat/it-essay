@@ -33,30 +33,27 @@ class FlashSaleWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Hero(
-              tag: 'flashSale:${product.slug}',
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(5),
-                child: Container(
+            ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: Container(
+                  width: size,
+                  height: size,
+                  // constraints:
+                  //     const BoxConstraints(minHeight: 200, minWidth: 200),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(AppDimensions.dp5),
+                    color: AppColors.whiteBrownColor,
+                  ),
+                  alignment: Alignment.topCenter,
+                  child: CachedNetworkImage(
+                    imageUrl: firstImage,
                     width: size,
                     height: size,
-                    // constraints:
-                    //     const BoxConstraints(minHeight: 200, minWidth: 200),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(AppDimensions.dp5),
-                      color: AppColors.whiteBrownColor,
-                    ),
-                    alignment: Alignment.topCenter,
-                    child: CachedNetworkImage(
-                      imageUrl: firstImage,
-                      width: size,
-                      height: size,
-                      fit: BoxFit.cover,
-                      errorWidget: ((context, url, error) => Image.asset(
-                            AppAssets.fkImHarryPotter3,
-                          )),
-                    )),
-              ),
+                    fit: BoxFit.cover,
+                    errorWidget: ((context, url, error) => Image.asset(
+                          AppAssets.fkImHarryPotter3,
+                        )),
+                  )),
             ),
             const SizedBox(height: 5),
             Text(
