@@ -6,7 +6,7 @@ part 'item_cart_dao.g.dart';
 @HiveType(typeId: 0)
 class ItemCart extends HiveObject {
   @HiveField(0)
-  final String slug;
+  final String id;
 
   @HiveField(1)
   final String name;
@@ -30,7 +30,7 @@ class ItemCart extends HiveObject {
 
   ItemCart({
     required this.price,
-    required this.slug,
+    required this.id,
     required this.name,
     required this.quantity,
     required this.sellerName,
@@ -50,7 +50,7 @@ class ItemCart extends HiveObject {
     int? price,
   }) {
     return ItemCart(
-      slug: slug ?? this.slug,
+      id: slug ?? id,
       name: name ?? this.name,
       quantity: quantity ?? this.quantity,
       sellerName: sellerName ?? this.sellerName,

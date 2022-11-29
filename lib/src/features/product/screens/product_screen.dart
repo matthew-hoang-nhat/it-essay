@@ -16,6 +16,7 @@ import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/product/cubit/product_cubit.dart';
 import 'package:it_project/src/features/product/widgets/component_review_widget.dart';
 import 'package:it_project/src/utils/remote/model/product/product.dart';
+import 'package:it_project/src/utils/remote/model/product/product_picture.dart';
 import 'package:it_project/src/widgets/load_widget.dart';
 import 'package:it_project/src/widgets/start_widget.dart';
 
@@ -276,6 +277,9 @@ class ProductScreen extends StatelessWidget {
       // bloc: bloc,
       buildWhen: ((previous, current) => previous.product != current.product),
       builder: (context, state) {
+        final imagePictures = (state.product.productImages as List)
+            .map((e) => ProductPicture.fromJson(e));
+
         return Stack(
           alignment: Alignment.bottomRight,
           children: [
@@ -299,9 +303,8 @@ class ProductScreen extends StatelessWidget {
                                 topRight: Radius.circular(5),
                               ),
                               child: CachedNetworkImage(
-                                imageUrl: state.product.productImages
-                                    .elementAt(index)
-                                    .fileLink,
+                                imageUrl:
+                                    imagePictures.elementAt(index).fileLink,
                                 width: double.infinity,
                                 height: 300,
                                 fit: BoxFit.fitHeight,
@@ -336,9 +339,7 @@ class ProductScreen extends StatelessWidget {
                               topRight: Radius.circular(5),
                             ),
                             child: CachedNetworkImage(
-                              imageUrl: state.product.productImages
-                                  .elementAt(index)
-                                  .fileLink,
+                              imageUrl: imagePictures.elementAt(index).fileLink,
                               width: double.infinity,
                               height: 300,
                               fit: BoxFit.fitHeight,
@@ -355,8 +356,7 @@ class ProductScreen extends StatelessWidget {
               builder: (context, state) {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(state.product.productImages.length,
-                      (index) {
+                  children: List.generate(imagePictures.length, (index) {
                     return Container(
                       height: 10,
                       width: 10,
@@ -517,6 +517,10 @@ class ProductScreen extends StatelessWidget {
       buildWhen: (previous, current) =>
           previous.isDescribeShowAll != current.isDescribeShowAll,
       builder: (context, state) {
+        final firstImage = (state.product.productImages as List)
+            .map((e) => ProductPicture.fromJson(e))
+            .first
+            .fileLink;
         return state.isDescribeShowAll == true
             ? Container(
                 padding:
@@ -531,7 +535,7 @@ class ProductScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      state.product.description,
+                      state.product.description ?? '',
                     ),
                   ],
                 ),
@@ -549,7 +553,7 @@ class ProductScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      state.product.description,
+                      state.product.description ?? '',
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -558,8 +562,7 @@ class ProductScreen extends StatelessWidget {
                       SizedBox(
                           height: 180,
                           child: CachedNetworkImage(
-                            imageUrl:
-                                state.product.productImages.first.fileLink,
+                            imageUrl: firstImage,
                             width: double.infinity,
                             height: 180,
                             fit: BoxFit.cover,

@@ -57,7 +57,7 @@ class ItemCartWidget extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      greyTextAndBlackText('Mã sản phẩm:', product.slug),
+                      greyTextAndBlackText('Mã sản phẩm:', product.id),
                       const SizedBox(height: 20),
                       Row(
                         children: [
@@ -91,7 +91,7 @@ class ItemCartWidget extends StatelessWidget {
                             onTap: () {
                               context.read<CartCubit>().actionCart(
                                   CartActionEnum.dec,
-                                  productSlug: product.slug);
+                                  id: product.id);
 
                               if (product.quantity == 1) {
                                 showDialog(
@@ -139,7 +139,7 @@ class ItemCartWidget extends StatelessWidget {
                                                 .read<CartCubit>()
                                                 .actionCart(
                                                     CartActionEnum.removeItem,
-                                                    productSlug: product.slug);
+                                                    id: product.id);
                                             context
                                                 .read<AppCubit>()
                                                 .reGetItemCartQuantity();
@@ -189,7 +189,7 @@ class ItemCartWidget extends StatelessWidget {
                             onTap: () {
                               context.read<CartCubit>().actionCart(
                                   CartActionEnum.inc,
-                                  productSlug: product.slug);
+                                  id: product.id);
                               context.read<AppCubit>().reGetItemCartQuantity();
                             },
                             child: Container(

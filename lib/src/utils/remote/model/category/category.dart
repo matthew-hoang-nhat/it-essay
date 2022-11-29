@@ -8,12 +8,12 @@ class Category {
   @JsonKey(name: 'name')
   String name;
   @JsonKey(name: 'slug')
-  String slug;
+  String? slug;
 
   Category({
-    required this.id,
+    this.id,
     required this.name,
-    required this.slug,
+    this.slug,
   });
 
   factory Category.fromJson(Map<String, dynamic> json) =>

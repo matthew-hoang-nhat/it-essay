@@ -147,7 +147,10 @@ class LoginScreen extends StatelessWidget {
                                   )
                                   .then((value) {
                                 if (value == true) {
-                                  context.read<AppCubit>().fetchFUser();
+                                  context
+                                      .read<AppCubit>()
+                                      .fetchUserAndLoadItemCartsServer();
+
                                   context.go(Paths.mainScreen);
                                 }
                                 context.read<MainCubit>().reloadMainScreen();

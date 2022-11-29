@@ -10,11 +10,7 @@ import 'package:it_project/src/utils/repository/product_repository_impl.dart';
 part 'cart_state.dart';
 
 // enum CartEnum { itemCarts, price, priceAfterSaleOff, itemQuantity }
-enum CartEnum {
-  itemCarts,
-  price,
-  priceAfterSaleOff,
-}
+enum CartEnum { itemCarts, price, priceAfterSaleOff, isLoading }
 
 enum CartActionEnum { inc, dec, removeItem }
 
@@ -26,6 +22,7 @@ class CartCubit extends Cubit<CartState>
           itemCarts: [],
           price: 0,
           priceAfterSaleOff: 0,
+          isLoading: false,
           // itemQuantity: 0,
         ));
 
@@ -41,7 +38,7 @@ class CartCubit extends Cubit<CartState>
   }
 
   void _reloadPrice() {
-    final itemCarts = cart.itemCarts;
+    final itemCarts = cartLocal.itemCarts;
     var price = _sumArray(itemCarts.map((e) => e.quantity * e.price).toList());
     var priceAfterSaleOff = _sumArray((itemCarts
             .map((e) => e.quantity * e.price * (100 - e.discountPercent) / 100))
@@ -51,24 +48,44 @@ class CartCubit extends Cubit<CartState>
     addNewEvent(CartEnum.priceAfterSaleOff, priceAfterSaleOff);
   }
 
-  initCubit() {
-    final itemCarts = cart.itemCarts;
+  _getItemCartLocal() {
+    final itemCarts = cartLocal.itemCarts;
     addNewEvent(CartEnum.itemCarts, itemCarts);
     _reloadPrice();
   }
 
-  actionCart(CartActionEnum cartAction, {required String productSlug}) {
+  _getItemCartServer() async {
+    await fetchItemCartsServerMixin();
+    final itemCarts = cartLocal.itemCarts;
+    addNewEvent(CartEnum.itemCarts, itemCarts);
+    _reloadPrice();
+  }
+
+  initCubit() async {
+    addNewEvent(CartEnum.isLoading, true);
+    _getItemCartLocal();
+    await _getItemCartServer();
+    addNewEvent(CartEnum.isLoading, false);
+  }
+
+  actionCart(CartActionEnum cartAction, {required String id}) {
     switch (cartAction) {
       case CartActionEnum.inc:
-        _plusQuantityItemCart(productSlug);
+        _plusQuantityItemCart(id);
+        updateItemCartServer(
+            cartLocal.itemCarts.firstWhere((element) => element.id == id));
 
         break;
       case CartActionEnum.dec:
-        _minusQuantityItemCart(productSlug);
+        _minusQuantityItemCart(id);
+        updateItemCartServer(
+            cartLocal.itemCarts.firstWhere((element) => element.id == id));
 
         break;
       case CartActionEnum.removeItem:
-        _removeItemCart(productSlug);
+        removeItemCartServer(
+            cartLocal.itemCarts.firstWhere((element) => element.id == id));
+        _removeItemCart(id);
         break;
       default:
     }
@@ -76,39 +93,36 @@ class CartCubit extends Cubit<CartState>
     _reloadPrice();
   }
 
-  _plusQuantityItemCart(String slug) {
+  _plusQuantityItemCart(String id) {
     final itemCarts = [
       for (var item in state.itemCarts)
-        if (item.slug == slug)
-          item.copyWith(quantity: item.quantity + 1)
-        else
-          item
+        if (item.id == id) item.copyWith(quantity: item.quantity + 1) else item
     ];
 
     addNewEvent(CartEnum.itemCarts, itemCarts);
-    updateItemCartMixin(itemCarts);
+    updateItemCartsLocal(itemCarts);
   }
 
-  _minusQuantityItemCart(String slug) {
+  _minusQuantityItemCart(String id) {
     final itemCarts = [
       for (var item in state.itemCarts)
-        if (item.slug == slug && item.quantity > 1)
+        if (item.id == id && item.quantity > 1)
           item.copyWith(quantity: item.quantity - 1)
         else
           item
     ];
 
     addNewEvent(CartEnum.itemCarts, itemCarts);
-    updateItemCartMixin(itemCarts);
+    updateItemCartsLocal(itemCarts);
   }
 
-  _removeItemCart(String slug) {
+  _removeItemCart(String id) {
     final itemCarts = [
       for (var item in state.itemCarts)
-        if (item.slug != slug) item
+        if (item.id != id) item
     ];
     addNewEvent(CartEnum.itemCarts, itemCarts);
-    updateItemCartMixin(itemCarts);
+    updateItemCartsLocal(itemCarts);
   }
 
   @override
@@ -123,6 +137,9 @@ class CartCubit extends Cubit<CartState>
         break;
       case CartEnum.priceAfterSaleOff:
         emit(NewCartState.fromOldSettingState(state, priceAfterSaleOff: value));
+        break;
+      case CartEnum.isLoading:
+        emit(NewCartState.fromOldSettingState(state, isLoading: value));
         break;
       // case CartEnum.itemQuantity:
       //   emit(NewCartState.fromOldSettingState(state, itemQuantity: value));

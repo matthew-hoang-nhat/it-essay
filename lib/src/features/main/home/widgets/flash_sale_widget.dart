@@ -8,6 +8,7 @@ import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/constants/app_dimensions.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/utils/remote/model/product/product.dart';
+import 'package:it_project/src/utils/remote/model/product/product_picture.dart';
 
 class FlashSaleWidget extends StatelessWidget {
   const FlashSaleWidget({Key? key, required this.product}) : super(key: key);
@@ -17,6 +18,11 @@ class FlashSaleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final formatCurrency = NumberFormat.simpleCurrency(locale: 'vi_VN');
     final size = MediaQuery.of(context).size.width * 2 / 8;
+
+    final firstImage = (product.productImages as List)
+        .map((e) => ProductPicture.fromJson(e))
+        .first
+        .fileLink;
     return InkWell(
       onTap: () {
         context.push(Paths.productScreen, extra: product);
@@ -42,7 +48,7 @@ class FlashSaleWidget extends StatelessWidget {
                     ),
                     alignment: Alignment.topCenter,
                     child: CachedNetworkImage(
-                      imageUrl: product.productImages.first.fileLink,
+                      imageUrl: firstImage,
                       width: size,
                       height: size,
                       fit: BoxFit.cover,
