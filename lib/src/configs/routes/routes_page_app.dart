@@ -50,8 +50,7 @@ class AppPages {
     GoRoute(
       path: Paths.productScreen,
       builder: (context, state) => ProductScreen(
-        product: (state.extra as Map)['product'] as Product,
-        tagHero: (state.extra as Map)['tagHero'] as String,
+        product: state.extra as Product,
       ),
     ),
     GoRoute(

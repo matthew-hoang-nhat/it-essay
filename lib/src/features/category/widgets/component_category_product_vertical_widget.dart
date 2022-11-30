@@ -41,7 +41,6 @@ class ComponentCategoryProductVerticalWidget extends StatelessWidget {
                                   extra: productOdd);
                             },
                             child: ProductWidget(
-                              tagHero: 'product${productOdd.slug}',
                               product: productOdd,
                               isHeart: false,
                               isBorder: true,
@@ -58,7 +57,6 @@ class ComponentCategoryProductVerticalWidget extends StatelessWidget {
                                         extra: productEven);
                                   },
                                   child: ProductWidget(
-                                    tagHero: 'product${productOdd.slug}',
                                     product: productEven,
                                     isHeart: false,
                                     isBorder: true,

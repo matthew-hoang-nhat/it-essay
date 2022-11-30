@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:it_project/src/utils/remote/model/cart/add_item_cart_request.dart';
 import 'package:it_project/src/utils/remote/services/state_response/success_response.dart';
 
 import 'package:retrofit/retrofit.dart';
@@ -12,12 +13,13 @@ abstract class CartService {
   @GET("/cart/get-cart-items")
   Future<SuccessResponse> getItemsInCart();
 
-  @GET("/cart/add-to-cart")
-  Future<SuccessResponse> addItemInCart();
+  @POST("/cart/add-to-cart")
+  Future<SuccessResponse> addItemInCart(@Body() AddItemCartRequest cartItem);
 
-  // @POST("/cart/remove-item")
-  // Future<SuccessResponse> removeItemInCart(@Body() CartItem cartItem);
+  @POST("/cart/add-multiple-items")
+  Future<SuccessResponse> addMultiItemsInCart(
+      @Body() AddItemCartRequest cartItem);
 
-  // @POST("/cart/add-multiple-items")
-  // Future<SuccessResponse> addMultiItemsInCart(@Body() CartItem cartItem);
+  @POST("/cart/remove-item")
+  Future<SuccessResponse> removeItemInCart(@Body() AddItemCartRequest cartItem);
 }

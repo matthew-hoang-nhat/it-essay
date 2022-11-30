@@ -4,6 +4,7 @@ import 'package:it_project/main.dart';
 import 'package:it_project/src/features/app/fcart_local.dart';
 import 'package:it_project/src/features/app/fuser_local.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
+import 'package:it_project/src/features/shopping_cart/mixin/action_cart.dart';
 import 'package:it_project/src/local/dao/fuser_local_dao.dart';
 import 'package:it_project/src/utils/repository/profile_respository.dart';
 import 'package:it_project/src/utils/repository/profile_respository_impl.dart';
@@ -12,7 +13,9 @@ part 'app_state.dart';
 
 enum AppCubitEnum { fUser, itemCartQuantity }
 
-class AppCubit extends Cubit<AppState> implements ParentCubit<AppCubitEnum> {
+class AppCubit extends Cubit<AppState>
+    with ActionCart
+    implements ParentCubit<AppCubitEnum> {
   AppCubit()
       : super(AppInitial(
           fUser: getIt<FUserLocal>().fUser,
@@ -28,10 +31,20 @@ class AppCubit extends Cubit<AppState> implements ParentCubit<AppCubitEnum> {
 
   bool isLoadingProfileUser = false;
 
-  initCubit() {
+  initCubit() async {
     if (_fUserLocal.isLogged) {
       fetchFUser();
+      await fetchItemCartsServerMixin();
     }
+
+    reGetItemCartQuantity();
+  }
+
+  _loadItemCartsServer() async {
+    await updateItemCartsMixin(
+        itemCarts: FCartLocal().itemCarts, type: ActionCartTypeEnum.server);
+    await fetchItemCartsServerMixin();
+    reGetItemCartQuantity();
   }
 
   reGetItemCartQuantity() {
@@ -45,7 +58,12 @@ class AppCubit extends Cubit<AppState> implements ParentCubit<AppCubitEnum> {
     addNewEvent(AppCubitEnum.itemCartQuantity, 0);
   }
 
-  Future<void> fetchFUser() async {
+  fetchUserAndLoadItemCartsServer() async {
+    await fetchFUser();
+    await _loadItemCartsServer();
+  }
+
+  fetchFUser() async {
     isLoadingProfileUser = true;
     final response = await _profileRepo.getProfileUser();
     if (response.isSuccess) {

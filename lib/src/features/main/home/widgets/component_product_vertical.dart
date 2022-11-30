@@ -39,13 +39,12 @@ class ComponentProductVertical extends StatelessWidget {
                           Flexible(
                             child: InkWell(
                               onTap: () {
-                                context.push(Paths.productScreen, extra: {
-                                  'product': productOdd,
-                                  'tagHero': productOdd.slug
-                                });
+                                context.push(
+                                  Paths.productScreen,
+                                  extra: productOdd,
+                                );
                               },
                               child: ProductWidget(
-                                  tagHero: 'product${productOdd.slug}',
                                   product: productOdd,
                                   // product: BriefProductModel(
                                   //     slug: productOdd.slug,
@@ -65,13 +64,12 @@ class ComponentProductVertical extends StatelessWidget {
                               : Flexible(
                                   child: InkWell(
                                     onTap: () {
-                                      context.push(Paths.productScreen, extra: {
-                                        'product': productEven,
-                                        'tagHero': productEven.slug
-                                      });
+                                      context.push(
+                                        Paths.productScreen,
+                                        extra: productEven,
+                                      );
                                     },
                                     child: ProductWidget(
-                                        tagHero: 'product${productEven.slug}',
                                         product: productEven,
                                         // product: BriefProductModel(
                                         //     slug: productEven.slug,

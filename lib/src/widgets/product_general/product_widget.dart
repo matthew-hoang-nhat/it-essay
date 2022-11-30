@@ -12,6 +12,7 @@ import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/utils/remote/model/product/product.dart';
 
 import 'package:intl/intl.dart';
+import 'package:it_project/src/utils/remote/model/product/product_picture.dart';
 
 // ignore: must_be_immutable
 class ProductWidget extends StatefulWidget {
@@ -19,12 +20,11 @@ class ProductWidget extends StatefulWidget {
       {super.key,
       required this.product,
       required this.isHeart,
-      required this.tagHero,
       this.isBorder = false});
   final Product product;
   bool isHeart;
   bool isBorder;
-  final String tagHero;
+
   @override
   State<ProductWidget> createState() => _ProductWidgetState();
 }
@@ -36,10 +36,7 @@ class _ProductWidgetState extends State<ProductWidget> {
       onTap: () {
         context.push(
           Paths.productScreen,
-          extra: {
-            'product': widget.product,
-            'tagHero': widget.tagHero,
-          },
+          extra: widget.product,
         );
       },
       child: Container(
@@ -53,10 +50,6 @@ class _ProductWidgetState extends State<ProductWidget> {
               : null,
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          // Hero(
-          //   tag: widget.tagHero,
-          //   child:
-          // ),
           _imageProduct(),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -143,6 +136,10 @@ class _ProductWidgetState extends State<ProductWidget> {
   }
 
   Widget _imageProduct() {
+    final firstImage = (widget.product.productImages as List)
+        .map((e) => ProductPicture.fromJson(e))
+        .first
+        .fileLink;
     return SizedBox(
       height: 180,
       width: double.infinity,
@@ -159,7 +156,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                   fit: BoxFit.fitHeight,
                 )
               : CachedNetworkImage(
-                  imageUrl: widget.product.productImages.first.fileLink,
+                  imageUrl: firstImage,
                   height: 180,
                   width: double.infinity,
                   fit: BoxFit.fitHeight,

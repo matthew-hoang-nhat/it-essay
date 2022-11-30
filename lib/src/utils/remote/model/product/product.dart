@@ -4,7 +4,6 @@ import 'package:it_project/src/utils/remote/model/seller/profile_seller.dart';
 
 import 'package:json_annotation/json_annotation.dart';
 
-import 'product_picture.dart';
 part 'product.g.dart';
 
 @JsonSerializable()
@@ -24,11 +23,11 @@ class Product {
   @JsonKey(name: 'category')
   Category category;
   @JsonKey(name: 'description')
-  String description;
+  String? description;
   @JsonKey(name: 'summary')
-  String summary;
+  String? summary;
   @JsonKey(name: 'productPictures')
-  List<ProductPicture> productImages;
+  dynamic productImages;
   @JsonKey(name: 'specs')
   Spec spec;
 
