@@ -40,7 +40,9 @@ class LoginScreen extends StatelessWidget {
         return Stack(
           children: [
             Scaffold(
-              appBar: AppBar(),
+              appBar: AppBar(
+                backgroundColor: AppColors.whiteColor,
+              ),
               resizeToAvoidBottomInset: false,
               body: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -247,7 +249,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
             ),
-            state.isLoading == true ? const LoadWidget() : Container()
+            state.isLoading == true ? const LoadingWidget() : Container()
           ],
         );
       }),

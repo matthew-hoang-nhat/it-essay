@@ -8,13 +8,17 @@ import 'package:it_project/src/utils/repository/product_repository_impl.dart';
 
 part 'detail_category_state.dart';
 
-enum DetailCategoryEnum { products, isEmpty }
+enum DetailCategoryEnum { products, isEmpty, isLoading }
 
 class DetailCategoryCubit extends Cubit<DetailCategoryState>
     implements ParentCubit<DetailCategoryEnum> {
   DetailCategoryCubit({required String slugCategory})
       : super(DetailCategoryInitial(
-            products: const [], slugCategory: slugCategory, isEmpty: false));
+          products: const [],
+          slugCategory: slugCategory,
+          isEmpty: false,
+          isLoading: false,
+        ));
   ProductRepository productRepository = getIt<ProductRepositoryImpl>();
   int _currentPageProducts = 1;
   bool isLoadingProducts = false;
@@ -26,7 +30,7 @@ class DetailCategoryCubit extends Cubit<DetailCategoryState>
   }
 
   void _getProducts() async {
-    isLoadingProducts = true;
+    addNewEvent(DetailCategoryEnum.isLoading, true);
     final productsResponse = await productRepository.getProductsOfCategoryPage(
       numberPage: _currentPageProducts,
       categorySlug: state.slugCategory,
@@ -42,7 +46,7 @@ class DetailCategoryCubit extends Cubit<DetailCategoryState>
       addNewEvent(DetailCategoryEnum.isEmpty, true);
     }
 
-    isLoadingProducts = false;
+    addNewEvent(DetailCategoryEnum.isLoading, false);
   }
 
   @override
@@ -55,6 +59,10 @@ class DetailCategoryCubit extends Cubit<DetailCategoryState>
         break;
       case DetailCategoryEnum.isEmpty:
         emit(NewDetailCategoryState.fromOldSettingState(state, isEmpty: value));
+        break;
+      case DetailCategoryEnum.isLoading:
+        emit(NewDetailCategoryState.fromOldSettingState(state,
+            isLoading: value));
         break;
       default:
     }

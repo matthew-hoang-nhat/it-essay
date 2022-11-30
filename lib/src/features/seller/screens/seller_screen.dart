@@ -14,6 +14,7 @@ import 'package:it_project/src/features/seller/screens/seller_tab_product.dart';
 import 'package:it_project/src/features/seller/screens/seller_tab_shop.dart';
 import 'package:it_project/src/utils/remote/model/seller/profile_seller.dart';
 import 'package:it_project/src/widgets/cart_button.dart';
+import 'package:it_project/src/widgets/load_widget.dart';
 import 'package:it_project/src/widgets/start_widget.dart';
 
 class SellerScreen extends StatefulWidget {
@@ -92,6 +93,12 @@ class _SellerScreenState extends State<SellerScreen>
                 );
               },
             ),
+            BlocBuilder<SellerCubit, SellerState>(
+              builder: (context, state) {
+                if (state.isLoading) return const LoadingWidget();
+                return Container();
+              },
+            )
           ],
         ));
   }
