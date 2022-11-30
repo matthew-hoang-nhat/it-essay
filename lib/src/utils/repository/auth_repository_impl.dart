@@ -70,4 +70,16 @@ class AuthRepositoryImpl extends AuthRepository {
       return FResult.error(ex.toString());
     }
   }
+
+  // @override
+  // Future<FResult<Map>> refreshToken() async {
+  // try {
+  // final result = await authService.refreshToken();
+  // print(result);
+  // return FResult.success(jsonDecode(result));
+  // } catch (ex) {
+  //   log(ex.toString());
+  //   return FResult.error(ex.toString());
+  // }
+  // }
 }

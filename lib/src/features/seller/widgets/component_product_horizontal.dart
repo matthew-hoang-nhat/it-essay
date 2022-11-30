@@ -25,7 +25,6 @@ class ComponentProductHorizontal extends StatelessWidget {
             product: products[index],
             isBorder: true,
             isHeart: false,
-            tagHero: '$categorySlug${products[index].slug}',
           ),
         )),
       for (var index = 0; index < maxProductInARow - products.length; index++)

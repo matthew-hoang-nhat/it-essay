@@ -44,7 +44,6 @@ class ComponentSearchProductVertical extends StatelessWidget {
                                   extra: productOdd);
                             },
                             child: ProductWidget(
-                              tagHero: 'product${productOdd.slug}',
                               product: productOdd,
                               // product: BriefProductModel(
                               //     slug: productOdd.slug,
@@ -69,7 +68,6 @@ class ComponentSearchProductVertical extends StatelessWidget {
                                         extra: productEven);
                                   },
                                   child: ProductWidget(
-                                    tagHero: 'product${productEven.slug}',
                                     product: productEven,
                                     // product: BriefProductModel(
                                     //     slug: productEven.slug,

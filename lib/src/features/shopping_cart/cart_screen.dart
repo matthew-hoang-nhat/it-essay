@@ -4,9 +4,11 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
+import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/shopping_cart/cubit/cart_cubit.dart';
 import 'package:intl/intl.dart';
 import 'package:it_project/src/features/shopping_cart/widgets/component_cart_widget.dart';
+import 'package:it_project/src/widgets/load_widget.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -33,92 +35,106 @@ class _CartScreenState extends State<CartScreen> {
             ),
             actions: const [],
           ),
-          body: Column(
+          bottomNavigationBar: bottomAppBar(),
+          body: Stack(
             children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      const ComponentCartWidget(),
-                      const SizedBox(height: 20),
-                      const SizedBox(height: 20),
-                      moreInformation(),
-                      const SizedBox(height: 20),
-                    ],
-                  ),
+              SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    const ComponentCartWidget(),
+                    const SizedBox(height: 20),
+                    const SizedBox(height: 20),
+                    moreInformation(),
+                    const SizedBox(height: 20),
+                  ],
                 ),
               ),
-              Container(
-                height: 70,
-                decoration: BoxDecoration(
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0.0, 1.0), //(x,y)
-                      blurRadius: 2,
-                    ),
-                  ],
-                  color: AppColors.whiteColor,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      BlocBuilder<CartCubit, CartState>(
-                        builder: (context, state) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Column(
-                                children: [
-                                  Text(
-                                    formatCurrency
-                                        .format(state.priceAfterSaleOff),
-                                    style: GoogleFonts.nunito(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                        color: AppColors.redColor),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  if (state.price != state.priceAfterSaleOff)
-                                    Text(
-                                      formatCurrency.format(state.price),
-                                      style: GoogleFonts.nunito(
-                                        decoration: TextDecoration.lineThrough,
-                                        decorationThickness: 3,
-                                        color: AppColors.greyColor,
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                      ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  AppColors.blueColor),
-                              padding: MaterialStateProperty.all<EdgeInsets>(
-                                  const EdgeInsets.symmetric(horizontal: 20)),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(100),
-                              ))),
-                          onPressed: () {
-                            // context.push(Paths.payment);
-                          },
-                          child: const Text('Thanh toán')),
-                    ],
-                  ),
-                ),
+              BlocBuilder<CartCubit, CartState>(
+                buildWhen: (previous, current) =>
+                    previous.isLoading != current.isLoading,
+                builder: (context, state) {
+                  if (state.isLoading) {
+                    return const LoadingWidget(
+                      loadingType: LoadingTypeEnum.fast,
+                    );
+                  }
+
+                  return Container();
+                },
               )
             ],
           )),
+    );
+  }
+
+  Container bottomAppBar() {
+    return Container(
+      height: 70,
+      decoration: BoxDecoration(
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.grey,
+            offset: Offset(0.0, 1.0), //(x,y)
+            blurRadius: 2,
+          ),
+        ],
+        color: AppColors.whiteColor,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            BlocBuilder<CartCubit, CartState>(
+              builder: (context, state) {
+                context.read<AppCubit>().reGetItemCartQuantity();
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          formatCurrency.format(state.priceAfterSaleOff),
+                          style: GoogleFonts.nunito(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: AppColors.redColor),
+                        ),
+                        const SizedBox(width: 10),
+                        if (state.price != state.priceAfterSaleOff)
+                          Text(
+                            formatCurrency.format(state.price),
+                            style: GoogleFonts.nunito(
+                              decoration: TextDecoration.lineThrough,
+                              decorationThickness: 3,
+                              color: AppColors.greyColor,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
+                );
+              },
+            ),
+            ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(AppColors.blueColor),
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                        const EdgeInsets.symmetric(horizontal: 20)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ))),
+                onPressed: () {
+                  // context.push(Paths.payment);
+                },
+                child: const Text('Thanh toán')),
+          ],
+        ),
+      ),
     );
   }
 

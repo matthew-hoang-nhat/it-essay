@@ -14,6 +14,8 @@ enum CartEnum {
   itemCarts,
   price,
   priceAfterSaleOff,
+  isLoading,
+  itemCartsChecked
 }
 
 enum CartActionEnum { inc, dec, removeItem }
@@ -23,11 +25,11 @@ class CartCubit extends Cubit<CartState>
     implements ParentCubit<CartEnum> {
   CartCubit()
       : super(const CartInitial(
-          itemCarts: [],
-          price: 0,
-          priceAfterSaleOff: 0,
-          // itemQuantity: 0,
-        ));
+            itemCarts: [],
+            price: 0,
+            priceAfterSaleOff: 0,
+            isLoading: false,
+            itemCartsChecked: []));
 
   ProductRepository productRepository = getIt<ProductRepositoryImpl>();
 
@@ -41,34 +43,58 @@ class CartCubit extends Cubit<CartState>
   }
 
   void _reloadPrice() {
-    final itemCarts = cart.itemCarts;
-    var price = _sumArray(itemCarts.map((e) => e.quantity * e.price).toList());
-    var priceAfterSaleOff = _sumArray((itemCarts
-            .map((e) => e.quantity * e.price * (100 - e.discountPercent) / 100))
+    final itemCarts = cartLocal.itemCarts;
+    var price = _sumArray(itemCarts
+        .map((e) =>
+            state.itemCartsChecked.contains(e.id) ? e.quantity * e.price : 0)
         .toList());
+    var priceAfterSaleOff = _sumArray((itemCarts.map((e) =>
+        state.itemCartsChecked.contains(e.id)
+            ? e.quantity * e.price * (100 - e.discountPercent) / 100
+            : 0)).toList());
 
     addNewEvent(CartEnum.price, price);
     addNewEvent(CartEnum.priceAfterSaleOff, priceAfterSaleOff);
   }
 
-  initCubit() {
-    final itemCarts = cart.itemCarts;
+  _getItemCartLocal() {
+    final itemCarts = cartLocal.itemCarts;
     addNewEvent(CartEnum.itemCarts, itemCarts);
     _reloadPrice();
   }
 
-  actionCart(CartActionEnum cartAction, {required String productSlug}) {
+  _getItemCartServer() async {
+    await fetchItemCartsServerMixin();
+    final itemCarts = cartLocal.itemCarts;
+    addNewEvent(CartEnum.itemCarts, itemCarts);
+    _reloadPrice();
+  }
+
+  initCubit() async {
+    addNewEvent(CartEnum.isLoading, true);
+    _getItemCartLocal();
+    await _getItemCartServer();
+    addNewEvent(CartEnum.isLoading, false);
+  }
+
+  actionCart(CartActionEnum cartAction, {required String id}) {
     switch (cartAction) {
       case CartActionEnum.inc:
-        _plusQuantityItemCart(productSlug);
+        _plusQuantityItemCart(id);
+        updateAnItemCartServer(
+            cartLocal.itemCarts.firstWhere((element) => element.id == id));
 
         break;
       case CartActionEnum.dec:
-        _minusQuantityItemCart(productSlug);
+        _minusQuantityItemCart(id);
+        updateAnItemCartServer(
+            cartLocal.itemCarts.firstWhere((element) => element.id == id));
 
         break;
       case CartActionEnum.removeItem:
-        _removeItemCart(productSlug);
+        removeItemCartServer(
+            cartLocal.itemCarts.firstWhere((element) => element.id == id));
+        _removeItemCart(id);
         break;
       default:
     }
@@ -76,39 +102,69 @@ class CartCubit extends Cubit<CartState>
     _reloadPrice();
   }
 
-  _plusQuantityItemCart(String slug) {
+  _plusQuantityItemCart(String id) {
     final itemCarts = [
       for (var item in state.itemCarts)
-        if (item.slug == slug)
-          item.copyWith(quantity: item.quantity + 1)
-        else
-          item
+        if (item.id == id) item.copyWith(quantity: item.quantity + 1) else item
     ];
 
     addNewEvent(CartEnum.itemCarts, itemCarts);
-    updateItemCartMixin(itemCarts);
+    updateItemCartsMixin(itemCarts: itemCarts, type: ActionCartTypeEnum.local);
   }
 
-  _minusQuantityItemCart(String slug) {
+  _minusQuantityItemCart(String id) {
     final itemCarts = [
       for (var item in state.itemCarts)
-        if (item.slug == slug && item.quantity > 1)
+        if (item.id == id && item.quantity > 1)
           item.copyWith(quantity: item.quantity - 1)
         else
           item
     ];
 
     addNewEvent(CartEnum.itemCarts, itemCarts);
-    updateItemCartMixin(itemCarts);
+    updateItemCartsMixin(itemCarts: itemCarts, type: ActionCartTypeEnum.local);
   }
 
-  _removeItemCart(String slug) {
+  _removeItemCart(String id) {
     final itemCarts = [
       for (var item in state.itemCarts)
-        if (item.slug != slug) item
+        if (item.id != id) item
     ];
     addNewEvent(CartEnum.itemCarts, itemCarts);
-    updateItemCartMixin(itemCarts);
+    updateItemCartsMixin(itemCarts: itemCarts, type: ActionCartTypeEnum.local);
+  }
+
+  checkItemCart(String id) {
+    final itemCartsChecked = state.itemCartsChecked;
+    List<String> newItemCartsChecked = List.from(itemCartsChecked);
+
+    final isContainedItemCartChecked = itemCartsChecked.contains(id);
+    switch (isContainedItemCartChecked) {
+      case true:
+        newItemCartsChecked.remove(id);
+        break;
+
+      case false:
+        newItemCartsChecked.add(id);
+        break;
+    }
+
+    addNewEvent(CartEnum.itemCartsChecked, newItemCartsChecked);
+    _reloadPrice();
+
+    // if (itemCartsChecked.contains(id)) {
+    //   newItemCartsChecked.remove(id);
+    //   addNewEvent(CartEnum.itemCartsChecked, newItemCartsChecked);
+    //   print('xóa nha');
+    //   _reloadPrice();
+    //   return;
+    // }
+
+    // print('thêm vào');
+    // newItemCartsChecked.add(id);
+    // addNewEvent(CartEnum.itemCartsChecked, newItemCartsChecked);
+
+    // _reloadPrice();
   }
 
   @override
@@ -123,6 +179,12 @@ class CartCubit extends Cubit<CartState>
         break;
       case CartEnum.priceAfterSaleOff:
         emit(NewCartState.fromOldSettingState(state, priceAfterSaleOff: value));
+        break;
+      case CartEnum.isLoading:
+        emit(NewCartState.fromOldSettingState(state, isLoading: value));
+        break;
+      case CartEnum.itemCartsChecked:
+        emit(NewCartState.fromOldSettingState(state, itemCartsChecked: value));
         break;
       // case CartEnum.itemQuantity:
       //   emit(NewCartState.fromOldSettingState(state, itemQuantity: value));
