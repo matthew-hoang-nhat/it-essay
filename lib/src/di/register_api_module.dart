@@ -10,5 +10,8 @@ void _registerApiModule() {
   getIt.registerSingleton(CartService(getIt<DioHttpClient>()));
   getIt.registerSingleton(DeliveryService(getIt<DioHttpClient>()));
   getIt.registerSingleton(
+    LocationService(getIt<DioHttpClient>(instanceName: 'locationServer')),
+  );
+  getIt.registerSingleton(
       UpFileService(getIt<DioHttpClient>(instanceName: 'upFileServer')));
 }

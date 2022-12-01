@@ -15,6 +15,7 @@ import 'package:it_project/src/utils/remote/services/auth_service/auth_service.d
 import 'package:it_project/src/utils/remote/services/cart/cart_service.dart';
 import 'package:it_project/src/utils/remote/services/category/category_service.dart';
 import 'package:it_project/src/utils/remote/services/delivery/delivery_service.dart';
+import 'package:it_project/src/utils/remote/services/delivery/location_service.dart';
 import 'package:it_project/src/utils/remote/services/dio_http_client.dart';
 import 'package:it_project/src/utils/remote/services/product/product_service.dart';
 import 'package:it_project/src/utils/remote/services/search/search_service.dart';
@@ -24,6 +25,7 @@ import 'package:it_project/src/utils/repository/auth_repository_impl.dart';
 import 'package:it_project/src/utils/repository/cart_repository_impl.dart';
 import 'package:it_project/src/utils/repository/category_repository_impl.dart';
 import 'package:it_project/src/utils/repository/delivery_repository_impl.dart';
+import 'package:it_project/src/utils/repository/location_repository_impl.dart';
 import 'package:it_project/src/utils/repository/product_repository_impl.dart';
 import 'package:it_project/src/utils/repository/profile_respository_impl.dart';
 import 'package:it_project/src/utils/repository/search_repository_impl.dart';

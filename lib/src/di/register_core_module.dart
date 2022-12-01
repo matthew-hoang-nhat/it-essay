@@ -9,6 +9,9 @@ Future<void> _registerCoreModule() async {
   getIt.registerSingleton(
       DioHttpClient('https://external-services-production.up.railway.app/v1'),
       instanceName: 'upFileServer');
+
+  getIt.registerSingleton(DioHttpClient('https://provinces.open-api.vn/api'),
+      instanceName: 'locationServer');
 }
 
 registerAppSharedAsync() async {

@@ -7,11 +7,15 @@ part of 'address.dart';
 // **************************************************************************
 
 Address _$AddressFromJson(Map<String, dynamic> json) => Address(
+      addressCode: json['addressCode'] == null
+          ? null
+          : AddressCode.fromJson(json['addressCode'] as Map<String, dynamic>),
       name: json['name'] as String,
-      code: json['code'] as int? ?? 1,
-      zipCode: json['zipCode'] as int,
       phoneNumber: json['phoneNumber'] as String,
       address: json['address'] as String,
+      zipCode: json['zipCode'] as int? ?? 6300,
+      code: json['code'] as int? ?? 1,
+      isDefault: json['isDefault'] as bool? ?? false,
       id: json['_id'] as String?,
     );
 
@@ -21,5 +25,7 @@ Map<String, dynamic> _$AddressToJson(Address instance) => <String, dynamic>{
       'address': instance.address,
       'zipCode': instance.zipCode,
       'code': instance.code,
+      'isDefault': instance.isDefault,
       '_id': instance.id,
+      'addressCode': instance.addressCode,
     };
