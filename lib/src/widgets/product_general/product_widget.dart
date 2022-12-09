@@ -110,7 +110,7 @@ class _ProductWidgetState extends State<ProductWidget> {
     final bool isHighDiscountPrice = (widget.product.discountPercent >= 15);
 
     double priceAfterSaleOff =
-        (100 - widget.product.discountPercent) * widget.product.price / 100;
+        (100 - widget.product.discountPercent) * widget.product.price! / 100;
 
     return Row(
       children: [
