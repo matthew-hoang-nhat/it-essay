@@ -14,10 +14,10 @@ class Spec {
   String publicationDate;
 
   Spec({
-    required this.author,
-    required this.publisher,
-    required this.city,
-    required this.publicationDate,
+    this.author = '',
+    this.publisher = '',
+    this.city = '',
+    this.publicationDate = '',
   });
 
   factory Spec.fromJson(Map<String, dynamic> json) => _$SpecFromJson(json);
