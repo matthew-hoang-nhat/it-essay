@@ -1,7 +1,6 @@
 import 'package:it_project/main.dart';
 import 'package:it_project/src/features/app/fcart_local.dart';
 import 'package:it_project/src/local/dao/item_cart_dao.dart';
-import 'package:it_project/src/utils/remote/model/product/product.dart';
 import 'package:it_project/src/utils/remote/model/product/product_picture.dart';
 import 'package:it_project/src/utils/repository/cart_repository_impl.dart';
 
@@ -24,18 +23,18 @@ mixin ActionCart {
 
     if (itemsCartRequestResponse.isSuccess) {
       cartLocal.itemCarts = itemsCartRequestResponse.data!.map((e) {
-        final product = Product.fromJson(e.product as Map<String, dynamic>);
+        final product = e.product;
         final firstImage =
             ProductPicture.fromJson(product.productImages).fileLink;
 
         return ItemCart(
-            price: product.price,
+            price: product.price!,
             id: product.id,
             name: product.name,
             quantity: e.quantity!,
             sellerName: product.seller!.info.name,
             discountPercent: product.discountPercent,
-            mainCategory: product.category.name,
+            mainCategory: product.category!.name,
             productImage: firstImage);
       }).toList();
     }

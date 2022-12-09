@@ -58,7 +58,7 @@ class FlashSaleWidget extends StatelessWidget {
             const SizedBox(height: 5),
             Text(
               formatCurrency.format(
-                  product.price * (100 - product.discountPercent) / 100),
+                  product.price! * (100 - product.discountPercent) / 100),
               maxLines: 2,
               textAlign: TextAlign.center,
               style: GoogleFonts.nunito(
