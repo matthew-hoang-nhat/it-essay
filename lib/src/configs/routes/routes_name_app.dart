@@ -5,9 +5,9 @@ class Paths {
   static const String loginScreen = "/login-screen";
   static const String registerScreen = "/register-screen";
   static const String cartScreen = "/cart-screen";
-  // static const String cartToOrderScreen = "cart-to-order-screen";
-  // static const String paymentMethodScreen = "payment-method-screen";
-  // static const String successPaymentScreen = "success-payment-screen";
+  static const String cartToOrderScreen = "cart-to-order-screen";
+  static const String paymentMethodScreen = "payment-method-screen";
+  static const String successPaymentScreen = "success-payment-screen";
   static const String otpScreen = "/otp-screen";
   static const String productScreen = "/product-screen";
   static const String sellerScreen = "/seller-screen";
