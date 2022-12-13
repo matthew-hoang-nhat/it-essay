@@ -17,11 +17,9 @@ abstract class AddAddressState extends Equatable {
 
   final bool isAllValidated;
   final bool isLoading;
-
   final List<Province> provinces;
   final List<District>? districts;
   final List<Ward>? wards;
-
   final Province? province;
   final District? district;
   final Ward? ward;

@@ -5,9 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/routes/routers_app.dart';
+import 'package:it_project/src/features/address/cubit/address_cubit.dart';
 import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/main/cubit/main_cubit.dart';
 import 'package:it_project/src/features/main/home/cubit/home_cubit.dart';
+import 'package:it_project/src/features/order/cubit/cart_to_order_cubit.dart';
 import 'package:it_project/src/features/order/cubit/history_order_cubit.dart';
 import 'package:it_project/src/features/search/cubit/search_cubit.dart';
 
@@ -26,9 +28,9 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => SearchCubit()),
         BlocProvider(create: (context) => HomeCubit()..initCubit()),
         BlocProvider(create: (context) => MainCubit()..reloadMainScreen()),
-        // BlocProvider(
-        //     create: (context) => AddressCubit()..initCubit(), lazy: true),
-        // BlocProvider(create: (context) => CartToOrderCubit()),
+        BlocProvider(
+            create: (context) => AddressCubit()..initCubit(), lazy: true),
+        BlocProvider(create: (context) => CartToOrderCubit()),
         BlocProvider(create: (context) => HistoryOrderCubit(), lazy: true),
       ],
       child: MaterialApp.router(

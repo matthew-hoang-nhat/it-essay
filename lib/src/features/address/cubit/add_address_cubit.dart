@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
@@ -12,7 +11,7 @@ import 'package:it_project/src/utils/repository/delivery_repository.dart';
 import 'package:it_project/src/utils/repository/delivery_repository_impl.dart';
 import 'package:it_project/src/utils/repository/location_repository.dart';
 import 'package:it_project/src/utils/repository/location_repository_impl.dart';
-
+import 'package:equatable/equatable.dart';
 part 'add_address_state.dart';
 
 enum AddAddressEnum {
@@ -69,15 +68,16 @@ class AddAddressCubit extends Cubit<AddAddressState>
     addNewEvent(AddAddressEnum.isLoading, true);
 
     final newAddress = Address(
-        addressCode: AddressCode(
-            district: state.district!.code,
-            provinceId: state.province!.code,
-            street: state.street,
-            wardId: state.ward!.code),
-        name: state.name,
-        phoneNumber: state.phoneNumber,
-        address:
-            '${state.street}, ${state.ward!.name}, ${state.district!.name}, ${state.province!.name}');
+      addressCode: AddressCode(
+          district: state.district!.code,
+          provinceId: state.province!.code,
+          street: state.street,
+          wardId: state.ward!.code),
+      name: state.name,
+      phoneNumber: state.phoneNumber,
+      address:
+          '${state.street}, ${state.ward!.name}, ${state.district!.name}, ${state.province!.name}',
+    );
     await _deliveryRepository.addAddress(
       address: newAddress,
     );

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
+import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/app/cubit/app_cubit.dart';
+import 'package:it_project/src/features/order/cubit/cart_to_order_cubit.dart';
 import 'package:it_project/src/features/shopping_cart/cubit/cart_cubit.dart';
 import 'package:intl/intl.dart';
 import 'package:it_project/src/features/shopping_cart/widgets/component_cart_widget.dart';
@@ -118,20 +122,50 @@ class _CartScreenState extends State<CartScreen> {
                 );
               },
             ),
-            ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(AppColors.blueColor),
-                    padding: MaterialStateProperty.all<EdgeInsets>(
-                        const EdgeInsets.symmetric(horizontal: 20)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100),
-                    ))),
-                onPressed: () {
-                  // context.push(Paths.payment);
-                },
-                child: const Text('Thanh toán')),
+            BlocBuilder<CartCubit, CartState>(
+              builder: (context, state) {
+                return ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            AppColors.blueColor),
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            const EdgeInsets.symmetric(horizontal: 20)),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100),
+                        ))),
+                    onPressed: () {
+                      final isEmptyCart = state.itemCartsChecked.isEmpty;
+                      if (isEmptyCart) {
+                        Fluttertoast.showToast(
+                            msg: "Bạn chưa chọn sản phẩm",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            textColor: Colors.white,
+                            fontSize: 16.0);
+                        return;
+                      }
+
+                      context.read<CartToOrderCubit>()
+                        ..emit(CartToOrderInitial(
+                          isLoading: false,
+                          addressId: null,
+                          paymentMethod: 'cod',
+                          shippingPrice: '',
+                          subTotalPrice: '',
+                          itemCarts: BlocProvider.of<CartCubit>(context)
+                              .itemCartsToOrder(),
+                          totalPrice: '',
+                        ))
+                        ..getPrice();
+
+                      context.push(
+                          '${Paths.cartScreen}/${Paths.cartToOrderScreen}');
+                    },
+                    child: const Text('Thanh toán'));
+              },
+            )
           ],
         ),
       ),

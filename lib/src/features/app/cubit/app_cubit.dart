@@ -6,21 +6,22 @@ import 'package:it_project/src/features/app/fuser_local.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
 import 'package:it_project/src/features/shopping_cart/mixin/action_cart.dart';
 import 'package:it_project/src/local/dao/fuser_local_dao.dart';
+import 'package:it_project/src/utils/remote/model/order/get/address.dart';
 import 'package:it_project/src/utils/repository/profile_respository.dart';
 import 'package:it_project/src/utils/repository/profile_respository_impl.dart';
 
 part 'app_state.dart';
 
-enum AppCubitEnum { fUser, itemCartQuantity }
+enum AppCubitEnum { fUser, itemCartQuantity, address }
 
 class AppCubit extends Cubit<AppState>
     with ActionCart
     implements ParentCubit<AppCubitEnum> {
   AppCubit()
       : super(AppInitial(
-          fUser: getIt<FUserLocal>().fUser,
-          itemCartQuantity: getIt<FCartLocal>().itemCarts.length,
-        ));
+            fUser: getIt<FUserLocal>().fUser,
+            itemCartQuantity: getIt<FCartLocal>().itemCarts.length,
+            address: null));
 
   final ProfileRepository _profileRepo = getIt<ProfileRepositoryImpl>();
 
@@ -107,6 +108,9 @@ class AppCubit extends Cubit<AppState>
         break;
       case AppCubitEnum.itemCartQuantity:
         emit(NewAppState.fromOldSettingState(state, itemCartQuantity: value));
+        break;
+      case AppCubitEnum.address:
+        emit(NewAppState.fromOldSettingState(state, address: value));
         break;
       default:
     }
