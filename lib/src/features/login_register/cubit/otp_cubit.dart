@@ -26,6 +26,8 @@ class OtpCubit extends Cubit<OtpState> implements ParentCubit<OtpEnum> {
   final int maxCount = 5;
   late int start = maxCount;
 
+  buttonOTPForgotPasswordOnClick() {}
+
   Future<bool> sendButtonClick(String otpCode, String userId) async {
     bool isLoading = true;
     addNewEvent(OtpEnum.isLoading, isLoading);
