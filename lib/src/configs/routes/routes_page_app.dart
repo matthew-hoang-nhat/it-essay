@@ -5,7 +5,10 @@ import 'package:it_project/src/features/address/screens/address_screen.dart';
 import 'package:it_project/src/features/address/screens/detail_address_screen.dart';
 import 'package:it_project/src/features/category/screens/category_screen.dart';
 import 'package:it_project/src/features/category/screens/detail_category_screen.dart';
+import 'package:it_project/src/features/login_register/screens/forgot_password_screen.dart';
 import 'package:it_project/src/features/login_register/screens/login_screen.dart';
+import 'package:it_project/src/features/login_register/screens/otp_check_screen_v2.dart';
+import 'package:it_project/src/features/login_register/screens/reset_password_screen.dart';
 
 import 'package:it_project/src/features/main/main_screen.dart';
 import 'package:it_project/src/features/order/screens/cart_to_order_screen.dart';
@@ -47,9 +50,27 @@ class AppPages {
               ]),
         ]),
     GoRoute(
-      path: Paths.loginScreen,
-      builder: (context, state) => const LoginScreen(),
-    ),
+        path: Paths.loginScreen,
+        builder: (context, state) => const LoginScreen(),
+        routes: [
+          GoRoute(
+              path: Paths.sForgotPasswordScreen,
+              builder: (context, state) => const ForgotPasswordScreen(),
+              routes: [
+                GoRoute(
+                    path: Paths.sOtpCheckScreenV2,
+                    builder: (context, state) => const OTPCheckScreenV2(
+                        // emailUser: state.extra as String,
+                        ),
+                    routes: [
+                      GoRoute(
+                        path: Paths.sResetPasswordScreen,
+                        builder: (context, state) =>
+                            const ResetPasswordScreen(),
+                      )
+                    ])
+              ])
+        ]),
     GoRoute(
       path: Paths.detailSearchScreen,
       builder: (context, state) => DetailSearchScreen(
