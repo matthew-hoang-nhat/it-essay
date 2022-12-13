@@ -6,7 +6,6 @@ import 'package:it_project/src/features/address/screens/detail_address_screen.da
 import 'package:it_project/src/features/category/screens/category_screen.dart';
 import 'package:it_project/src/features/category/screens/detail_category_screen.dart';
 import 'package:it_project/src/features/login_register/screens/login_screen.dart';
-import 'package:it_project/src/features/main/home/home_screen.dart';
 
 import 'package:it_project/src/features/main/main_screen.dart';
 import 'package:it_project/src/features/order/screens/cart_to_order_screen.dart';
@@ -15,6 +14,7 @@ import 'package:it_project/src/features/order/screens/history_order_screen.dart'
 import 'package:it_project/src/features/order/screens/payment_method_screen.dart';
 import 'package:it_project/src/features/order/screens/success_payment_screen.dart';
 import 'package:it_project/src/features/product/screens/product_screen.dart';
+import 'package:it_project/src/features/profile/screens/change_password_screen.dart';
 import 'package:it_project/src/features/profile/screens/detail_profile_screen.dart';
 import 'package:it_project/src/features/search/screens/detail_search_screen.dart';
 import 'package:it_project/src/features/search/screens/search_screen.dart';
@@ -103,6 +103,10 @@ class AppPages {
             path: Paths.subHistoryOrderScreen,
             builder: (context, state) => const HistoryOrderScreen(),
           ),
+          GoRoute(
+            path: Paths.sChangePasswordScreen,
+            builder: (context, state) => const ChangePasswordScreen(),
+          )
         ]),
     GoRoute(
         path: Paths.detailProfileScreen,
@@ -125,8 +129,5 @@ class AppPages {
     GoRoute(
         path: Paths.categoryScreen,
         builder: (context, state) => const CategoryScreen()),
-    GoRoute(
-        path: Paths.homeScreen,
-        builder: (context, state) => const HomeScreen()),
   ];
 }
