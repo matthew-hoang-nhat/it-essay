@@ -1,3 +1,4 @@
+import 'package:it_project/src/utils/remote/model/order/add/add_order_request.dart';
 import 'package:it_project/src/utils/remote/model/order/get/item_order.dart';
 import 'package:it_project/src/utils/remote/model/order/get/order_response.dart';
 import 'package:it_project/src/utils/remote/services/fresult.dart';
@@ -7,8 +8,8 @@ abstract class OrderRepository {
   final OrderService orderService;
   OrderRepository({required this.orderService});
 
-  // Future<FResult<Map<String, dynamic>>> createOrder(
-  //     {required AddOrderRequest addOrderRequest});
+  Future<FResult<Map<String, dynamic>>> createOrder(
+      {required AddOrderRequest addOrderRequest});
   Future<FResult<String>> checkStatusOrder({required String paymentId});
 
   Future<FResult<OrderResponse>> getDetailOrder({required String orderId});

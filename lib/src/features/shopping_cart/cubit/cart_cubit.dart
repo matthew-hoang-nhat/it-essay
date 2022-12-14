@@ -38,8 +38,16 @@ class CartCubit extends Cubit<CartState>
     for (var item in array) {
       sum += item;
     }
-
     return sum.toInt();
+  }
+
+  List<ItemCart> itemCartsToOrder() {
+    final itemCarts = state.itemCartsChecked.map((itemCartChecked) {
+      return state.itemCarts
+          .firstWhere((element) => element.id == itemCartChecked);
+    }).toList();
+
+    return itemCarts;
   }
 
   void _reloadPrice() {
