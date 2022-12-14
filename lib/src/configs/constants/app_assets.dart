@@ -42,4 +42,5 @@ class AppAssets {
   static const String imgPersonBook = 'assets/images/img_person_book.png';
   static const String imgPoster = 'assets/images/img_poster.png';
   static const String imgLogoTuoiTre = 'assets/images/img_tuoi_tre.png';
+  static const String imgLogoPaypal = 'assets/images/img_paypal.png';
 }

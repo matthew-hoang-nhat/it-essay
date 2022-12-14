@@ -11,17 +11,19 @@ class Product {
   @JsonKey(name: '_id')
   String id;
   @JsonKey(name: 'price')
-  int price;
+  int? price;
   @JsonKey(name: 'discountPercent')
   int discountPercent;
   @JsonKey(name: 'name')
   String name;
   @JsonKey(name: 'slug')
-  String slug;
+  String? slug;
+  @JsonKey(name: 'quantity')
+  int? quantity;
   @JsonKey(name: 'seller')
   ProfileSeller? seller;
   @JsonKey(name: 'category')
-  Category category;
+  Category? category;
   @JsonKey(name: 'description')
   String? description;
   @JsonKey(name: 'summary')
@@ -29,20 +31,21 @@ class Product {
   @JsonKey(name: 'productPictures')
   dynamic productImages;
   @JsonKey(name: 'specs')
-  Spec spec;
+  Spec? spec;
 
   Product(
       {this.discountPercent = 0,
-      required this.category,
-      required this.slug,
+      this.category,
+      this.slug,
+      this.quantity = 0,
       required this.id,
-      required this.price,
-      required this.productImages,
+      this.price,
+      this.productImages,
       required this.name,
-      required this.spec,
-      required this.description,
-      required this.summary,
-      required this.seller});
+      this.spec,
+      this.description = '',
+      this.summary = '',
+      this.seller});
 
   factory Product.fromJson(Map<String, dynamic> json) =>
       _$ProductFromJson(json);

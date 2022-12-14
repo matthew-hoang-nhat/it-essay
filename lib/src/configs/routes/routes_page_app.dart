@@ -1,14 +1,13 @@
 import 'package:go_router/go_router.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
-import 'package:it_project/src/features/address/screens/address_screen.dart';
-import 'package:it_project/src/features/address/screens/detail_address_screen.dart';
-import 'package:it_project/src/features/address/screens/add_address_screen.dart';
 import 'package:it_project/src/features/category/screens/category_screen.dart';
 import 'package:it_project/src/features/category/screens/detail_category_screen.dart';
 import 'package:it_project/src/features/login_register/screens/login_screen.dart';
 import 'package:it_project/src/features/main/home/home_screen.dart';
 
 import 'package:it_project/src/features/main/main_screen.dart';
+import 'package:it_project/src/features/order/screens/detail_order_screen.dart';
+import 'package:it_project/src/features/order/screens/history_order_screen.dart';
 import 'package:it_project/src/features/product/screens/product_screen.dart';
 import 'package:it_project/src/features/profile/screens/detail_profile_screen.dart';
 import 'package:it_project/src/features/search/screens/detail_search_screen.dart';
@@ -17,29 +16,41 @@ import 'package:it_project/src/features/seller/screens/seller_products_category_
 import 'package:it_project/src/features/seller/screens/seller_screen.dart';
 import 'package:it_project/src/features/shopping_cart/cart_screen.dart';
 import 'package:it_project/src/utils/remote/model/category/category.dart';
-import 'package:it_project/src/utils/remote/model/order/get/address.dart';
 import 'package:it_project/src/utils/remote/model/product/product.dart';
 import 'package:it_project/src/utils/remote/model/seller/profile_seller.dart';
 
 class AppPages {
   static const List<String> needAuthenticatedPages = [
-    Paths.payment,
+    // Paths.paymentMethodScreen,
   ];
 
   static final pages = <GoRoute>[
     GoRoute(
-      path: Paths.cartScreen,
-      builder: (context, state) => const CartScreen(),
-    ),
+        path: Paths.cartScreen,
+        builder: (context, state) => const CartScreen(),
+        routes: const [
+          // GoRoute(
+          //     path: Paths.cartToOrderScreen,
+          //     builder: (context, state) => const CartToOrderScreen(
+          //         // itemCarts: state.extra as List<ItemCart>,
+          //         ),
+          //     routes: [
+          //       GoRoute(
+          //         path: Paths.paymentMethodScreen,
+          //         builder: (context, state) => const PaymentMethodScreen(
+          //             // products: state.extra as List<Product>,
+          //             ),
+          //       ),
+          //     ]),
+        ]),
+
     // GoRoute(
     //   path: Paths.payment,
     //   builder: (context, state) => const CartScreen(),
     // ),
     GoRoute(
       path: Paths.loginScreen,
-      builder: (context, state) => const LoginScreen(
-          // isShowRegister: state.extra as bool?,
-          ),
+      builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
       path: Paths.detailSearchScreen,
@@ -47,19 +58,30 @@ class AppPages {
         textSearch: state.extra as String,
       ),
     ),
+    // GoRoute(
+    //   path: Paths.addressScreen,
+    //   builder: (context, state) =>
+    //       AddressScreen(isAllowChoose: state.extra as bool?),
+    // ),
+    // GoRoute(
+    //   path: Paths.detailAddressScreen,
+    //   builder: (context, state) => DetailAddressScreen(
+    //     address: state.extra as Address,
+    //   ),
+    // ),
+    // GoRoute(
+    //   path: Paths.addAddressScreen,
+    //   builder: (context, state) => const AddAddressScreen(),
+    // ),
     GoRoute(
-      path: Paths.addressScreen,
-      builder: (context, state) => const AddressScreen(),
+      path: Paths.historyOrderScreen,
+      builder: (context, state) => const HistoryOrderScreen(),
     ),
     GoRoute(
-      path: Paths.detailAddressScreen,
-      builder: (context, state) => DetailAddressScreen(
-        address: state.extra as Address,
+      path: Paths.detailOrderScreen,
+      builder: (context, state) => DetailOrderScreen(
+        orderId: state.extra as String,
       ),
-    ),
-    GoRoute(
-      path: Paths.addAddressScreen,
-      builder: (context, state) => const AddAddressScreen(),
     ),
     GoRoute(
       path: Paths.searchScreen,
@@ -73,7 +95,17 @@ class AppPages {
     ),
     GoRoute(
         path: Paths.mainScreen,
-        builder: (context, state) => const MainScreen()),
+        builder: (context, state) => const MainScreen(),
+        routes: const [
+          // GoRoute(
+          //   path: Paths.successPaymentScreen,
+          //   builder: (context, state) => const SuccessPaymentScreen(),
+          // ),
+          // GoRoute(
+          //   path: Paths.subHistoryOrderScreen,
+          //   builder: (context, state) => const HistoryOrderScreen(),
+          // ),
+        ]),
 
     GoRoute(
         path: Paths.detailProfileScreen,

@@ -5,9 +5,9 @@ Future<void> _registerCoreModule() async {
 
   // Network
   getIt.registerSingleton(
-      DioHttpClient('https://auth-server-btn-v1.herokuapp.com/v1'));
+      DioHttpClient('https://auth-server-v1-btn-production.up.railway.app/v1'));
   getIt.registerSingleton(
-      DioHttpClient('https://external-services-production.up.railway.app/v1'),
+      DioHttpClient('https://external-services-production.up.railway.app'),
       instanceName: 'upFileServer');
 
   getIt.registerSingleton(DioHttpClient('https://provinces.open-api.vn/api'),
