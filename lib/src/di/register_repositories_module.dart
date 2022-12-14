@@ -22,6 +22,9 @@ Future<void> _registerRepositoriesModule() async {
   getIt.registerSingleton(LocationRepositoryImpl(
     locationService: getIt<LocationService>(),
   ));
+  getIt.registerSingleton(OrderRepositoryImpl(
+    orderService: getIt<OrderService>(),
+  ));
   getIt.registerSingleton(
       ProfileRepositoryImpl(profileService: getIt<AuthService>()));
   getIt.registerSingleton(

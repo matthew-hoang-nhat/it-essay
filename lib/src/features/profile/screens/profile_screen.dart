@@ -30,7 +30,11 @@ class ProfileScreen extends StatelessWidget {
           children: [
             infoUserCard(sizeWidth),
             const SizedBox(height: 20),
-            orderCard(),
+            InkWell(
+                onTap: () {
+                  context.push(Paths.historyOrderScreen);
+                },
+                child: orderCard()),
             someChoice(context),
             SizedBox(
               height: MediaQuery.of(context).padding.bottom,
@@ -60,6 +64,9 @@ class ProfileScreen extends StatelessWidget {
                   color: AppColors.primaryColor,
                 ),
                 title: const Text('Thông tin cá nhân'),
+                onTap: () {
+                  context.push(Paths.detailProfileScreen);
+                },
                 trailing: const Icon(MaterialCommunityIcons.chevron_right),
               ),
               const Divider(),
@@ -68,6 +75,9 @@ class ProfileScreen extends StatelessWidget {
                   MaterialCommunityIcons.clipboard_text_clock_outline,
                   color: AppColors.primaryColor,
                 ),
+                onTap: () {
+                  context.push(Paths.historyOrderScreen);
+                },
                 title: const Text('Đơn hàng'),
                 trailing: const Icon(
                   MaterialCommunityIcons.chevron_right,

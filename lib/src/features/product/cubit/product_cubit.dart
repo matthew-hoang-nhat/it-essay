@@ -52,7 +52,7 @@ class ProductCubit extends Cubit<ProductState>
   _getDetailProduct() async {
     addNewEvent(ProductEnum.isLoading, true);
     final productResponse =
-        await productRepository.getDetailProduct(state.product.slug);
+        await productRepository.getDetailProduct(state.product.slug!);
 
     if (productResponse.isSuccess) {
       addNewEvent(ProductEnum.product, productResponse.data);
@@ -93,13 +93,13 @@ class ProductCubit extends Cubit<ProductState>
   _addItemToCart() async {
     final product = state.product;
     ItemCart itemCart = ItemCart(
-        price: product.price,
+        price: product.price!,
         id: product.id,
         name: product.name,
         quantity: 1,
         sellerName: product.seller?.info.name ?? '',
         discountPercent: product.discountPercent,
-        mainCategory: product.category.name,
+        mainCategory: product.category!.name,
         productImage: (product.productImages as List)
             .map((e) => ProductPicture.fromJson(e))
             .first

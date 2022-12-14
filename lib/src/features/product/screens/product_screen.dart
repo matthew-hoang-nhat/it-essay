@@ -74,7 +74,10 @@ class ProductScreen extends StatelessWidget {
                       previous.isLoading != current.isLoading,
                   builder: (context, state) {
                     if (state.isLoading) {
-                      return const Center(child: LoadingWidget());
+                      return const Center(
+                          child: LoadingWidget(
+                        isBlurScreen: true,
+                      ));
                     }
                     return Container();
                   },
@@ -157,9 +160,9 @@ class ProductScreen extends StatelessWidget {
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(state.product.category.name),
-                const Icon(MaterialCommunityIcons.heart_outline),
+              children: const [
+                // Text(state.product.category!.name),
+                Icon(MaterialCommunityIcons.heart_outline),
               ],
             ),
             Text(
@@ -266,9 +269,6 @@ class ProductScreen extends StatelessWidget {
                     Flexible(
                       child: contentSellerInfo('1.9k+', 'Người theo dõi'),
                     ),
-                    // Flexible(
-                    //   child: contentSellerInfo('70%', 'Phản hồi Chat'),
-                    // ),
                   ],
                 )
               ],
@@ -281,12 +281,13 @@ class ProductScreen extends StatelessWidget {
 
   imgPoster() {
     return BlocBuilder<ProductCubit, ProductState>(
-      // bloc: bloc,
       buildWhen: ((previous, current) => previous.product != current.product),
       builder: (context, state) {
+        if (state.product.productImages == null ||
+            state.product.productImages.isEmpty) return Container();
+
         final imagePictures = (state.product.productImages as List)
             .map((e) => ProductPicture.fromJson(e));
-
         return Stack(
           alignment: Alignment.bottomRight,
           children: [
@@ -297,8 +298,7 @@ class ProductScreen extends StatelessWidget {
                   controller: context.read<ProductCubit>().pageController,
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
-                  itemCount: product.productImages.length,
-                  // itemCount: 3,
+                  itemCount: imagePictures.length,
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       return Stack(
@@ -318,24 +318,6 @@ class ProductScreen extends StatelessWidget {
                               )),
                         ],
                       );
-                      // return Stack(
-                      //   alignment: Alignment.bottomRight,
-                      //   children: [
-                      //     ClipRRect(
-                      //         borderRadius: const BorderRadius.only(
-                      //           topLeft: Radius.circular(5),
-                      //           topRight: Radius.circular(5),
-                      //         ),
-                      //         child: CachedNetworkImage(
-                      //           imageUrl: state.product.productImages
-                      //               .elementAt(index)
-                      //               .fileLink,
-                      //           width: double.infinity,
-                      //           height: 300,
-                      //           fit: BoxFit.cover,
-                      //         )),
-                      //   ],
-                      // );
                     }
                     return Stack(
                       alignment: Alignment.bottomRight,
@@ -391,8 +373,10 @@ class ProductScreen extends StatelessWidget {
 
     return BlocBuilder<ProductCubit, ProductState>(
       builder: (context, state) {
-        final priceAfterSaleOff =
-            state.product.price * (100 - (state.product.discountPercent)) / 100;
+        if (state.product.price == null) return Container();
+        final priceAfterSaleOff = state.product.price! *
+            (100 - (state.product.discountPercent)) /
+            100;
 
         final isDiscount = state.product.discountPercent != 0;
         return Row(
@@ -522,8 +506,10 @@ class ProductScreen extends StatelessWidget {
   describeProduct() {
     return BlocBuilder<ProductCubit, ProductState>(
       buildWhen: (previous, current) =>
-          previous.isDescribeShowAll != current.isDescribeShowAll,
+          previous.isDescribeShowAll != current.isDescribeShowAll ||
+          previous.product != current.product,
       builder: (context, state) {
+        if (state.product.productImages == null) return Container();
         final firstImage = (state.product.productImages as List)
             .map((e) => ProductPicture.fromJson(e))
             .first
@@ -640,38 +626,44 @@ class ProductScreen extends StatelessWidget {
       );
     }
 
-    return SizedBox(
-      width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Text(
-              'Thông tin chi tiết',
-              style:
-                  GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
+    return BlocBuilder<ProductCubit, ProductState>(
+      buildWhen: (previous, current) => previous.product != current.product,
+      builder: (context, state) {
+        return SizedBox(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Text(
+                  'Thông tin chi tiết',
+                  style: GoogleFonts.nunito(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+              rowContent('Danh mục', 'Kỹ năng sống', 0),
+              rowContent('Tác giả', product?.spec?.author, 1),
+              rowContent('Nhà xuất bản', product?.spec?.publisher, 2),
+              rowContent('Ngày xuất bản', product?.spec?.publicationDate, 3),
+              Center(
+                  child: InkWell(
+                      onTap: () {},
+                      child: Container(
+                          height: 30,
+                          width: 100,
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Xem tất cả',
+                            style: GoogleFonts.nunito(
+                                color: AppColors.blueColor,
+                                fontWeight: FontWeight.bold),
+                          )))),
+            ],
           ),
-          rowContent('Danh mục', 'Kỹ năng sống', 0),
-          rowContent('Tác giả', product?.spec.author, 1),
-          rowContent('Nhà xuất bản', product?.spec.publisher, 2),
-          rowContent('Ngày xuất bản', product?.spec.publicationDate, 3),
-          // Center(
-          //     child: InkWell(
-          //         onTap: () {},
-          //         child: Container(
-          //             height: 30,
-          //             width: 100,
-          //             alignment: Alignment.center,
-          //             child: Text(
-          //               'Xem tất cả',
-          //               style: GoogleFonts.nunito(
-          //                   color: AppColors.blueColor,
-          //                   fontWeight: FontWeight.bold),
-          //             )))),
-        ],
-      ),
+        );
+      },
     );
   }
 
