@@ -8,15 +8,13 @@ import 'package:it_project/src/utils/repository/delivery_repository_impl.dart';
 
 part 'address_state.dart';
 
-enum AddressEnum { addresses, isEmpty }
+enum AddressEnum { addresses, isEmpty, addressId, isLoading }
 
 class AddressCubit extends Cubit<AddressState>
     implements ParentCubit<AddressEnum> {
   AddressCubit()
       : super(const AddressInitial(
-          addresses: [],
-          isEmpty: false,
-        ));
+            addresses: [], isEmpty: false, addressId: null, isLoading: true));
   final DeliveryRepository _deliveryRepository =
       getIt<DeliveryRepositoryImpl>();
 
@@ -25,12 +23,19 @@ class AddressCubit extends Cubit<AddressState>
     return result.isSuccess;
   }
 
+  Future<void> initCubit() async {
+    await getAddresses();
+  }
+
   getAddresses() async {
+    addNewEvent(AddressEnum.isLoading, true);
+
     final addressesResponse = await _deliveryRepository.getAddresses();
     if (addressesResponse.isSuccess) {
       addNewEvent(AddressEnum.addresses, addressesResponse.data);
       _checkEmptyAddresses();
     }
+    addNewEvent(AddressEnum.isLoading, false);
   }
 
   _checkEmptyAddresses() {
@@ -53,9 +58,16 @@ class AddressCubit extends Cubit<AddressState>
     switch (key) {
       case AddressEnum.addresses:
         emit(NewAddressState.fromOldSettingState(state, addresses: value));
+
+        break;
+      case AddressEnum.addressId:
+        emit(NewAddressState.fromOldSettingState(state, addressId: value));
         break;
       case AddressEnum.isEmpty:
         emit(NewAddressState.fromOldSettingState(state, isEmpty: value));
+        break;
+      case AddressEnum.isLoading:
+        emit(NewAddressState.fromOldSettingState(state, isLoading: value));
         break;
       default:
     }

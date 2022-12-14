@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -5,115 +6,147 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/address/cubit/address_cubit.dart';
+import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/utils/remote/model/order/get/address.dart';
+import 'package:it_project/src/widgets/load_widget.dart';
 
 class AddressScreen extends StatelessWidget {
-  const AddressScreen({super.key});
+  const AddressScreen({
+    Key? key,
+    this.isAllowChoose = false,
+  }) : super(key: key);
+  final bool? isAllowChoose;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Địa chỉ'),
-          actions: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextButton(
-                  onPressed: () {
-                    if (context.read<AddressCubit>().state.addresses.length >
-                        2) {
-                      Fluttertoast.showToast(
-                          msg: "Tối đa 3 địa chỉ",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          textColor: Colors.white,
-                          fontSize: 16.0);
-                      return;
-                    }
-                    context.push(Paths.addAddressScreen);
-                  },
-                  child: Text(
-                    'Thêm địa chỉ',
-                    style: GoogleFonts.nunito(color: AppColors.whiteColor),
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-        body: SafeArea(
-            child: Column(
-          children: [
-            BlocBuilder<AddressCubit, AddressState>(
-              bloc: context.read<AddressCubit>()..getAddresses(),
-              builder: (context, state) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: state.addresses
-                        .map((e) => _InlineAddress(
-                              address: e,
-                            ))
-                        .toList(),
-                  ),
-                );
-              },
-            ),
-            BlocBuilder<AddressCubit, AddressState>(
-              buildWhen: (previous, current) =>
-                  previous.isEmpty != current.isEmpty,
-              builder: (context, state) {
-                if (state.isEmpty) {
-                  return Container(
-                    height: 200,
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(
-                          MaterialCommunityIcons.map_legend,
-                          size: 100,
-                          color: AppColors.primaryColor,
-                        ),
-                        Text(
-                          'Chưa có địa chỉ...',
-                          style: GoogleFonts.nunito(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'Thêm địa chỉ để đặt hàng và tạo đơn hàng',
-                          style: GoogleFonts.nunito(
-                              color: AppColors.greyColor, fontSize: 16),
-                        ),
-                      ],
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Scaffold(
+            appBar: AppBar(
+              title: const Text('Địa chỉ'),
+              actions: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextButton(
+                      onPressed: () {
+                        if (context
+                                .read<AddressCubit>()
+                                .state
+                                .addresses
+                                .length >
+                            2) {
+                          Fluttertoast.showToast(
+                              msg: "Tối đa 3 địa chỉ",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                          return;
+                        }
+                        context.push(Paths.addAddressScreen);
+                      },
+                      child: Text(
+                        'Thêm địa chỉ',
+                        style: GoogleFonts.nunito(color: AppColors.whiteColor),
+                      ),
                     ),
-                  );
-                }
+                  ),
+                )
+              ],
+            ),
+            body: SafeArea(
+                child: Column(
+              children: [
+                BlocBuilder<AddressCubit, AddressState>(
+                  bloc: context.read<AddressCubit>()
+                    ..addNewEvent(AddressEnum.addressId,
+                        context.read<AppCubit>().state.address?.id),
+                  buildWhen: (previous, current) =>
+                      previous.addressId != current.addressId ||
+                      previous.addresses != current.addresses,
+                  builder: (context, state) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: state.addresses
+                            .map((e) => _InlineAddress(
+                                  address: e,
+                                  isAllowChoose: isAllowChoose,
+                                ))
+                            .toList(),
+                      ),
+                    );
+                  },
+                ),
+                BlocBuilder<AddressCubit, AddressState>(
+                  buildWhen: (previous, current) =>
+                      previous.isEmpty != current.isEmpty,
+                  builder: (context, state) {
+                    if (state.isEmpty) {
+                      return Container(
+                        height: 200,
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(
+                              MaterialCommunityIcons.map_legend,
+                              size: 100,
+                              color: AppColors.primaryColor,
+                            ),
+                            Text(
+                              'Chưa có địa chỉ...',
+                              style: GoogleFonts.nunito(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              'Thêm địa chỉ để đặt hàng và tạo đơn hàng',
+                              style: GoogleFonts.nunito(
+                                  color: AppColors.greyColor, fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
 
-                return Container();
-              },
-            )
-          ],
-        )));
+                    return Container();
+                  },
+                )
+              ],
+            ))),
+        BlocBuilder<AddressCubit, AddressState>(
+          buildWhen: (previous, current) =>
+              previous.isLoading != current.isLoading,
+          builder: (context, state) {
+            if (state.isLoading) return const LoadingWidget();
+            return Container();
+          },
+        )
+      ],
+    );
   }
 }
 
 class _InlineAddress extends StatelessWidget {
   final Address address;
+  final bool? isAllowChoose;
 
-  const _InlineAddress({required this.address});
+  const _InlineAddress({required this.address, required this.isAllowChoose});
   @override
   Widget build(BuildContext context) {
+    final String addressId = address.id!;
     return Slidable(
         enabled: true,
-        key: ValueKey(address.id),
+        key: ValueKey(addressId),
         endActionPane: ActionPane(
           motion: const ScrollMotion(),
           children: [
@@ -140,6 +173,21 @@ class _InlineAddress extends StatelessWidget {
               children: [
                 Row(
                   children: [
+                    isAllowChoose == true
+                        ? BlocBuilder<AddressCubit, AddressState>(
+                            builder: (context, state) {
+                              return Radio<String?>(
+                                  value: addressId,
+                                  groupValue: state.addressId,
+                                  onChanged: (value) {
+                                    context.read<AddressCubit>().addNewEvent(
+                                        AddressEnum.addressId, value);
+                                    context.read<AppCubit>().addNewEvent(
+                                        AppCubitEnum.address, address);
+                                  });
+                            },
+                          )
+                        : Container(),
                     Icon(
                       MaterialCommunityIcons.google_maps,
                       color: AppColors.primaryColor,

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:it_project/src/utils/remote/model/order/add/add_order_request.dart';
 import 'package:it_project/src/utils/remote/model/order/get/item_order.dart';
 import 'package:it_project/src/utils/remote/services/fresult.dart';
 import 'package:it_project/src/utils/remote/model/order/get/order_response.dart';
@@ -147,23 +148,23 @@ class OrderRepositoryImpl extends OrderRepository {
     }
   }
 
-  // @override
-  // Future<FResult<Map<String, dynamic>>> createOrder(
-  //     {required AddOrderRequest addOrderRequest}) async {
-  //   try {
-  //     final orderRequest = {'order': addOrderRequest};
-  //     final result = await orderService.addOrder(orderRequest);
+  @override
+  Future<FResult<Map<String, dynamic>>> createOrder(
+      {required AddOrderRequest addOrderRequest}) async {
+    try {
+      final orderRequest = {'order': addOrderRequest};
+      final result = await orderService.addOrder(orderRequest);
 
-  //     return FResult.success(result.data);
-  //   } catch (ex) {
-  //     // if (ex is DioError) {
-  //     //   Logger().e(ex.response?.data);
-  //     // } else {
-  //     //   Logger().e(ex.toString());
-  //     // }
-  //     return FResult.error(ex.toString());
-  //   }
-  // }
+      return FResult.success(result.data);
+    } catch (ex) {
+      // if (ex is DioError) {
+      //   Logger().e(ex.response?.data);
+      // } else {
+      //   Logger().e(ex.toString());
+      // }
+      return FResult.error(ex.toString());
+    }
+  }
 
   @override
   Future<FResult<String>> cancelAnItemOrder(
