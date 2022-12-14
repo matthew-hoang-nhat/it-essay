@@ -7,8 +7,11 @@ Future<void> _registerCoreModule() async {
   getIt.registerSingleton(
       DioHttpClient('https://auth-server-btn-v1.herokuapp.com/v1'));
   getIt.registerSingleton(
-      DioHttpClient('https://extenal-services.herokuapp.com'),
+      DioHttpClient('https://external-services-production.up.railway.app/v1'),
       instanceName: 'upFileServer');
+
+  getIt.registerSingleton(DioHttpClient('https://provinces.open-api.vn/api'),
+      instanceName: 'locationServer');
 }
 
 registerAppSharedAsync() async {

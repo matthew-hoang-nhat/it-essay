@@ -16,6 +16,12 @@ Future<void> _registerRepositoriesModule() async {
   getIt.registerSingleton(CartRepositoryImpl(
     cartService: getIt<CartService>(),
   ));
+  getIt.registerSingleton(DeliveryRepositoryImpl(
+    deliveryService: getIt<DeliveryService>(),
+  ));
+  getIt.registerSingleton(LocationRepositoryImpl(
+    locationService: getIt<LocationService>(),
+  ));
   getIt.registerSingleton(
       ProfileRepositoryImpl(profileService: getIt<AuthService>()));
   getIt.registerSingleton(
