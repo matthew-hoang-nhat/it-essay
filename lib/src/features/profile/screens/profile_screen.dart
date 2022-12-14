@@ -75,6 +75,9 @@ class ProfileScreen extends StatelessWidget {
               ),
               const Divider(),
               ListTile(
+                onTap: () {
+                  context.push(Paths.addressScreen);
+                },
                 leading: Icon(
                   MaterialCommunityIcons.map,
                   color: AppColors.primaryColor,
