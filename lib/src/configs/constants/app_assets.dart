@@ -32,6 +32,7 @@ class AppAssets {
   static const String icNext = 'assets/images/ic_next.png';
   static const String imOtp = 'assets/images/im_otp.png';
   static const String icLogo = 'assets/images/ic_logo.png';
+  static const String imgLogo = 'assets/images/logo.png';
 
   static const String fkImHarryPotter1 =
       'assets/fake_images/harry_potter_1.jpg';
