@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:it_project/main.dart';
-import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
 import 'package:it_project/src/utils/remote/model/order/get/item_order.dart';
 import 'package:it_project/src/utils/remote/model/order/get/order_response.dart';
 import 'package:it_project/src/utils/repository/order_repository.dart';
@@ -54,13 +53,13 @@ enum OrderEnum {
   }
 }
 
-enum HistoryOrderCubitEnum {
-  isEmpty,
-  isLoading,
-  orderStatusTab,
-  orders,
-  loadMoreTab
-}
+// enum HistoryOrderCubitEnum {
+//   isEmpty,
+//   isLoading,
+//   orderStatusTab,
+//   orders,
+//   loadMoreTab
+// }
 
 enum HistoryOrderTabEnum {
   orders,
@@ -92,8 +91,7 @@ enum HistoryOrderTabEnum {
   }
 }
 
-class HistoryOrderCubit extends Cubit<HistoryOrderState>
-    implements ParentCubit<HistoryOrderCubitEnum> {
+class HistoryOrderCubit extends Cubit<HistoryOrderState> {
   HistoryOrderCubit()
       : super(const HistoryOrderInitial(
           orders: [],
@@ -168,8 +166,10 @@ class HistoryOrderCubit extends Cubit<HistoryOrderState>
       _getAllCancelOrders()
     ]);
 
-    addNewEvent(HistoryOrderCubitEnum.orders, [...allOrders]);
-    addNewEvent(HistoryOrderCubitEnum.isLoading, false);
+    emit(state.copyWith(
+      orders: [...allOrders],
+      isLoading: false,
+    ));
   }
 
   refreshTab(HistoryOrderTabEnum tab) async {
@@ -190,13 +190,13 @@ class HistoryOrderCubit extends Cubit<HistoryOrderState>
       default:
     }
     if (tab == state.orderStatusTab) {
-      addNewEvent(HistoryOrderCubitEnum.orders, [...newOrders]);
+      emit(state.copyWith(orders: [...newOrders]));
     }
   }
 
   loadMore(HistoryOrderTabEnum loadMoreTab) async {
     List newOrders = [];
-    addNewEvent(HistoryOrderCubitEnum.loadMoreTab, loadMoreTab);
+    emit(state.copyWith(loadMoreTab: loadMoreTab));
     switch (loadMoreTab) {
       case HistoryOrderTabEnum.orders:
         await _loadMoreAllOrders();
@@ -227,10 +227,10 @@ class HistoryOrderCubit extends Cubit<HistoryOrderState>
 
     final currentTab = state.orderStatusTab;
     if (loadMoreTab == currentTab) {
-      addNewEvent(HistoryOrderCubitEnum.orders, [...newOrders]);
+      emit(state.copyWith(orders: [...newOrders]));
     }
 
-    addNewEvent(HistoryOrderCubitEnum.loadMoreTab, HistoryOrderTabEnum.nothing);
+    emit(state.copyWith(loadMoreTab: HistoryOrderTabEnum.nothing));
   }
 
   bool isLoadingOrders = false;
@@ -245,12 +245,14 @@ class HistoryOrderCubit extends Cubit<HistoryOrderState>
     isLoadingOrders = true;
     final ordersResponse =
         await _orderRepository.getAllOrder(currentPage: _currentPageOrders);
+
     if (ordersResponse.isSuccess && ordersResponse.data!.isNotEmpty) {
       allOrders.addAll(ordersResponse.data!);
     }
     if (ordersResponse.isError || ordersResponse.data!.isEmpty) {
       _currentPageOrders--;
     }
+
     isLoadingOrders = false;
   }
 
@@ -316,28 +318,35 @@ class HistoryOrderCubit extends Cubit<HistoryOrderState>
 
   void changeTab(HistoryOrderTabEnum tab) async {
     final oldTab = state.orderStatusTab;
-    addNewEvent(HistoryOrderCubitEnum.orderStatusTab, tab);
+    emit(state.copyWith(orderStatusTab: tab));
+
     switch (tab) {
       case HistoryOrderTabEnum.orders:
-        addNewEvent(HistoryOrderCubitEnum.orders, [...allOrders]);
+        emit(state.copyWith(orders: [...allOrders]));
+
         break;
       case HistoryOrderTabEnum.ordered:
-        addNewEvent(HistoryOrderCubitEnum.orders, [...allOrdered]);
+        emit(state.copyWith(orders: [...allOrdered]));
+
         break;
       case HistoryOrderTabEnum.packed:
-        addNewEvent(HistoryOrderCubitEnum.orders, [...allPackedOrders]);
+        emit(state.copyWith(orders: [...allPackedOrders]));
+
         break;
       case HistoryOrderTabEnum.shipping:
-        addNewEvent(HistoryOrderCubitEnum.orders, [...allShippingOrders]);
+        emit(state.copyWith(orders: [...allShippingOrders]));
+
         break;
       case HistoryOrderTabEnum.completed:
-        addNewEvent(HistoryOrderCubitEnum.orders, [...allCompletedOrders]);
+        emit(state.copyWith(orders: [...allCompletedOrders]));
+
         break;
       case HistoryOrderTabEnum.cancel:
-        addNewEvent(HistoryOrderCubitEnum.orders, [...allCancelOrders]);
+        emit(state.copyWith(orders: [...allCancelOrders]));
+
         break;
       default:
-        addNewEvent(HistoryOrderCubitEnum.orders, <OrderResponse>[]);
+        emit(state.copyWith(orders: []));
     }
 
     if (oldTab == tab) {
@@ -376,16 +385,6 @@ class HistoryOrderCubit extends Cubit<HistoryOrderState>
     isLoadingCompleted = false;
   }
 
-  // bool isLoadingCancel = false;
-  // Future<void> _getAllCancelOrders() async {
-  //   final itemOrdersResponse =
-  //       await _orderRepository.getAllCancelOrders(currentPage: 1);
-  //   if (itemOrdersResponse.isSuccess) {
-  //     Logger().i(itemOrdersResponse.data?.length);
-  //     allCancelOrders.addAll(itemOrdersResponse.data!);
-  //   }
-  // }
-
   Future<void> _getAllShippingOrders() async {
     isLoadingShipping = true;
     final ordersResponse = await _orderRepository.getAllShippingOrders(
@@ -397,32 +396,5 @@ class HistoryOrderCubit extends Cubit<HistoryOrderState>
       _currentPageShipping--;
     }
     isLoadingShipping = false;
-  }
-
-  @override
-  void addNewEvent(HistoryOrderCubitEnum key, value) {
-    if (isClosed) return;
-    switch (key) {
-      case HistoryOrderCubitEnum.orders:
-        emit(NewHistoryOrderState.fromOldSettingState(state, orders: value));
-        break;
-      case HistoryOrderCubitEnum.isEmpty:
-        emit(NewHistoryOrderState.fromOldSettingState(state, isEmpty: value));
-        break;
-      case HistoryOrderCubitEnum.isLoading:
-        emit(NewHistoryOrderState.fromOldSettingState(state, isLoading: value));
-        break;
-      case HistoryOrderCubitEnum.loadMoreTab:
-        emit(NewHistoryOrderState.fromOldSettingState(state,
-            loadMoreTab: value));
-
-        break;
-      case HistoryOrderCubitEnum.orderStatusTab:
-        emit(NewHistoryOrderState.fromOldSettingState(state,
-            orderStatusTab: value));
-        break;
-
-      default:
-    }
   }
 }

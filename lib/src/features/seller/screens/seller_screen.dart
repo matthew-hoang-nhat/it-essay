@@ -125,7 +125,7 @@ class _SellerScreenState extends State<SellerScreen>
         labelPadding: EdgeInsets.zero,
         indicatorColor: Colors.black87,
         onTap: (value) {
-          context.read<SellerCubit>().addNewEvent(SellerEnum.tabIndex, value);
+          context.read<SellerCubit>().setTabIndex(value);
         },
         tabs: tabs
             .map((e) => Container(

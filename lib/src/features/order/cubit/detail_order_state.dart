@@ -1,6 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'detail_order_cubit.dart';
 
-abstract class DetailOrderState extends Equatable {
+class DetailOrderState extends Equatable {
   const DetailOrderState({
     required this.orderResponse,
     required this.orderId,
@@ -16,6 +17,18 @@ abstract class DetailOrderState extends Equatable {
         orderResponse,
         isLoading,
       ];
+
+  DetailOrderState copyWith({
+    OrderResponse? orderResponse,
+    String? orderId,
+    bool? isLoading,
+  }) {
+    return DetailOrderState(
+      orderResponse: orderResponse ?? this.orderResponse,
+      orderId: orderId ?? this.orderId,
+      isLoading: isLoading ?? this.isLoading,
+    );
+  }
 }
 
 class DetailOrderInitial extends DetailOrderState {
@@ -24,17 +37,4 @@ class DetailOrderInitial extends DetailOrderState {
     required super.orderId,
     required super.isLoading,
   });
-}
-
-class NewDetailOrderState extends DetailOrderState {
-  NewDetailOrderState.fromOldSettingState(
-    DetailOrderState oldState, {
-    OrderResponse? orderResponse,
-    String? orderId,
-    bool? isLoading,
-  }) : super(
-          orderResponse: orderResponse ?? oldState.orderResponse,
-          isLoading: isLoading ?? oldState.isLoading,
-          orderId: orderId ?? oldState.orderId,
-        );
 }

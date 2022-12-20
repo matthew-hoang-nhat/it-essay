@@ -583,8 +583,7 @@ class ProductScreen extends StatelessWidget {
                     Center(
                         child: InkWell(
                             onTap: () {
-                              context.read<ProductCubit>().addNewEvent(
-                                  ProductEnum.isDescribeShowAll, true);
+                              context.read<ProductCubit>().setShowAll();
                             },
                             child: Container(
                                 height: 30,
