@@ -1,6 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'history_order_cubit.dart';
 
-abstract class HistoryOrderState extends Equatable {
+class HistoryOrderState extends Equatable {
   const HistoryOrderState(
       {required this.orders,
       required this.isEmpty,
@@ -22,6 +23,22 @@ abstract class HistoryOrderState extends Equatable {
         orderStatusTab,
         loadMoreTab,
       ];
+
+  HistoryOrderState copyWith({
+    List<dynamic>? orders,
+    bool? isEmpty,
+    bool? isLoading,
+    HistoryOrderTabEnum? orderStatusTab,
+    HistoryOrderTabEnum? loadMoreTab,
+  }) {
+    return HistoryOrderState(
+      orders: orders ?? this.orders,
+      isEmpty: isEmpty ?? this.isEmpty,
+      isLoading: isLoading ?? this.isLoading,
+      orderStatusTab: orderStatusTab ?? this.orderStatusTab,
+      loadMoreTab: loadMoreTab ?? this.loadMoreTab,
+    );
+  }
 }
 
 class HistoryOrderInitial extends HistoryOrderState {
@@ -32,21 +49,4 @@ class HistoryOrderInitial extends HistoryOrderState {
     required super.orders,
     required super.isLoading,
   });
-}
-
-class NewHistoryOrderState extends HistoryOrderState {
-  NewHistoryOrderState.fromOldSettingState(
-    HistoryOrderState oldState, {
-    List<dynamic>? orders,
-    bool? isEmpty,
-    bool? isLoading,
-    HistoryOrderTabEnum? orderStatusTab,
-    HistoryOrderTabEnum? loadMoreTab,
-  }) : super(
-          orders: orders ?? oldState.orders,
-          orderStatusTab: orderStatusTab ?? oldState.orderStatusTab,
-          loadMoreTab: loadMoreTab ?? oldState.loadMoreTab,
-          isLoading: isLoading ?? oldState.isLoading,
-          isEmpty: isEmpty ?? oldState.isEmpty,
-        );
 }
