@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:it_project/main.dart';
-import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
 import 'package:it_project/src/utils/helpers/validate.dart';
 import 'package:it_project/src/utils/remote/model/order/get/address.dart';
 import 'package:it_project/src/utils/remote/model/order/get/address_code.dart';
@@ -29,8 +29,7 @@ enum DetailAddressEnum {
   name
 }
 
-class DetailAddressCubit extends Cubit<DetailAddressState>
-    implements ParentCubit<DetailAddressEnum> {
+class DetailAddressCubit extends Cubit<DetailAddressState> {
   DetailAddressCubit({required Address address})
       : super(DetailAddressInitial(
           address: address,
@@ -46,6 +45,9 @@ class DetailAddressCubit extends Cubit<DetailAddressState>
           isDefault: address.isDefault,
           name: address.name,
           phoneNumber: address.phoneNumber,
+          nameAnnouncement: '',
+          phoneNumberAnnouncement: '',
+          streetAnnouncement: '',
         ));
 
   final DeliveryRepository _deliveryRepository =
@@ -54,26 +56,36 @@ class DetailAddressCubit extends Cubit<DetailAddressState>
       getIt<LocationRepositoryImpl>();
 
   _getLocation() async {
-    addNewEvent(DetailAddressEnum.isLoading, true);
+    emit(state.copyWithNotAddress(isLoading: true));
+
     final result = await _locationRepository.getProvinces();
 
     if (result.isSuccess) {
       final provinces = result.data;
-      addNewEvent(DetailAddressEnum.provinces, provinces);
+      emit(state.copyWith(
+          districts: null,
+          wards: null,
+          province: null,
+          district: null,
+          ward: null,
+          provinces: provinces));
 
       final province = provinces!.firstWhere(
           (element) => element.code == state.address.addressCode!.provinceId);
-      addNewEvent(DetailAddressEnum.province, province);
+
+      setProvince(province);
 
       final district = province.districts.firstWhere(
           (element) => element.code == state.address.addressCode!.district);
-      addNewEvent(DetailAddressEnum.district, district);
+      setDistrict(district);
+
       final ward = district.wards.firstWhere(
           (element) => element.code == state.address.addressCode!.wardId);
-      addNewEvent(DetailAddressEnum.ward, ward);
+
+      setWard(ward);
     }
 
-    addNewEvent(DetailAddressEnum.isLoading, false);
+    emit(state.copyWithNotAddress(isLoading: false));
   }
 
   initCubit() {
@@ -81,10 +93,20 @@ class DetailAddressCubit extends Cubit<DetailAddressState>
     _getLocation();
   }
 
-  _setFields() {}
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  TextEditingController streetController = TextEditingController();
+  _setFields() {
+    nameController.text = state.address.name;
+    addressController.text = state.address.addressCode!.street ?? '';
+    phoneController.text = state.phoneNumber;
+    streetController.text = state.street;
+  }
 
-  updateAddress() async {
-    addNewEvent(DetailAddressEnum.isLoading, true);
+  callAPIUpdateAddress() async {
+    emit(state.copyWithNotAddress(isLoading: true));
+
     if (state.isDefault) {
       _deliveryRepository.setDefaultAddress(addressId: state.address.id!);
     }
@@ -103,135 +125,116 @@ class DetailAddressCubit extends Cubit<DetailAddressState>
       address: newAddress,
     );
 
-    addNewEvent(DetailAddressEnum.isLoading, false);
+    emit(state.copyWithNotAddress(isLoading: false));
   }
 
-  void checkAll(String name, String phoneNumber, String detailAddress) {
-    addNewEvent(DetailAddressEnum.isAllValidated,
-        checkValidatedTexField(name, phoneNumber, detailAddress));
+  setName(value) {
+    emit(state.copyWithNotAddress(name: value));
   }
 
-  bool checkValidatedTexField(
-      String name, String phoneNumber, String detailAddress) {
-    if (name.isEmpty || phoneNumber.isEmpty || detailAddress.isEmpty) {
+  setDefault() {
+    emit(state.copyWithNotAddress(isDefault: true));
+  }
+
+  setPhoneNumber(value) {
+    emit(state.copyWithNotAddress(phoneNumber: value));
+  }
+
+  setStreet(value) {
+    emit(state.copyWithNotAddress(street: value));
+  }
+
+  _checkNameTextField() {
+    final name = state.name;
+    const nameValidatedAnnouncement =
+        'Tên không được chứa số và kí tự đặc biệt';
+
+    if (name.isEmpty) {
+      emit(state.copyWithNotAddress(nameAnnouncement: ''));
+
+      return;
+    }
+
+    if (name.isNotEmpty && Validate().isInvalidName(name)) {
+      emit(state.copyWithNotAddress(
+          nameAnnouncement: nameValidatedAnnouncement));
+
+      return;
+    }
+    emit(state.copyWithNotAddress(nameAnnouncement: ''));
+  }
+
+  _checkPhoneNumber() {
+    final phoneNumber = state.phoneNumber;
+    const phoneNumberValidatedAnnouncement = 'Số điện thoại bao gồm 10 chữ số';
+    if (phoneNumber.isEmpty) {
+      emit(state.copyWithNotAddress(phoneNumberAnnouncement: ''));
+      return;
+    }
+
+    if (phoneNumber.isNotEmpty &&
+        Validate().isInvalidPhoneNumber(phoneNumber)) {
+      emit(state.copyWithNotAddress(
+          phoneNumberAnnouncement: phoneNumberValidatedAnnouncement));
+      return;
+    }
+    emit(state.copyWithNotAddress(phoneNumberAnnouncement: ''));
+  }
+
+  void checkAll() {
+    _checkNameTextField();
+    _checkPhoneNumber();
+
+    final isAllValidated = _isValidatedTexField() & _isValidatedAddress();
+
+    emit(state.copyWithNotAddress(isAllValidated: isAllValidated));
+  }
+
+  bool _isValidatedAddress() {
+    return state.district != null &&
+        state.ward != null &&
+        state.province != null &&
+        state.street.isNotEmpty;
+  }
+
+  bool _isValidatedTexField() {
+    if (state.name.isEmpty || state.phoneNumber.isEmpty) {
       return false;
     }
-    if (Validate().isInvalidName(name) ||
-        Validate().isInvalidPhoneNumber(phoneNumber)) {
+    if (Validate().isInvalidName(state.name) ||
+        Validate().isInvalidPhoneNumber(state.phoneNumber)) {
       return false;
     }
     return true;
   }
 
-  @override
-  void addNewEvent(DetailAddressEnum key, value) {
-    if (isClosed) return;
-    switch (key) {
-      case DetailAddressEnum.isAllValidated:
-        emit(NewDetailAddressState.fromOldSettingState(
-          state,
-          isAllValidated: value,
-          province: state.province,
-          district: state.district,
-          ward: state.ward,
-          districts: state.districts,
-          wards: state.wards,
-        ));
-        break;
-      case DetailAddressEnum.isDefault:
-        emit(NewDetailAddressState.fromOldSettingState(
-          state,
-          isDefault: value,
-          province: state.province,
-          district: state.district,
-          ward: state.ward,
-          districts: state.districts,
-          wards: state.wards,
-        ));
-        break;
-      case DetailAddressEnum.isLoading:
-        emit(NewDetailAddressState.fromOldSettingState(
-          state,
-          isLoading: value,
-          province: state.province,
-          district: state.district,
-          ward: state.ward,
-          districts: state.districts,
-          wards: state.wards,
-        ));
-        break;
-      case DetailAddressEnum.provinces:
-        emit(NewDetailAddressState.fromOldSettingState(
-          state,
-          provinces: value,
-          districts: null,
-          wards: null,
-          province: null,
-          district: null,
-          ward: null,
-        ));
+  setProvince(Province province) {
+    emit(state.copyWith(
+      province: province,
+      districts: province.districts,
+      district: null,
+      wards: null,
+      ward: null,
+    ));
+  }
 
-        break;
-      case DetailAddressEnum.province:
-        emit(NewDetailAddressState.fromOldSettingState(
-          state,
-          province: value,
-          districts: (value as Province).districts,
-          wards: null,
-          district: null,
-          ward: null,
-        ));
-        break;
-      case DetailAddressEnum.district:
-        emit(NewDetailAddressState.fromOldSettingState(
-          state,
-          districts: state.districts,
-          wards: (value as District).wards,
-          province: state.province,
-          district: value,
-          ward: null,
-        ));
+  setDistrict(District district) {
+    emit(state.copyWith(
+      district: district,
+      districts: state.districts,
+      province: state.province,
+      wards: district.wards,
+      ward: null,
+    ));
+  }
 
-        break;
-      case DetailAddressEnum.ward:
-        emit(NewDetailAddressState.fromOldSettingState(
-          state,
-          districts: state.districts,
-          wards: state.wards,
-          province: state.province,
-          district: state.district,
-          ward: value,
-        ));
-        break;
-
-      case DetailAddressEnum.street:
-        emit(NewDetailAddressState.fromOldSettingState(state,
-            districts: state.districts,
-            wards: state.wards,
-            province: state.province,
-            district: state.district,
-            ward: state.ward,
-            street: value));
-        break;
-      case DetailAddressEnum.phoneNumber:
-        emit(NewDetailAddressState.fromOldSettingState(state,
-            districts: state.districts,
-            wards: state.wards,
-            province: state.province,
-            district: state.district,
-            ward: state.ward,
-            phoneNumber: value));
-        break;
-      case DetailAddressEnum.name:
-        emit(NewDetailAddressState.fromOldSettingState(state,
-            districts: state.districts,
-            wards: state.wards,
-            province: state.province,
-            district: state.district,
-            ward: state.ward,
-            name: value));
-        break;
-      default:
-    }
+  setWard(Ward ward) {
+    emit(state.copyWith(
+      province: state.province,
+      districts: state.districts,
+      district: state.district,
+      wards: state.wards,
+      ward: ward,
+    ));
   }
 }

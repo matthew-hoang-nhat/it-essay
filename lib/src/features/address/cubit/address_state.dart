@@ -1,6 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'address_cubit.dart';
 
-abstract class AddressState extends Equatable {
+class AddressState extends Equatable {
   const AddressState({
     required this.addresses,
     required this.isEmpty,
@@ -20,6 +21,20 @@ abstract class AddressState extends Equatable {
         addressId,
         isLoading,
       ];
+
+  AddressState copyWith({
+    List<Address>? addresses,
+    bool? isEmpty,
+    bool? isLoading,
+    String? addressId,
+  }) {
+    return AddressState(
+      addresses: addresses ?? this.addresses,
+      isEmpty: isEmpty ?? this.isEmpty,
+      isLoading: isLoading ?? this.isLoading,
+      addressId: addressId ?? this.addressId,
+    );
+  }
 }
 
 class AddressInitial extends AddressState {
@@ -29,19 +44,4 @@ class AddressInitial extends AddressState {
     required super.addressId,
     required super.isLoading,
   });
-}
-
-class NewAddressState extends AddressState {
-  NewAddressState.fromOldSettingState(
-    AddressState oldState, {
-    List<Address>? addresses,
-    String? addressId,
-    bool? isEmpty,
-    bool? isLoading,
-  }) : super(
-          addresses: addresses ?? oldState.addresses,
-          isEmpty: isEmpty ?? oldState.isEmpty,
-          addressId: addressId ?? oldState.addressId,
-          isLoading: isLoading ?? oldState.isLoading,
-        );
 }
