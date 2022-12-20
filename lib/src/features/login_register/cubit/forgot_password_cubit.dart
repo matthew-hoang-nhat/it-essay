@@ -46,6 +46,8 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
+  final otpControllers = List.generate(6, (_) => TextEditingController());
+
   setEmailUser(String email) {
     emit(state.copyWith(emailUser: email));
   }
@@ -62,7 +64,17 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
     emit(state.copyWith(confirmPassword: confirmPassword));
   }
 
+  _refreshAllTextEditingControllers() {
+    emailController.text = '';
+    for (var item in otpControllers) {
+      item.text = '';
+    }
+    newPasswordController.text = '';
+    confirmPasswordController.text = '';
+  }
+
   refreshCubit() {
+    _refreshAllTextEditingControllers();
     emit(ForgotPasswordInitial(
         announcement: '',
         emailUser: '',
@@ -83,9 +95,9 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
         state.emailUser.isNotEmpty) {
       const announcement = 'Email không hợp lệ';
       emit(state.copyWith(announcement: announcement));
-
       return;
     }
+
     emit(state.copyWith(announcement: ''));
   }
 
@@ -101,8 +113,7 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
     emit(state.copyWith(isLoading: true));
     final result = await authRepo.emailResetPassword(email: state.emailUser);
     final userId = result.data;
-    emit(state.copyWith(userId: userId));
-    emit(state.copyWith(isLoading: false));
+    emit(state.copyWith(userId: userId, isLoading: false));
 
     if (result.isSuccess) {
       GoRouter.of(context).replace(
@@ -187,8 +198,21 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
     }
   }
 
+  refreshForgotPasswordSendEmail() {
+    emit(state.copyWith(emailUser: ''));
+  }
+
+  String _otpCodeStr() {
+    String otpCode = '';
+    for (var item in otpControllers) {
+      otpCode += item.text;
+    }
+    return otpCode;
+  }
+
   sendOtpOnClick(context) async {
-    if (state.otp.length != 6) {
+    final otpCode = _otpCodeStr();
+    if (otpCode.length != 6) {
       const announcement = 'Bạn nhập chưa đủ';
       emit(state.copyWith(announcement: announcement));
       return;
@@ -196,7 +220,7 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
 
     emit(state.copyWith(isLoading: true));
     final result =
-        await authRepo.otpResetPassword(otp: state.otp, userId: state.userId);
+        await authRepo.otpResetPassword(otp: otpCode, userId: state.userId);
     emit(state.copyWith(isLoading: false));
 
     if (result.isSuccess) {
