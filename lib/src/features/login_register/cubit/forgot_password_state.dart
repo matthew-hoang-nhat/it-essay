@@ -1,6 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'forgot_password_cubit.dart';
 
-abstract class ForgotPasswordState extends Equatable {
+class ForgotPasswordState extends Equatable {
   const ForgotPasswordState({
     required this.time,
     required this.announcement,
@@ -44,6 +45,38 @@ abstract class ForgotPasswordState extends Equatable {
         confirmPasswordAnnouncement,
         totalAnnouncement,
       ];
+
+  ForgotPasswordState copyWith({
+    String? announcement,
+    String? time,
+    String? userId,
+    String? token,
+    String? otp,
+    String? emailUser,
+    String? newPassword,
+    String? confirmPassword,
+    String? newPasswordAnnouncement,
+    String? confirmPasswordAnnouncement,
+    String? totalAnnouncement,
+    bool? isLoading,
+  }) {
+    return ForgotPasswordState(
+      announcement: announcement ?? this.announcement,
+      time: time ?? this.time,
+      userId: userId ?? this.userId,
+      token: token ?? this.token,
+      otp: otp ?? this.otp,
+      emailUser: emailUser ?? this.emailUser,
+      newPassword: newPassword ?? this.newPassword,
+      confirmPassword: confirmPassword ?? this.confirmPassword,
+      newPasswordAnnouncement:
+          newPasswordAnnouncement ?? this.newPasswordAnnouncement,
+      confirmPasswordAnnouncement:
+          confirmPasswordAnnouncement ?? this.confirmPasswordAnnouncement,
+      totalAnnouncement: totalAnnouncement ?? this.totalAnnouncement,
+      isLoading: isLoading ?? this.isLoading,
+    );
+  }
 }
 
 class ForgotPasswordInitial extends ForgotPasswordState {
@@ -61,37 +94,4 @@ class ForgotPasswordInitial extends ForgotPasswordState {
     required super.confirmPasswordAnnouncement,
     required super.totalAnnouncement,
   });
-}
-
-class NewForgotPasswordState extends ForgotPasswordState {
-  NewForgotPasswordState.fromOldSettingState(
-    ForgotPasswordState oldState, {
-    String? announcement,
-    String? time,
-    String? otp,
-    String? userId,
-    String? emailUser,
-    String? token,
-    String? newPassword,
-    String? confirmPassword,
-    String? newPasswordAnnouncement,
-    String? confirmPasswordAnnouncement,
-    String? totalAnnouncement,
-    bool? isLoading,
-  }) : super(
-          announcement: announcement ?? oldState.announcement,
-          emailUser: emailUser ?? oldState.emailUser,
-          token: token ?? oldState.token,
-          userId: userId ?? oldState.userId,
-          time: time ?? oldState.time,
-          otp: otp ?? oldState.otp,
-          isLoading: isLoading ?? oldState.isLoading,
-          newPassword: newPassword ?? oldState.newPassword,
-          confirmPassword: confirmPassword ?? oldState.confirmPassword,
-          newPasswordAnnouncement:
-              newPasswordAnnouncement ?? oldState.newPasswordAnnouncement,
-          confirmPasswordAnnouncement: confirmPasswordAnnouncement ??
-              oldState.confirmPasswordAnnouncement,
-          totalAnnouncement: totalAnnouncement ?? oldState.totalAnnouncement,
-        );
 }
