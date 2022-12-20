@@ -1,6 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'detail_address_cubit.dart';
 
-abstract class DetailAddressState extends Equatable {
+class DetailAddressState extends Equatable {
   const DetailAddressState({
     required this.address,
     required this.name,
@@ -15,6 +16,9 @@ abstract class DetailAddressState extends Equatable {
     required this.street,
     required this.district,
     required this.ward,
+    required this.phoneNumberAnnouncement,
+    required this.nameAnnouncement,
+    required this.streetAnnouncement,
   });
 
   final Address address;
@@ -33,6 +37,9 @@ abstract class DetailAddressState extends Equatable {
   final String name;
   final String phoneNumber;
   final String street;
+  final String phoneNumberAnnouncement;
+  final String nameAnnouncement;
+  final String streetAnnouncement;
 
   @override
   List<Object?> get props => [
@@ -48,7 +55,78 @@ abstract class DetailAddressState extends Equatable {
         name,
         phoneNumber,
         street,
+        phoneNumberAnnouncement,
+        nameAnnouncement,
+        streetAnnouncement,
       ];
+
+  DetailAddressState copyWithNotAddress(
+      {bool? isAllValidated,
+      bool? isLoading,
+      String? name,
+      String? nameAnnouncement,
+      String? phoneNumber,
+      String? phoneNumberAnnouncement,
+      String? street,
+      String? streetAnnouncement,
+      bool? isDefault}) {
+    return copyWith(
+        isDefault: isDefault,
+        address: address,
+        provinces: provinces,
+        districts: districts,
+        wards: wards,
+        province: province,
+        district: district,
+        ward: ward,
+        isAllValidated: isAllValidated,
+        isLoading: isLoading,
+        name: name,
+        phoneNumber: phoneNumber,
+        phoneNumberAnnouncement: phoneNumberAnnouncement,
+        street: street,
+        nameAnnouncement: nameAnnouncement,
+        streetAnnouncement: streetAnnouncement);
+  }
+
+  DetailAddressState copyWith({
+    Address? address,
+    bool? isDefault,
+    bool? isAllValidated,
+    bool? isLoading,
+    List<Province>? provinces,
+    required List<District>? districts,
+    required List<Ward>? wards,
+    required Province? province,
+    required District? district,
+    required Ward? ward,
+    String? name,
+    String? nameAnnouncement,
+    String? phoneNumber,
+    String? phoneNumberAnnouncement,
+    String? street,
+    String? streetAnnouncement,
+  }) {
+    return DetailAddressState(
+      address: address ?? this.address,
+      isDefault: isDefault ?? this.isDefault,
+      districts: districts,
+      wards: wards,
+      province: province,
+      district: district,
+      ward: ward,
+      isAllValidated: isAllValidated ?? this.isAllValidated,
+      isLoading: isLoading ?? this.isLoading,
+      provinces: provinces ?? this.provinces,
+      name: name ?? this.name,
+      nameAnnouncement: nameAnnouncement ?? this.nameAnnouncement,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      phoneNumberAnnouncement:
+          phoneNumberAnnouncement ?? this.phoneNumberAnnouncement,
+      street: street ?? this.street,
+      streetAnnouncement: streetAnnouncement ?? this.streetAnnouncement,
+    );
+  }
 }
 
 class DetailAddressInitial extends DetailAddressState {
@@ -66,38 +144,8 @@ class DetailAddressInitial extends DetailAddressState {
     required super.street,
     required super.districts,
     required super.wards,
+    required super.nameAnnouncement,
+    required super.phoneNumberAnnouncement,
+    required super.streetAnnouncement,
   });
-}
-
-class NewDetailAddressState extends DetailAddressState {
-  NewDetailAddressState.fromOldSettingState(
-    DetailAddressState oldState, {
-    Address? address,
-    bool? isAllValidated,
-    bool? isLoading,
-    bool? isDefault,
-    String? street,
-    String? phoneNumber,
-    String? name,
-    List<Province>? provinces,
-    required List<District>? districts,
-    required List<Ward>? wards,
-    required Province? province,
-    required District? district,
-    required Ward? ward,
-  }) : super(
-          isDefault: isDefault ?? oldState.isDefault,
-          address: address ?? oldState.address,
-          isAllValidated: isAllValidated ?? oldState.isAllValidated,
-          isLoading: isLoading ?? oldState.isLoading,
-          provinces: provinces ?? oldState.provinces,
-          street: street ?? oldState.street,
-          phoneNumber: phoneNumber ?? oldState.phoneNumber,
-          name: name ?? oldState.name,
-          districts: districts,
-          wards: wards,
-          province: province,
-          district: district,
-          ward: ward,
-        );
 }
