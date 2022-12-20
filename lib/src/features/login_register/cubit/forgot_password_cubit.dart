@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
@@ -8,27 +9,24 @@ import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/utils/helpers/validate.dart';
 import 'package:it_project/src/utils/repository/auth_repository_impl.dart';
 
-import 'parent_cubit.dart';
-
 part 'forgot_password_state.dart';
 
-enum ForgotPasswordStateEnum {
-  announcement,
-  otp,
-  time,
-  isLoading,
-  userId,
-  token,
-  emailUser,
-  newPassword,
-  confirmPassword,
-  newPasswordAnnouncement,
-  confirmPasswordAnnouncement,
-  totalAnnouncement,
-}
+// enum ForgotPasswordStateEnum {
+//   announcement,
+//   otp,
+//   time,
+//   isLoading,
+//   userId,
+//   token,
+//   emailUser,
+//   newPassword,
+//   confirmPassword,
+//   newPasswordAnnouncement,
+//   confirmPasswordAnnouncement,
+//   totalAnnouncement,
+// }
 
-class ForgotPasswordCubit extends Cubit<ForgotPasswordState>
-    implements ParentCubit<ForgotPasswordStateEnum> {
+class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
   ForgotPasswordCubit()
       : super(const ForgotPasswordInitial(
             announcement: '',
@@ -43,6 +41,26 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState>
             newPasswordAnnouncement: '',
             confirmPasswordAnnouncement: '',
             totalAnnouncement: ''));
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  setEmailUser(String email) {
+    emit(state.copyWith(emailUser: email));
+  }
+
+  setOtp(String otp) {
+    emit(state.copyWith(otp: otp));
+  }
+
+  setNewPassword(String newPassword) {
+    emit(state.copyWith(newPassword: newPassword));
+  }
+
+  setConfirmPassword(String confirmPassword) {
+    emit(state.copyWith(confirmPassword: confirmPassword));
+  }
 
   refreshCubit() {
     emit(ForgotPasswordInitial(
@@ -64,28 +82,27 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState>
     if (Validate().isInvalidEmail(state.emailUser) &&
         state.emailUser.isNotEmpty) {
       const announcement = 'Email không hợp lệ';
-      addNewEvent(ForgotPasswordStateEnum.announcement, announcement);
+      emit(state.copyWith(announcement: announcement));
+
       return;
     }
-    addNewEvent(ForgotPasswordStateEnum.announcement, '');
+    emit(state.copyWith(announcement: ''));
   }
 
   sendMailOnClick(context) async {
     if (state.emailUser.isEmpty && state.announcement.isEmpty) {
       const announcement = 'Bạn chưa nhập ô này';
-      addNewEvent(ForgotPasswordStateEnum.announcement, announcement);
+      emit(state.copyWith(announcement: announcement));
       return;
     }
 
     if (Validate().isInvalidEmail(state.emailUser)) return;
 
-    addNewEvent(ForgotPasswordStateEnum.isLoading, true);
+    emit(state.copyWith(isLoading: true));
     final result = await authRepo.emailResetPassword(email: state.emailUser);
-
     final userId = result.data;
-    addNewEvent(ForgotPasswordStateEnum.userId, userId);
-
-    addNewEvent(ForgotPasswordStateEnum.isLoading, false);
+    emit(state.copyWith(userId: userId));
+    emit(state.copyWith(isLoading: false));
 
     if (result.isSuccess) {
       GoRouter.of(context).replace(
@@ -93,20 +110,22 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState>
       return;
     }
 
-    addNewEvent(
-        ForgotPasswordStateEnum.totalAnnouncement, 'Email không tồn tại');
+    const totalAnnouncement = 'Email không tồn tại';
+    emit(state.copyWith(totalAnnouncement: totalAnnouncement));
   }
 
   _checkNewPassword() {
     bool isHadError = false;
     if (Validate().isInvalidPassword(state.newPassword) &&
         state.newPassword.isNotEmpty) {
-      addNewEvent(ForgotPasswordStateEnum.newPasswordAnnouncement,
-          'Mật khẩu phải bao gồm 8 kí tự: chữ hoa, chữ thường, chữ số và kí tự đặc biệt.');
+      const newPasswordAnnouncement =
+          'Mật khẩu phải bao gồm 8 kí tự: chữ hoa, chữ thường, chữ số và kí tự đặc biệt.';
+
+      emit(state.copyWith(newPasswordAnnouncement: newPasswordAnnouncement));
       isHadError = true;
     }
     if (isHadError == false) {
-      addNewEvent(ForgotPasswordStateEnum.newPasswordAnnouncement, '');
+      emit(state.copyWith(newPasswordAnnouncement: ''));
     }
   }
 
@@ -114,12 +133,13 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState>
     bool isHadError = false;
     if (state.newPassword != state.confirmPassword &&
         state.confirmPassword.isNotEmpty) {
-      addNewEvent(ForgotPasswordStateEnum.confirmPasswordAnnouncement,
-          'Mật khẩu không khớp');
+      const confirmPasswordAnnouncement = 'Mật khẩu không khớp';
+      emit(state.copyWith(
+          confirmPasswordAnnouncement: confirmPasswordAnnouncement));
       isHadError = true;
     }
     if (isHadError == false) {
-      addNewEvent(ForgotPasswordStateEnum.confirmPasswordAnnouncement, '');
+      emit(state.copyWith(confirmPasswordAnnouncement: ''));
     }
   }
 
@@ -145,9 +165,9 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState>
     final isValidatedAllTextField = _isValidatedAllTextFields();
 
     if (isValidatedAllTextField) {
-      addNewEvent(ForgotPasswordStateEnum.isLoading, true);
+      emit(state.copyWith(isLoading: true));
       final isSuccess = await _changePassword();
-      addNewEvent(ForgotPasswordStateEnum.isLoading, false);
+      emit(state.copyWith(isLoading: false));
 
       if (isSuccess) {
         Fluttertoast.showToast(
@@ -158,31 +178,30 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState>
       }
     }
 
+    const emptyAnnouncement = 'Bạn chưa nhập ô này';
     if (state.newPassword.isEmpty) {
-      addNewEvent(ForgotPasswordStateEnum.newPasswordAnnouncement,
-          'Bạn chưa nhập ô này');
+      emit(state.copyWith(newPasswordAnnouncement: emptyAnnouncement));
     }
     if (state.confirmPassword.isEmpty) {
-      addNewEvent(ForgotPasswordStateEnum.confirmPasswordAnnouncement,
-          'Bạn chưa nhập ô này');
+      emit(state.copyWith(confirmPasswordAnnouncement: emptyAnnouncement));
     }
   }
 
   sendOtpOnClick(context) async {
     if (state.otp.length != 6) {
       const announcement = 'Bạn nhập chưa đủ';
-      addNewEvent(ForgotPasswordStateEnum.announcement, announcement);
+      emit(state.copyWith(announcement: announcement));
       return;
     }
-    addNewEvent(ForgotPasswordStateEnum.isLoading, true);
+
+    emit(state.copyWith(isLoading: true));
     final result =
         await authRepo.otpResetPassword(otp: state.otp, userId: state.userId);
-
-    addNewEvent(ForgotPasswordStateEnum.isLoading, false);
+    emit(state.copyWith(isLoading: false));
 
     if (result.isSuccess) {
       final token = result.data!['token'];
-      addNewEvent(ForgotPasswordStateEnum.token, token);
+      emit(state.copyWith(token: token));
       GoRouter.of(context).replace(
           '${Paths.loginScreen}/${Paths.sForgotPasswordScreen}/${Paths.sOtpCheckScreenV2}/${Paths.sResetPasswordScreen}');
       return;
@@ -194,54 +213,54 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState>
 
   final authRepo = getIt<AuthRepositoryImpl>();
 
-  @override
-  void addNewEvent(ForgotPasswordStateEnum key, value) {
-    if (isClosed) return;
-    switch (key) {
-      case ForgotPasswordStateEnum.time:
-        emit(NewForgotPasswordState.fromOldSettingState(state, time: value));
-        break;
-      case ForgotPasswordStateEnum.otp:
-        emit(NewForgotPasswordState.fromOldSettingState(state, otp: value));
-        break;
-      case ForgotPasswordStateEnum.announcement:
-        emit(NewForgotPasswordState.fromOldSettingState(state,
-            announcement: value));
-        break;
-      case ForgotPasswordStateEnum.isLoading:
-        emit(NewForgotPasswordState.fromOldSettingState(state,
-            isLoading: value));
-        break;
-      case ForgotPasswordStateEnum.token:
-        emit(NewForgotPasswordState.fromOldSettingState(state, token: value));
-        break;
-      case ForgotPasswordStateEnum.userId:
-        emit(NewForgotPasswordState.fromOldSettingState(state, userId: value));
-        break;
-      case ForgotPasswordStateEnum.emailUser:
-        emit(NewForgotPasswordState.fromOldSettingState(state,
-            emailUser: value));
-        break;
-      case ForgotPasswordStateEnum.confirmPasswordAnnouncement:
-        emit(NewForgotPasswordState.fromOldSettingState(state,
-            confirmPasswordAnnouncement: value));
-        break;
-      case ForgotPasswordStateEnum.newPasswordAnnouncement:
-        emit(NewForgotPasswordState.fromOldSettingState(state,
-            newPasswordAnnouncement: value));
-        break;
-      case ForgotPasswordStateEnum.newPassword:
-        emit(NewForgotPasswordState.fromOldSettingState(state,
-            newPassword: value));
-        break;
-      case ForgotPasswordStateEnum.confirmPassword:
-        emit(NewForgotPasswordState.fromOldSettingState(state,
-            confirmPassword: value));
-        break;
-      case ForgotPasswordStateEnum.totalAnnouncement:
-        emit(NewForgotPasswordState.fromOldSettingState(state,
-            totalAnnouncement: value));
-        break;
-    }
-  }
+  // @override
+  // void addNewEvent(ForgotPasswordStateEnum key, value) {
+  //   if (isClosed) return;
+  //   switch (key) {
+  //     case ForgotPasswordStateEnum.time:
+  //       emit(NewForgotPasswordState.fromOldSettingState(state, time: value));
+  //       break;
+  //     case ForgotPasswordStateEnum.otp:
+  //       emit(NewForgotPasswordState.fromOldSettingState(state, otp: value));
+  //       break;
+  //     case ForgotPasswordStateEnum.announcement:
+  //       emit(NewForgotPasswordState.fromOldSettingState(state,
+  //           announcement: value));
+  //       break;
+  //     case ForgotPasswordStateEnum.isLoading:
+  //       emit(NewForgotPasswordState.fromOldSettingState(state,
+  //           isLoading: value));
+  //       break;
+  //     case ForgotPasswordStateEnum.token:
+  //       emit(NewForgotPasswordState.fromOldSettingState(state, token: value));
+  //       break;
+  //     case ForgotPasswordStateEnum.userId:
+  //       emit(NewForgotPasswordState.fromOldSettingState(state, userId: value));
+  //       break;
+  //     case ForgotPasswordStateEnum.emailUser:
+  //       emit(NewForgotPasswordState.fromOldSettingState(state,
+  //           emailUser: value));
+  //       break;
+  //     case ForgotPasswordStateEnum.confirmPasswordAnnouncement:
+  //       emit(NewForgotPasswordState.fromOldSettingState(state,
+  //           confirmPasswordAnnouncement: value));
+  //       break;
+  //     case ForgotPasswordStateEnum.newPasswordAnnouncement:
+  //       emit(NewForgotPasswordState.fromOldSettingState(state,
+  //           newPasswordAnnouncement: value));
+  //       break;
+  //     case ForgotPasswordStateEnum.newPassword:
+  //       emit(NewForgotPasswordState.fromOldSettingState(state,
+  //           newPassword: value));
+  //       break;
+  //     case ForgotPasswordStateEnum.confirmPassword:
+  //       emit(NewForgotPasswordState.fromOldSettingState(state,
+  //           confirmPassword: value));
+  //       break;
+  //     case ForgotPasswordStateEnum.totalAnnouncement:
+  //       emit(NewForgotPasswordState.fromOldSettingState(state,
+  //           totalAnnouncement: value));
+  //       break;
+  //   }
+  // }
 }

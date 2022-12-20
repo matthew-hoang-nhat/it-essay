@@ -11,7 +11,6 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController emailController = TextEditingController();
     context.read<ForgotPasswordCubit>().refreshCubit();
     return Scaffold(
       appBar: AppBar(title: const Text('Quên mật khẩu')),
@@ -29,12 +28,13 @@ class ForgotPasswordScreen extends StatelessWidget {
                   builder: (context, state) {
                     return MeTextFieldV2(
                       text: 'Email',
-                      textEditingController: emailController,
+                      textEditingController:
+                          context.read<ForgotPasswordCubit>().emailController,
                       announcement: state.announcement,
-                      onChanged: () {
+                      onChanged: (value) {
+                        final email = value;
                         context.read<ForgotPasswordCubit>()
-                          ..addNewEvent(ForgotPasswordStateEnum.emailUser,
-                              emailController.text)
+                          ..setEmailUser(email)
                           ..checkValidatedEmail();
                       },
                     );
