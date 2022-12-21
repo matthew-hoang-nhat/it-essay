@@ -83,9 +83,7 @@ class AppPages {
         ]),
     GoRoute(
       path: Paths.detailSearchScreen,
-      builder: (context, state) => DetailSearchScreen(
-        textSearch: state.extra as String,
-      ),
+      builder: (context, state) => const DetailSearchScreen(),
     ),
     GoRoute(
       path: Paths.addressScreen,

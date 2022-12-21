@@ -98,7 +98,8 @@ class HomeCubit extends Cubit<HomeState> implements ParentCubit<HomeEnum> {
     isLoadingCategories = true;
 
     final categoriesResponse = await categoryRepository.getCategories(
-        numberPage: _currentPageCategory);
+        // numberPage: _currentPageCategory
+        );
     if (categoriesResponse.isSuccess) {
       addNewEvent(HomeEnum.categories, categoriesResponse.data);
     }

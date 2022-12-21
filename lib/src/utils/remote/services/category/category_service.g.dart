@@ -16,13 +16,13 @@ class _CategoryService implements CategoryService {
   String? baseUrl;
 
   @override
-  Future<SuccessResponse> getCategoriesPage(
-      {required limit, required currentPage}) async {
+  Future<SuccessResponse> getCategoriesPage({limit, currentPage}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'limit': limit,
       r'currentPage': currentPage
     };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(

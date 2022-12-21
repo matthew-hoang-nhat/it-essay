@@ -11,34 +11,19 @@ import 'package:it_project/src/utils/remote/model/category/category.dart';
 import 'package:it_project/src/utils/remote/model/search/content_search.dart';
 import 'package:it_project/src/widgets/cart_button.dart';
 
-class SearchScreen extends StatefulWidget {
+class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
 
   @override
-  State<SearchScreen> createState() => _SearchScreenState();
-}
-
-class _SearchScreenState extends State<SearchScreen> {
-  late final bloc = context.read<SearchCubit>();
-
-  @override
   Widget build(BuildContext context) {
-    final textEditingController = TextEditingController();
-
-    var focusNode = FocusNode();
-    focusNode.requestFocus();
-
+    BlocProvider.of<SearchCubit>(context)
+        .loadPageProducts(SearchCubitLoadProductEnum.refresh);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           foregroundColor: AppColors.whiteColor,
           backgroundColor: AppColors.primaryColor,
-          title: SearchBar(
-            focusNode: focusNode,
-            textEditingController: textEditingController,
-            hintText: 'Chú dế mèn kêu',
-          ),
-          // actions: [cartButton(context)],
+          title: const SearchBar(),
           actions: const [CartButton()],
         ),
         body: SingleChildScrollView(
@@ -46,30 +31,21 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Column(children: [
               Padding(
                 padding: const EdgeInsets.all(10),
-                child: resultBar(context, textEditingController),
+                child: resultBar(context),
               ),
-              // imageBackground(bloc),
-              // textInImageBackground(bloc),
               const SizedBox(height: 20),
-              // categories(context, bloc),
-              // extensionSearchField(),
-              // showProducts(bloc)
-              // const ComponentSearchProductVertical()
             ])));
   }
 
-  BlocBuilder<SearchCubit, SearchState> resultBar(
-      context, TextEditingController textEditingController) {
+  BlocBuilder<SearchCubit, SearchState> resultBar(context) {
     return BlocBuilder<SearchCubit, SearchState>(
-      bloc: bloc,
       buildWhen: (previous, current) =>
           previous.contentSearches != current.contentSearches,
       builder: (context, state) {
         return Column(
           children: [
             ...state.contentSearches
-                .map((e) =>
-                    resultLineTextSearch(e, textEditingController, context))
+                .map((e) => resultLineTextSearch(e, context))
                 .toList()
           ],
         );
@@ -77,19 +53,19 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  resultLineTextSearch(ContentSearch contentSearch,
-      TextEditingController textController, context) {
+  resultLineTextSearch(ContentSearch contentSearch, context) {
     final ContentTypeEnum? type = contentSearchType[contentSearch.type];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         InkWell(
           onTap: () {
-            textController.text = contentSearch.name;
-            // bloc.addNewEvent(
-            //     SearchEnum.contentSearches, List<ContentSearch>.empty());
-            // FocusScope.of(context).unfocus();
+            BlocProvider.of<SearchCubit>(context).setField(
+                SearchCubitEnum.searchText,
+                value: contentSearch.name);
+
             switch (type) {
               case ContentTypeEnum.product:
                 GoRouter.of(context)
@@ -104,69 +80,39 @@ class _SearchScreenState extends State<SearchScreen> {
                 break;
               default:
             }
-
-            // GoRouter.of(context).push(Paths.detailSearchScreen, extra: text);
-            // bloc.loadPageProducts(text);
-            // bloc.addNewEvent(SearchEnum.isShowProducts, true);
           },
           child: SizedBox(
-              width: double.infinity,
-              child: Row(
-                children: [
-                  SizedBox(
-                      height: 50,
-                      width: 50,
-                      child: contentSearchType[contentSearch.type] ==
-                              ContentTypeEnum.category
-                          ? const Icon(MaterialCommunityIcons.card_text)
-                          : null),
-                  Text(
+            height: 50,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 50,
+                  child: contentSearchType[contentSearch.type] ==
+                          ContentTypeEnum.category
+                      ? const Icon(
+                          MaterialCommunityIcons.card_text,
+                          size: 20,
+                        )
+                      : const Icon(
+                          MaterialCommunityIcons.book,
+                          size: 20,
+                        ),
+                ),
+                Expanded(
+                  child: Text(
                     contentSearch.name,
+                    maxLines: 2,
                     style: GoogleFonts.nunito(fontSize: 16),
                   ),
-                ],
-              )),
+                ),
+              ],
+            ),
+          ),
         ),
         const Divider(),
       ],
     );
-  }
-
-  // Widget categories(BuildContext context, SearchCubit bloc) {
-  Padding extensionSearchField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 20),
-          Text('SALE', style: GoogleFonts.nunito(color: AppColors.redColor)),
-          const Divider(),
-          lineText('NEW IN'),
-          lineText('Clothes'),
-          lineText('Shoe'),
-          lineText('Accessories & Bags'),
-          lineText('Beach Wear'),
-          lineText('Cosmetics & Personal Care'),
-          lineText('BEST DEAL'),
-        ],
-      ),
-    );
-  }
-
-  lineText(title) {
-    final whiteGrey = AppColors.greyColor.withOpacity(0.2);
-    return Column(children: [
-      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text(title),
-        Icon(
-          MaterialCommunityIcons.chevron_right,
-          color: whiteGrey,
-        )
-      ]),
-      Divider(
-        color: whiteGrey,
-      ),
-    ]);
   }
 }
