@@ -3,206 +3,203 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/constants/app_dimensions.dart';
-import 'package:it_project/src/configs/locates/lang_vi.dart';
 import 'package:it_project/src/configs/locates/me_locale_key.dart';
 
 import 'package:it_project/src/features/login_register/cubit/register_cubit.dart';
-import 'package:it_project/src/features/login_register/screens/otp_check_screen.dart';
 import 'package:it_project/src/utils/helpers/validate.dart';
 import 'package:it_project/src/widgets/load_widget.dart';
 import 'package:it_project/src/widgets/me_text_field.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+class RegisterScreen extends StatelessWidget {
+  const RegisterScreen({super.key});
 
-  @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
-}
-
-class _RegisterScreenState extends State<RegisterScreen> {
-  bool isRegisterScreen = true;
-  String userId = '';
-  TextEditingController emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final bloc = RegisterCubit();
-    return BlocProvider<RegisterCubit>(
-        create: (context) => bloc,
-        child: isRegisterScreen
-            ? registerScreen(bloc)
-            : OtpCheckScreen(
-                userId: userId,
-                emailUser: emailController.text,
-              ));
-  }
-
-  registerScreen(RegisterCubit bloc) {
-    TextEditingController firstNameController = TextEditingController();
-    TextEditingController lastNameController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-    TextEditingController confirmPasswordController = TextEditingController();
-    final meLocalKey = viVN;
-    final List<String> genders = ['male', 'female'];
-    String valueGender = 'male';
-    return BlocBuilder<RegisterCubit, RegisterState>(
-      bloc: bloc,
-      builder: (context, state) {
-        return Stack(
-          children: [
-            Column(
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(children: [
-                  const Expanded(child: Text('')),
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                        meLocalKey[MeLocaleKey.registerLabel] ??
-                            'Register Screen',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.ruda(
-                            fontSize: AppDimensions.dp30,
-                            fontWeight: FontWeight.bold)),
-                  ),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(100),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            child: Text('Skip',
-                                style: GoogleFonts.nunito(
-                                    color: AppColors.blueColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16)),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ]),
-                Expanded(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
+    context.read<RegisterCubit>().refreshCubit();
+    final meLocalKey = context.read<RegisterCubit>().meLocalKey;
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.whiteColor,
+        foregroundColor: AppColors.brownColor,
+        actions: [
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            alignment: Alignment.center,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(100),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Text('Skip',
+                    style: GoogleFonts.nunito(
+                        color: AppColors.blueColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16)),
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              Text(meLocalKey[MeLocaleKey.registerLabel] ?? 'Register Screen',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.ruda(
+                      fontSize: AppDimensions.dp30,
+                      fontWeight: FontWeight.bold)),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: BlocBuilder<RegisterCubit, RegisterState>(
+                      buildWhen: (previous, current) =>
+                          previous.isClickedLogin != current.isClickedLogin,
+                      builder: (context, state) {
+                        return Column(
                           children: [
-                            MeTextField(
-                              text: meLocalKey[MeLocaleKey.emailLabel],
-                              textEditingController: emailController,
-                              hintText: meLocalKey[MeLocaleKey.emailHintText],
-                              isCheckEmpty: bloc.state.isClickedLogin,
-                              // callFuncOnChange: controller.checkValidate,
-                              functionValidation: (value) {
-                                if (value.isEmpty) return null;
-                                if (Validate().isInvalidEmail(value)) {
-                                  final notification =
-                                      meLocalKey[MeLocaleKey.invalidEmail];
-                                  return notification;
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 10),
-                            MeTextField(
-                              text: meLocalKey[MeLocaleKey.firstNameLabel],
-                              textEditingController: firstNameController,
-                              hintText: meLocalKey[MeLocaleKey.firstNameHint],
-                              isCheckEmpty: bloc.state.isClickedLogin,
-                              // callFuncOnChange: controller.checkValidate,
-                              functionValidation: (value) {
-                                if (value.isEmpty) return null;
-                                return null;
-                              },
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            MeTextField(
-                              text: meLocalKey[MeLocaleKey.lastNameLabel],
-                              textEditingController: lastNameController,
-                              hintText: meLocalKey[MeLocaleKey.lastNameHint],
-                              isCheckEmpty: bloc.state.isClickedLogin,
-                              // callFuncOnChange: controller.checkValidate,
-                              functionValidation: (value) {
-                                if (value.isEmpty) return null;
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 10),
-                            MeTextField(
-                              isPassword: true,
-                              text: meLocalKey[MeLocaleKey.passwordLabel],
-                              textEditingController: passwordController,
-                              isCheckEmpty: bloc.state.isClickedLogin,
-                              hintText:
-                                  meLocalKey[MeLocaleKey.passwordHintText],
-                              // callFuncOnChange: controller.checkValidate,
-                              functionValidation: (value) {
-                                if (value.isEmpty) return null;
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  MeTextField(
+                                    text: meLocalKey[MeLocaleKey.emailLabel],
+                                    textEditingController: context
+                                        .read<RegisterCubit>()
+                                        .emailController,
+                                    hintText:
+                                        meLocalKey[MeLocaleKey.emailHintText],
+                                    isCheckEmpty: state.isClickedLogin,
+                                    functionValidation: (value) {
+                                      if (value.isEmpty) return null;
+                                      if (Validate().isInvalidEmail(value)) {
+                                        final notification = meLocalKey[
+                                            MeLocaleKey.invalidEmail];
+                                        return notification;
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  const SizedBox(height: 10),
+                                  MeTextField(
+                                    text:
+                                        meLocalKey[MeLocaleKey.firstNameLabel],
+                                    textEditingController: context
+                                        .read<RegisterCubit>()
+                                        .firstNameController,
+                                    hintText:
+                                        meLocalKey[MeLocaleKey.firstNameHint],
+                                    isCheckEmpty: state.isClickedLogin,
+                                    // callFuncOnChange: controller.checkValidate,
+                                    functionValidation: (value) {
+                                      if (value.isEmpty) return null;
+                                      return null;
+                                    },
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  MeTextField(
+                                    text: meLocalKey[MeLocaleKey.lastNameLabel],
+                                    textEditingController: context
+                                        .read<RegisterCubit>()
+                                        .lastNameController,
+                                    hintText:
+                                        meLocalKey[MeLocaleKey.lastNameHint],
+                                    isCheckEmpty: state.isClickedLogin,
+                                    // callFuncOnChange: controller.checkValidate,
+                                    functionValidation: (value) {
+                                      if (value.isEmpty) return null;
+                                      return null;
+                                    },
+                                  ),
+                                  const SizedBox(height: 10),
+                                  MeTextField(
+                                    isPassword: true,
+                                    text: meLocalKey[MeLocaleKey.passwordLabel],
+                                    textEditingController: context
+                                        .read<RegisterCubit>()
+                                        .passwordController,
+                                    isCheckEmpty: state.isClickedLogin,
+                                    hintText: meLocalKey[
+                                        MeLocaleKey.passwordHintText],
+                                    // callFuncOnChange: controller.checkValidate,
+                                    functionValidation: (value) {
+                                      if (value.isEmpty) return null;
 
-                                if (Validate().isInvalidPassword(value)) {
-                                  final notification =
-                                      meLocalKey[MeLocaleKey.invalidPassword];
-                                  return notification;
-                                }
+                                      if (Validate().isInvalidPassword(value)) {
+                                        final notification = meLocalKey[
+                                            MeLocaleKey.invalidPassword];
+                                        return notification;
+                                      }
 
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 10),
-                            MeTextField(
-                              isPassword: true,
-                              text:
-                                  meLocalKey[MeLocaleKey.confirmPasswordLabel],
-                              textEditingController: confirmPasswordController,
-                              hintText: meLocalKey[
-                                  MeLocaleKey.confirmPasswordHintText],
-                              // callFuncOnChange: controller.checkValidate,
-                              isCheckEmpty: bloc.state.isClickedLogin,
-                              functionValidation: (value) {
-                                if (value.isEmpty) return null;
+                                      return null;
+                                    },
+                                  ),
+                                  const SizedBox(height: 10),
+                                  MeTextField(
+                                    isPassword: true,
+                                    text: meLocalKey[
+                                        MeLocaleKey.confirmPasswordLabel],
+                                    textEditingController: context
+                                        .read<RegisterCubit>()
+                                        .confirmPasswordController,
+                                    hintText: meLocalKey[
+                                        MeLocaleKey.confirmPasswordHintText],
+                                    // callFuncOnChange: controller.checkValidate,
+                                    isCheckEmpty: state.isClickedLogin,
+                                    functionValidation: (value) {
+                                      if (value.isEmpty) return null;
+                                      final password = context
+                                          .read<RegisterCubit>()
+                                          .passwordController
+                                          .text;
+                                      final isValidPassword = !Validate()
+                                          .isInvalidPassword(password);
+                                      if (value != password &&
+                                          isValidPassword) {
+                                        final notification = meLocalKey[
+                                            MeLocaleKey
+                                                .notificationNotMatchPassword];
+                                        return notification;
+                                      }
 
-                                final isValidPassword = !Validate()
-                                    .isInvalidPassword(passwordController.text);
-
-                                if (value != passwordController.text &&
-                                    isValidPassword) {
-                                  final notification = meLocalKey[
-                                      MeLocaleKey.notificationNotMatchPassword];
-                                  return notification;
-                                }
-
-                                return null;
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
+                                      return null;
+                                    },
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                ]),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                SizedBox(
-                                  height: 24,
-                                  width: 24,
-                                  child: Checkbox(
-                                      value: bloc.state.isCheckBox,
-                                      onChanged: (value) {
-                                        bloc.addNewEvent(
-                                            RegisterEnum.isCheckBox, value);
-                                      }),
+                                BlocBuilder<RegisterCubit, RegisterState>(
+                                  buildWhen: (previous, current) =>
+                                      previous.isCheckBox != current.isCheckBox,
+                                  builder: (context, state) {
+                                    return SizedBox(
+                                      height: 24,
+                                      width: 24,
+                                      child: Checkbox(
+                                          value: state.isCheckBox,
+                                          onChanged: (value) {
+                                            context
+                                                .read<RegisterCubit>()
+                                                .setField(
+                                                    RegisterEnum.isCheckBox,
+                                                    value: value);
+                                          }),
+                                    );
+                                  },
                                 ),
                                 const SizedBox(width: 20),
                                 Expanded(
@@ -226,13 +223,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               ],
                             ),
-                            Center(
-                                child: Text(
-                              bloc.state.announcement ?? '',
-                              style: GoogleFonts.nunito(
-                                color: AppColors.redColor,
-                              ),
-                            )),
+                            BlocBuilder<RegisterCubit, RegisterState>(
+                              buildWhen: (previous, current) =>
+                                  previous.registerAnnouncement !=
+                                  current.registerAnnouncement,
+                              builder: (context, state) {
+                                return Center(
+                                    child: Text(
+                                  state.registerAnnouncement ?? '',
+                                  style: GoogleFonts.nunito(
+                                    color: AppColors.redColor,
+                                  ),
+                                ));
+                              },
+                            ),
                             const SizedBox(
                               height: 20,
                             ),
@@ -240,22 +244,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               splashColor: AppColors.whiteColor,
                               highlightColor: AppColors.whiteColor,
                               onTap: () async {
-                                final responseRegister =
-                                    await bloc.registerButtonClick(
-                                  confirmPassword:
-                                      confirmPasswordController.text,
-                                  emailText: emailController.text,
-                                  firstName: firstNameController.text,
-                                  gender: valueGender,
-                                  lastName: lastNameController.text,
-                                  password: passwordController.text,
-                                );
-                                final userIdResponse = responseRegister != null;
-                                if (userIdResponse) {
-                                  isRegisterScreen = false;
-                                  userId = responseRegister;
-                                  setState(() {});
-                                }
+                                await context
+                                    .read<RegisterCubit>()
+                                    .registerButtonClick(context);
                               },
                               child: Container(
                                   alignment: Alignment.center,
@@ -276,16 +267,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     ),
                                   )),
                             ),
-                          ]),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 ),
-              ],
-            ),
-            bloc.state.isLoading == true ? const LoadingWidget() : Container()
-          ],
-        );
-      },
+              ),
+            ],
+          ),
+          BlocBuilder<RegisterCubit, RegisterState>(
+            buildWhen: (previous, current) =>
+                previous.isLoading != current.isLoading,
+            builder: (context, state) {
+              if (state.isLoading == true) {
+                return const LoadingWidget();
+              }
+              return Container();
+            },
+          )
+        ],
+      ),
     );
   }
 }
