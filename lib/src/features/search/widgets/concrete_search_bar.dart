@@ -1,12 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 
 Widget concreteSearchBar(context, {String text = ''}) {
-  log('rebuild');
   return Container(
     height: 50,
     margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -24,8 +21,11 @@ Widget concreteSearchBar(context, {String text = ''}) {
       const SizedBox(width: 10),
       Expanded(
         child: Text(
-          text,
-          style: GoogleFonts.nunito(fontSize: 16),
+          'Warren Buffett: 22 thương vụ đầu tiên và bài học đắt giá từ những sai lầm',
+          style: GoogleFonts.nunito(
+            fontSize: 16,
+            color: AppColors.greyColor,
+          ),
           overflow: TextOverflow.ellipsis,
         ),
       ),

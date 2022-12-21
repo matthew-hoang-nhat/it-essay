@@ -37,7 +37,6 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^8.1.1
   flutter_lorem: ^2.0.0
-  flutter_native_splash: ^2.2.16
   flutter_slidable: ^2.0.0
   flutter_vector_icons: ^2.0.0
   fluttertoast: ^8.1.1
