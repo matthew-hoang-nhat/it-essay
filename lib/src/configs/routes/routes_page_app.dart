@@ -19,8 +19,10 @@ import 'package:it_project/src/features/order/screens/history_order_screen.dart'
 import 'package:it_project/src/features/order/screens/payment_method_screen.dart';
 import 'package:it_project/src/features/order/screens/success_payment_screen.dart';
 import 'package:it_project/src/features/product/screens/product_screen.dart';
+import 'package:it_project/src/features/profile/screens/about_me_screen.dart';
 import 'package:it_project/src/features/profile/screens/change_password_screen.dart';
 import 'package:it_project/src/features/profile/screens/detail_profile_screen.dart';
+import 'package:it_project/src/features/profile/screens/privacy_screen.dart';
 import 'package:it_project/src/features/search/screens/detail_search_screen.dart';
 import 'package:it_project/src/features/search/screens/search_screen.dart';
 import 'package:it_project/src/features/seller/screens/seller_products_category_screen.dart';
@@ -82,9 +84,15 @@ class AppPages {
               ])
         ]),
     GoRoute(
-      path: Paths.detailSearchScreen,
-      builder: (context, state) => const DetailSearchScreen(),
-    ),
+        path: Paths.preSearchScreen,
+        builder: (context, state) => const SearchScreen(),
+        routes: [
+          GoRoute(
+              path: Paths.sDetailSearchScreen,
+              builder: (context, state) => DetailSearchScreen(
+                    extra: state.extra as Map<DetailSearchExtraEnum, dynamic>?,
+                  )),
+        ]),
     GoRoute(
       path: Paths.addressScreen,
       builder: (context, state) =>
@@ -111,10 +119,6 @@ class AppPages {
       ),
     ),
     GoRoute(
-      path: Paths.searchScreen,
-      builder: (context, state) => const SearchScreen(),
-    ),
-    GoRoute(
       path: Paths.productScreen,
       builder: (context, state) => ProductScreen(
         product: state.extra as Product,
@@ -135,7 +139,15 @@ class AppPages {
           GoRoute(
             path: Paths.sChangePasswordScreen,
             builder: (context, state) => const ChangePasswordScreen(),
-          )
+          ),
+          GoRoute(
+            path: Paths.sPrivacyScreen,
+            builder: (context, state) => const PrivacyScreen(),
+          ),
+          GoRoute(
+            path: Paths.sAboutMeScreen,
+            builder: (context, state) => const AboutMeScreen(),
+          ),
         ]),
     GoRoute(
         path: Paths.detailProfileScreen,
@@ -144,11 +156,25 @@ class AppPages {
         path: Paths.detailCategoryScreen,
         builder: (context, state) => DetailCategoryScreen(
               category: state.extra as Category,
-            )),
+            ),
+        routes: [
+          GoRoute(
+              path: Paths.sDetailSearchScreen,
+              builder: (context, state) => DetailSearchScreen(
+                    extra: state.extra as Map<DetailSearchExtraEnum, dynamic>?,
+                  )),
+        ]),
     GoRoute(
         path: Paths.sellerScreen,
         builder: (context, state) =>
-            SellerScreen(profileSeller: state.extra as ProfileSeller)),
+            SellerScreen(profileSeller: state.extra as ProfileSeller),
+        routes: [
+          GoRoute(
+              path: Paths.sDetailSearchScreen,
+              builder: (context, state) => DetailSearchScreen(
+                    extra: state.extra as Map<DetailSearchExtraEnum, dynamic>?,
+                  )),
+        ]),
     GoRoute(
         path: Paths.sellerProductsOfCategoryScreen,
         builder: (context, state) => SellerProductsInCategoryScreen(

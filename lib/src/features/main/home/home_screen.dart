@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:it_project/main.dart';
 
 import 'package:it_project/src/configs/constants/app_assets.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
@@ -76,9 +77,9 @@ class HomeScreen extends StatelessWidget {
         Expanded(
             child: InkWell(
                 onTap: () {
-                  GoRouter.of(context).push(Paths.searchScreen);
+                  GoRouter.of(context).push(Paths.preSearchScreen);
                 },
-                child: concreteSearchBar(context))),
+                child: concreteSearchBar())),
         const CartButton()
         // cartButton(context),
       ],
