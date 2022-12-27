@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
-import 'package:it_project/src/features/search/cubit/search_cubit.dart';
-import 'package:it_project/src/features/search/widgets/search_bar.dart';
-import 'package:it_project/src/utils/remote/model/category/category.dart';
+import 'package:it_project/src/features/search/cubit/pre_search_cubit.dart';
+import 'package:it_project/src/features/search/screens/detail_search_screen.dart';
+import 'package:it_project/src/features/search/widgets/search_bar_pre_widget.dart';
 import 'package:it_project/src/utils/remote/model/search/content_search.dart';
+
 import 'package:it_project/src/widgets/cart_button.dart';
 
 class SearchScreen extends StatelessWidget {
@@ -16,29 +16,30 @@ class SearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<SearchCubit>(context)
-        .loadPageProducts(SearchCubitLoadProductEnum.refresh);
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          foregroundColor: AppColors.whiteColor,
-          backgroundColor: AppColors.primaryColor,
-          title: const SearchBar(),
-          actions: const [CartButton()],
-        ),
-        body: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(children: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: resultBar(context),
-              ),
-              const SizedBox(height: 20),
-            ])));
+    return BlocProvider(
+      create: (context) => PreSearchCubit(),
+      child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            foregroundColor: AppColors.whiteColor,
+            backgroundColor: AppColors.primaryColor,
+            title: const SearchBarPreWidget(),
+            actions: const [CartButton()],
+          ),
+          body: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(children: [
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: resultBar(),
+                ),
+                const SizedBox(height: 20),
+              ]))),
+    );
   }
 
-  BlocBuilder<SearchCubit, SearchState> resultBar(context) {
-    return BlocBuilder<SearchCubit, SearchState>(
+  Widget resultBar() {
+    return BlocBuilder<PreSearchCubit, PreSearchState>(
       buildWhen: (previous, current) =>
           previous.contentSearches != current.contentSearches,
       builder: (context, state) {
@@ -54,32 +55,17 @@ class SearchScreen extends StatelessWidget {
   }
 
   resultLineTextSearch(ContentSearch contentSearch, context) {
-    final ContentTypeEnum? type = contentSearchType[contentSearch.type];
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         InkWell(
           onTap: () {
-            BlocProvider.of<SearchCubit>(context).setField(
-                SearchCubitEnum.searchText,
-                value: contentSearch.name);
-
-            switch (type) {
-              case ContentTypeEnum.product:
-                GoRouter.of(context)
-                    .push(Paths.detailSearchScreen, extra: contentSearch.name);
-                break;
-              case ContentTypeEnum.category:
-                GoRouter.of(context).push(Paths.detailCategoryScreen,
-                    extra: Category(
-                        name: contentSearch.name,
-                        slug: contentSearch.slug,
-                        id: contentSearch.id));
-                break;
-              default:
-            }
+            context.push(
+                '${Paths.preSearchScreen}/${Paths.sDetailSearchScreen}',
+                extra: {
+                  DetailSearchExtraEnum.searchText: contentSearch.name,
+                });
           },
           child: SizedBox(
             height: 50,

@@ -17,7 +17,8 @@ class SellerTabProduct extends StatelessWidget {
         return Container(
           color: AppColors.whiteColor,
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
+          child: Stack(
+            alignment: Alignment.bottomCenter,
             children: [
               ComponentProductVerticalWidget(
                 products: state.products,

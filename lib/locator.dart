@@ -17,6 +17,7 @@ import 'package:it_project/src/utils/remote/services/order/order_service.dart';
 import 'package:it_project/src/utils/remote/services/product/product_service.dart';
 import 'package:it_project/src/utils/remote/services/search/search_service.dart';
 import 'package:it_project/src/utils/remote/services/seller/seller_service.dart';
+
 import 'package:it_project/src/utils/remote/services/up_file/up_file_service.dart';
 import 'package:it_project/src/utils/repository/auth_repository_impl.dart';
 import 'package:it_project/src/utils/repository/cart_repository_impl.dart';
@@ -28,6 +29,7 @@ import 'package:it_project/src/utils/repository/product_repository_impl.dart';
 import 'package:it_project/src/utils/repository/profile_respository_impl.dart';
 import 'package:it_project/src/utils/repository/search_repository_impl.dart';
 import 'package:it_project/src/utils/repository/seller_repository_impl.dart';
+
 import 'package:it_project/src/utils/repository/up_file_repository_impl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
@@ -52,9 +54,9 @@ Future<void> _registerCoreModule() async {
 
   // Network
   getIt.registerSingleton(
-      DioHttpClient('https://auth-server-v1-btn-production.up.railway.app/v1'));
+      DioHttpClient('https://main-server-v1.onrender.com/v1'));
   getIt.registerSingleton(
-      DioHttpClient('https://external-services-production.up.railway.app'),
+      DioHttpClient('https://external-server-v1.onrender.com'),
       instanceName: 'upFileServer');
 
   getIt.registerSingleton(DioHttpClient('https://provinces.open-api.vn/api'),
@@ -117,6 +119,7 @@ Future<void> _registerRepositoriesModule() async {
   getIt.registerSingleton(OrderRepositoryImpl(
     orderService: getIt<OrderService>(),
   ));
+
   getIt.registerSingleton(
       ProfileRepositoryImpl(profileService: getIt<AuthService>()));
   getIt.registerSingleton(

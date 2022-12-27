@@ -9,83 +9,69 @@ class Wrapped<T> {
 class SearchState extends Equatable {
   const SearchState({
     required this.products,
-    required this.contentSearches,
-    required this.categories,
     required this.isLoading,
-    required this.searchType,
-    required this.minPrice,
-    required this.categoryFilter,
-    required this.typeFilter,
     required this.isLoadingMore,
-    required this.sellerFilter,
+    required this.typeFilters,
+    required this.typeSearch,
+    required this.onTypeFilter,
+    required this.valueTypeFilters,
+    required this.valuesTypeFilters,
   });
-  final List<ContentSearch> contentSearches;
-  final List<Category> categories;
-  final Category? categoryFilter;
 
-  final Map<String, String>? sellerFilter;
   final bool isLoading;
   final bool isLoadingMore;
-
-  final SearchTypeFilterEnum typeFilter;
-  final double minPrice;
-  final SearchTypeEnum searchType;
   final List<Product> products;
+  final TypeSearchEnum typeSearch;
+  final List<TypeSearchFilterEnum> typeFilters;
+  final TypeSearchFilterEnum? onTypeFilter;
+  final Map<TypeSearchFilterEnum, dynamic> valuesTypeFilters;
+  final Map<TypeSearchFilterEnum, dynamic> valueTypeFilters;
 
   @override
   List<Object?> get props => [
-        contentSearches,
         isLoading,
-        categories,
-        categoryFilter,
-        sellerFilter,
-        minPrice,
-        typeFilter,
         products,
         isLoadingMore,
-        searchType,
+        typeFilters,
+        typeSearch,
+        onTypeFilter,
+        valueTypeFilters,
+        valuesTypeFilters,
       ];
 
   SearchState copyWith({
-    List<ContentSearch>? contentSearches,
-    List<Category>? categories,
-    Wrapped<Category?>? categoryFilter,
-    Wrapped<Map<String, String>?>? sellerFilter,
     bool? isLoading,
     bool? isLoadingMore,
-    SearchTypeFilterEnum? typeFilter,
-    double? minPrice,
-    SearchTypeEnum? searchType,
     List<Product>? products,
+    TypeSearchEnum? typeSearch,
+    List<TypeSearchFilterEnum>? typeFilters,
+    Wrapped<TypeSearchFilterEnum?>? onTypeFilter,
+    Map<TypeSearchFilterEnum, dynamic>? valuesTypeFilters,
+    Map<TypeSearchFilterEnum, dynamic>? valueTypeFilters,
   }) {
     return SearchState(
       products: products ?? this.products,
-      contentSearches: contentSearches ?? this.contentSearches,
-      categories: categories ?? this.categories,
-      minPrice: minPrice ?? this.minPrice,
-      typeFilter: typeFilter ?? this.typeFilter,
-      categoryFilter:
-          categoryFilter != null ? categoryFilter.value : this.categoryFilter,
-      sellerFilter:
-          sellerFilter != null ? sellerFilter.value : this.sellerFilter,
       isLoading: isLoading ?? this.isLoading,
-      searchType: searchType ?? this.searchType,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      typeFilters: typeFilters ?? this.typeFilters,
+      typeSearch: typeSearch ?? this.typeSearch,
+      onTypeFilter:
+          onTypeFilter != null ? onTypeFilter.value : this.onTypeFilter,
+      valueTypeFilters: valueTypeFilters ?? this.valueTypeFilters,
+      valuesTypeFilters: valuesTypeFilters ?? this.valuesTypeFilters,
     );
   }
 }
 
 class SearchInitial extends SearchState {
   const SearchInitial({
-    required super.contentSearches,
     required super.products,
     required super.isLoading,
-    required super.typeFilter,
-    required super.categories,
-    required super.minPrice,
-    required super.searchType,
-    required super.categoryFilter,
-    required super.sellerFilter,
+    required super.onTypeFilter,
     required super.isLoadingMore,
+    required super.typeFilters,
+    required super.typeSearch,
+    required super.valueTypeFilters,
+    required super.valuesTypeFilters,
   });
 }

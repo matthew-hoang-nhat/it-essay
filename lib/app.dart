@@ -13,7 +13,6 @@ import 'package:it_project/src/features/main/cubit/main_cubit.dart';
 import 'package:it_project/src/features/main/home/cubit/home_cubit.dart';
 import 'package:it_project/src/features/order/cubit/cart_to_order_cubit.dart';
 import 'package:it_project/src/features/order/cubit/history_order_cubit.dart';
-import 'package:it_project/src/features/search/cubit/search_cubit.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -27,7 +26,6 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => AppCubit()..initCubit()),
-        BlocProvider(create: (context) => SearchCubit()..initCubit()),
         BlocProvider(create: (context) => HomeCubit()..initCubit()),
         BlocProvider(create: (context) => MainCubit()..reloadMainScreen()),
         BlocProvider(
