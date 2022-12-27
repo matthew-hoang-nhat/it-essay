@@ -6,6 +6,7 @@ import 'package:it_project/src/utils/remote/model/user/update_profile_user_data.
 import 'package:it_project/src/utils/remote/model/user/update_profile_user_request.dart';
 import 'package:it_project/src/utils/remote/services/fresult.dart';
 import 'package:it_project/src/utils/repository/profile_respository.dart';
+import 'package:logger/logger.dart';
 
 class ProfileRepositoryImpl extends ProfileRepository {
   ProfileRepositoryImpl({required super.profileService});
@@ -39,6 +40,23 @@ class ProfileRepositoryImpl extends ProfileRepository {
       }
       log('updateProfileUser: ${ex.toString()}');
 
+      return FResult.error(ex.toString());
+    }
+  }
+
+  @override
+  Future<FResult<String>> changePassword(
+      {required String oldPassword, required String newPassword}) async {
+    try {
+      final changePasswordRequest = {
+        'oldPassword': oldPassword,
+        'newPassword': newPassword
+      };
+      final response =
+          await profileService.changePassword(changePasswordRequest);
+      return FResult.success('Thành công');
+    } catch (ex) {
+      Logger().e(ex);
       return FResult.error(ex.toString());
     }
   }
