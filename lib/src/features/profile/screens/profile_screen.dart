@@ -97,6 +97,21 @@ class ProfileScreen extends StatelessWidget {
                   MaterialCommunityIcons.chevron_right,
                 ),
               ),
+              const Divider(),
+              ListTile(
+                onTap: () {
+                  context.push(
+                      '${Paths.mainScreen}/${Paths.sChangePasswordScreen}');
+                },
+                leading: Icon(
+                  MaterialCommunityIcons.form_textbox_password,
+                  color: AppColors.primaryColor,
+                ),
+                title: const Text('Đổi mật khẩu'),
+                trailing: const Icon(
+                  MaterialCommunityIcons.chevron_right,
+                ),
+              ),
             ]),
           ),
           const SizedBox(height: 20),

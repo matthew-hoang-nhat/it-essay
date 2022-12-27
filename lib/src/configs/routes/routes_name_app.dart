@@ -14,9 +14,9 @@ class Paths {
   static const String sellerProductsOfCategoryScreen =
       "/seller-products-of-category-screen";
   static const String profileScreen = "/profile-screen";
+  static const String sChangePasswordScreen = "change-password-screen";
   static const String detailProfileScreen = "/detail-profile-screen";
   static const String editProfileScreen = "/edit-profile-screen";
-  static const String homeScreen = "/home-screen";
   static const String addressScreen = "/address-screen";
   static const String detailAddressScreen = "/detail-address-screen";
   static const String addAddressScreen = "/add-address-screen";

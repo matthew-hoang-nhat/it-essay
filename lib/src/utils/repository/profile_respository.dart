@@ -10,4 +10,7 @@ abstract class ProfileRepository {
   Future<FResult<ProfileUser>> getProfileUser();
   Future<FResult<String>> updateProfileUser(
       {required UpdateProfileUserData newProfileUserData});
+
+  Future<FResult<String>> changePassword(
+      {required String oldPassword, required String newPassword});
 }
