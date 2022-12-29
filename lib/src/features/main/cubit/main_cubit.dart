@@ -36,9 +36,9 @@ class MainCubit extends Cubit<MainState> {
     final newBarItems = [
       const BottomNavigationBarItem(
           icon: Icon(MaterialCommunityIcons.home, size: 20.0), label: 'Home'),
-      const BottomNavigationBarItem(
-          icon: Icon(MaterialCommunityIcons.heart, size: 20.0),
-          label: 'Wishlist'),
+      // const BottomNavigationBarItem(
+      //     icon: Icon(MaterialCommunityIcons.heart, size: 20.0),
+      //     label: 'Wishlist'),
       BottomNavigationBarItem(
           icon: isLogin
               ? ClipRRect(
@@ -69,7 +69,7 @@ class MainCubit extends Cubit<MainState> {
 
     final newTabs = [
       const HomeScreen(),
-      isLogin == true ? const ProfileScreen() : const LoginPopup(),
+      // isLogin == true ? const ProfileScreen() : const LoginPopup(),
       isLogin == true ? const ProfileScreen() : const LoginPopup()
     ];
     emit(state.copyWith(

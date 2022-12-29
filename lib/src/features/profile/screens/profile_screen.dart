@@ -127,7 +127,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 title: const Text('Điều khoản và chính sách'),
                 onTap: () {
-                  // context.push('${Paths.mainScreen}/${Paths.sPrivacyScreen}');
+                  context.push('${Paths.mainScreen}/${Paths.sPrivacyScreen}');
                 },
                 trailing: const Icon(MaterialCommunityIcons.chevron_right),
               ),
@@ -138,7 +138,7 @@ class ProfileScreen extends StatelessWidget {
                   color: AppColors.primaryColor,
                 ),
                 onTap: () {
-                  // context.push('${Paths.mainScreen}/${Paths.sAboutMeScreen}');
+                  context.push('${Paths.mainScreen}/${Paths.sAboutMeScreen}');
                 },
                 title: const Text('Về chúng tôi'),
                 trailing: const Icon(
