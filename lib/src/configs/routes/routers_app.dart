@@ -12,6 +12,7 @@ class AppRouter {
         initialLocation: Paths.mainScreen,
         routes: AppPages.pages,
         debugLogDiagnostics: true,
+        navigatorKey: navigatorKey,
         redirect: (context, state) => _redirect(context, state),
       );
 
