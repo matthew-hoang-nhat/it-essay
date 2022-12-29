@@ -36,6 +36,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.1
+  flutter_local_notifications: ^13.0.0
   flutter_lorem: ^2.0.0
   flutter_slidable: ^2.0.0
   flutter_vector_icons: ^2.0.0
@@ -53,6 +54,7 @@ dependencies:
   logger: ^1.1.0
   path_provider: ^2.0.11
   retrofit: ^3.0.1+1
+  socket_io_client: ^2.0.0
   url_launcher: ^6.1.7
 
 dev_dependencies:

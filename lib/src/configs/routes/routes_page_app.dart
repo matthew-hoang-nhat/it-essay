@@ -19,8 +19,10 @@ import 'package:it_project/src/features/order/screens/history_order_screen.dart'
 import 'package:it_project/src/features/order/screens/payment_method_screen.dart';
 import 'package:it_project/src/features/order/screens/success_payment_screen.dart';
 import 'package:it_project/src/features/product/screens/product_screen.dart';
+import 'package:it_project/src/features/profile/screens/about_me_screen.dart';
 import 'package:it_project/src/features/profile/screens/change_password_screen.dart';
 import 'package:it_project/src/features/profile/screens/detail_profile_screen.dart';
+import 'package:it_project/src/features/profile/screens/privacy_screen.dart';
 import 'package:it_project/src/features/search/screens/detail_search_screen.dart';
 import 'package:it_project/src/features/search/screens/search_screen.dart';
 import 'package:it_project/src/features/seller/screens/seller_products_category_screen.dart';
@@ -107,16 +109,6 @@ class AppPages {
       builder: (context, state) => const AddAddressScreen(),
     ),
     GoRoute(
-      path: Paths.historyOrderScreen,
-      builder: (context, state) => const HistoryOrderScreen(),
-    ),
-    GoRoute(
-      path: Paths.detailOrderScreen,
-      builder: (context, state) => DetailOrderScreen(
-        orderId: state.extra as String,
-      ),
-    ),
-    GoRoute(
       path: Paths.productScreen,
       builder: (context, state) => ProductScreen(
         product: state.extra as Product,
@@ -131,21 +123,28 @@ class AppPages {
             builder: (context, state) => const SuccessPaymentScreen(),
           ),
           GoRoute(
-            path: Paths.subHistoryOrderScreen,
-            builder: (context, state) => const HistoryOrderScreen(),
-          ),
+              path: Paths.subHistoryOrderScreen,
+              builder: (context, state) => const HistoryOrderScreen(),
+              routes: [
+                GoRoute(
+                    path: '${Paths.sDetailOrderScreen}/:orderId',
+                    builder: (context, state) {
+                      final orderId = state.params['orderId'];
+                      return DetailOrderScreen(orderId: orderId as String);
+                    }),
+              ]),
           GoRoute(
             path: Paths.sChangePasswordScreen,
             builder: (context, state) => const ChangePasswordScreen(),
           ),
-          // GoRoute(
-          //   path: Paths.sPrivacyScreen,
-          //   builder: (context, state) => const PrivacyScreen(),
-          // ),
-          // GoRoute(
-          //   path: Paths.sAboutMeScreen,
-          //   builder: (context, state) => const AboutMeScreen(),
-          // ),
+          GoRoute(
+            path: Paths.sPrivacyScreen,
+            builder: (context, state) => const PrivacyScreen(),
+          ),
+          GoRoute(
+            path: Paths.sAboutMeScreen,
+            builder: (context, state) => const AboutMeScreen(),
+          ),
         ]),
     GoRoute(
         path: Paths.detailProfileScreen,

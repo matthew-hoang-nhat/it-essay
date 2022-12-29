@@ -27,9 +27,9 @@ class Paths {
   static const String addressScreen = "/address-screen";
   static const String detailAddressScreen = "/detail-address-screen";
   static const String addAddressScreen = "/add-address-screen";
-  static const String historyOrderScreen = "/history-order-screen";
+  // static const String historyOrderScreen = "/history-order-screen";
   static const String subHistoryOrderScreen = "history-order-screen";
-  static const String detailOrderScreen = "/detail-order-screen";
+  static const String sDetailOrderScreen = "detail-order-screen";
   static const String categoryScreen = "/category-screen";
   static const String detailCategoryScreen = "/detail-category-screen";
 }
