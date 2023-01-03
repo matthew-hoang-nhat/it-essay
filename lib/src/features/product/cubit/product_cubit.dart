@@ -1,15 +1,19 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:it_project/main.dart';
+import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/locates/lang_vi.dart';
 import 'package:it_project/src/features/app/fcart_local.dart';
 import 'package:it_project/src/features/shopping_cart/mixin/action_cart.dart';
 import 'package:it_project/src/local/dao/item_cart_dao.dart';
 import 'package:it_project/src/utils/remote/model/product/product.dart';
 import 'package:it_project/src/utils/remote/model/product/product_picture.dart';
+import 'package:it_project/src/utils/remote/model/review/review.dart';
 import 'package:it_project/src/utils/repository/product_repository.dart';
 import 'package:it_project/src/utils/repository/product_repository_impl.dart';
+import 'package:it_project/src/utils/repository/review_repository_impl.dart';
 
 part 'product_state.dart';
 
@@ -17,36 +21,94 @@ enum ProductCartActionEnum {
   addItem,
 }
 
+enum TypeLoad { refresh, loadMore }
+
 class ProductCubit extends Cubit<ProductState> with ActionCart {
-  ProductCubit({required Product product})
-      : super(ProductInitial(
-          isTop: true,
-          product: product,
-          indexImage: 0,
-          isDescribeShowAll: false,
-          isLoading: false,
-        ));
+  ProductCubit()
+      : super(const ProductInitial(
+            isTop: true,
+            product: null,
+            indexImage: 0,
+            isDescribeShowAll: false,
+            isLoading: false,
+            isLoadingMore: false,
+            reviews: [],
+            isBoughtProduct: false,
+            isEndReviews: false));
 
   final controller = ScrollController();
   final pageController = PageController();
 
   ProductRepository productRepository = getIt<ProductRepositoryImpl>();
+
   final meLocalKey = viVN;
 
-  initCubit() async {
-    _getDetailProduct();
+  initCubit(String slug) async {
+    _getDetailProduct(slug).then((value) {
+      _getReviewsOfAProduct(TypeLoad.refresh);
+      _checkPermissionReview();
+    });
     _settingController();
+  }
+
+  _checkPermissionReview() async {
+    if (state.product == null) return;
+    final result =
+        await reviewRepo.isBoughtProduct(idProduct: state.product!.id);
+
+    if (result.data == true) {
+      emit(state.copyWith(isBoughtProduct: true));
+    }
+  }
+
+  Future<bool> deleteReview(Review review) async {
+    final result = await reviewRepo.deleteReview(
+        discussId: review.id, page: review.page, productId: state.product!.id);
+
+    if (result.isSuccess) {
+      final newReviews = List<Review>.from(state.reviews);
+      newReviews.removeWhere(
+        (Review element) => element.id == review.id,
+      );
+      emit(state.copyWith(reviews: newReviews));
+      Fluttertoast.showToast(msg: 'Xóa đánh giá thành công');
+      return true;
+    }
+
+    Fluttertoast.showToast(
+        msg: 'Không thể xóa đánh giá',
+        backgroundColor: AppColors.redColor,
+        textColor: AppColors.whiteColor);
+    return false;
+  }
+
+  loadReviews(TypeLoad type) async {
+    switch (type) {
+      case TypeLoad.refresh:
+        emit(state.copyWith(isLoadingMore: true));
+        currentPageNumberReviews = 1;
+        emit(state.copyWith(isEndReviews: false));
+        await _getReviewsOfAProduct(TypeLoad.refresh);
+        emit(state.copyWith(isLoadingMore: false));
+        break;
+      case TypeLoad.loadMore:
+        if (state.isEndReviews) return;
+        emit(state.copyWith(isLoadingMore: true));
+        currentPageNumberReviews++;
+        await _getReviewsOfAProduct(TypeLoad.loadMore);
+        emit(state.copyWith(isLoadingMore: false));
+        break;
+      default:
+    }
   }
 
   setShowAll() {
     emit(state.copyWith(isDescribeShowAll: true));
   }
 
-  _getDetailProduct() async {
+  Future<void> _getDetailProduct(slug) async {
     emit(state.copyWith(isLoading: true));
-
-    final productResponse =
-        await productRepository.getDetailProduct(state.product.slug!);
+    final productResponse = await productRepository.getDetailProduct(slug);
 
     if (productResponse.isSuccess) {
       final product = productResponse.data;
@@ -86,7 +148,7 @@ class ProductCubit extends Cubit<ProductState> with ActionCart {
   }
 
   _addItemToCart() async {
-    final product = state.product;
+    final product = state.product!;
     ItemCart itemCart = ItemCart(
         price: product.price!,
         id: product.id,
@@ -105,5 +167,25 @@ class ProductCubit extends Cubit<ProductState> with ActionCart {
             .itemCarts
             .firstWhere((element) => element.id == itemCart.id),
         type: ActionCartTypeEnum.server);
+  }
+
+  int currentPageNumberReviews = 1;
+  final reviewRepo = getIt<ReviewRepositoryImpl>();
+  _getReviewsOfAProduct(TypeLoad type) async {
+    final result = await reviewRepo.getReviewsOfAProduct(
+        idProduct: state.product!.id, numberPage: currentPageNumberReviews);
+
+    if (result.isSuccess) {
+      final reviews = result.data!;
+      if (type == TypeLoad.refresh) {
+        emit(state.copyWith(reviews: [...reviews]));
+      }
+      if (type == TypeLoad.loadMore) {
+        emit(state.copyWith(reviews: [...state.reviews, ...reviews]));
+      }
+    }
+    if (result.isError) {
+      emit(state.copyWith(isEndReviews: true));
+    }
   }
 }
