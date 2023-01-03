@@ -8,7 +8,6 @@ import 'package:it_project/src/features/order/cubit/detail_order_cubit.dart';
 import 'package:it_project/src/features/order/widgets/inline_item_order_widget.dart';
 import 'package:it_project/src/utils/remote/model/order/get/item_order.dart';
 import 'package:it_project/src/utils/remote/model/order/get/order_response.dart';
-import 'package:it_project/src/utils/remote/model/product/product.dart';
 import 'package:it_project/src/widgets/load_widget.dart';
 
 import '../widgets/inline_history_order_response_widget.dart';
@@ -101,11 +100,8 @@ class DetailOrderScreen extends StatelessWidget {
                                   children: [
                                     InkWell(
                                       onTap: () {
-                                        context.push(Paths.productScreen,
-                                            extra: Product(
-                                                id: e.product.id,
-                                                name: e.product.name,
-                                                slug: e.product.slug));
+                                        context.push(
+                                            '${Paths.productScreen}/${e.product.slug}');
                                       },
                                       child: InlineItemOrderWidget(
                                         productOrder: e,

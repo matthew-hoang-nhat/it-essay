@@ -28,7 +28,7 @@ class ComponentSearchProductVertical extends StatelessWidget {
                 Flexible(
                   child: InkWell(
                     onTap: () {
-                      context.push(Paths.productScreen, extra: productOdd);
+                      context.push('${Paths.productScreen}/${productOdd.slug}');
                     },
                     child: ProductWidget(
                       product: productOdd,
@@ -43,8 +43,8 @@ class ComponentSearchProductVertical extends StatelessWidget {
                     : Flexible(
                         child: InkWell(
                           onTap: () {
-                            context.push(Paths.productScreen,
-                                extra: productEven);
+                            context.push(
+                                '${Paths.productScreen}/${productEven.slug}');
                           },
                           child: ProductWidget(
                             product: productEven,

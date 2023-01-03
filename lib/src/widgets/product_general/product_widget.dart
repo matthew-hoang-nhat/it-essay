@@ -35,8 +35,7 @@ class _ProductWidgetState extends State<ProductWidget> {
     return InkWell(
       onTap: () {
         context.push(
-          Paths.productScreen,
-          extra: widget.product,
+          '${Paths.productScreen}/${widget.product.slug}',
         );
       },
       child: Container(
