@@ -4,6 +4,7 @@ import 'package:it_project/src/utils/remote/services/fresult.dart';
 
 abstract class AuthRepository {
   final AuthService authService;
+
   AuthRepository({required this.authService});
 
   Future<FResult<String?>> registerUsernamePassword(
@@ -21,5 +22,11 @@ abstract class AuthRepository {
     required String password,
   });
 
-  // Future<FResult<Map>> refreshToken();
+  Future<FResult<String>> emailResetPassword({required String email});
+  Future<FResult<Map<String, dynamic>>> otpResetPassword(
+      {required String otp, required String userId});
+  Future<FResult<String>> finalResetPassword(
+      {required String password,
+      required String token,
+      required String userId});
 }

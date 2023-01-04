@@ -123,7 +123,10 @@ class LoginScreen extends StatelessWidget {
                             child: InkWell(
                               highlightColor: AppColors.whiteColor,
                               splashColor: AppColors.whiteColor,
-                              onTap: () {},
+                              onTap: () {
+                                context.push(
+                                    '${Paths.loginScreen}/${Paths.sForgotPasswordScreen}');
+                              },
                               child: Text(
                                   meLocalKey[MeLocaleKey.forgotPasswordLabel] ??
                                       'Err: Quên mật khẩu',

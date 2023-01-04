@@ -8,7 +8,7 @@ part of 'item_cart_request.dart';
 
 ItemCartRequest _$ItemCartRequestFromJson(Map<String, dynamic> json) =>
     ItemCartRequest(
-      product: Product.fromJson(json['product'] as Map<String, dynamic>),
+      product: json['product'],
       quantity: json['quantity'] as int?,
       wishlist: json['wishlist'] as bool?,
     );
