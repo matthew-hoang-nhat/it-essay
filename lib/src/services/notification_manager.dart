@@ -17,7 +17,6 @@ class NotificationManager {
   }
 
   Future<void> initPlugin() async {
-    Logger().wtf('initPlugin');
     _setting = InitializationSettings(
       android: _settingAndroid,
     );
@@ -25,10 +24,9 @@ class NotificationManager {
       _setting,
       // onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
       onDidReceiveNotificationResponse: (NotificationResponse response) {
-        final String? payload = response.payload;
-        Logger().i('Click Notification in Foregorund');
+        final String? orderId = response.payload;
         GoRouter.of(navigatorKey.currentContext!).push(
-            '${Paths.mainScreen}/${Paths.subHistoryOrderScreen}/${Paths.sDetailOrderScreen}/$payload');
+            '${Paths.mainScreen}/${Paths.subHistoryOrderScreen}/${Paths.sDetailOrderScreen}/$orderId');
       },
     );
   }
@@ -37,19 +35,25 @@ class NotificationManager {
     final NotificationAppLaunchDetails? detail =
         await notificationPlugin.getNotificationAppLaunchDetails();
 
-    if (detail != null && detail.didNotificationLaunchApp) {
-      final String? orderId = detail.notificationResponse!.payload;
+    Logger().i(['detail:', detail]);
+
+    // if (detail != null && detail.didNotificationLaunchApp) {
+    if (detail?.notificationResponse != null) {
+      final String? orderId = detail?.notificationResponse!.payload;
+      Logger().i(orderId);
       GoRouter.of(navigatorKey.currentContext!).push(
           '${Paths.mainScreen}/${Paths.subHistoryOrderScreen}/${Paths.sDetailOrderScreen}/$orderId');
     }
   }
 
-  @pragma('vm:entry-point')
-  void notificationTapBackground(NotificationResponse notificationResponse) {
-    final String? orderId = notificationResponse.payload;
-    GoRouter.of(navigatorKey.currentContext!).push(
-        '${Paths.mainScreen}/${Paths.subHistoryOrderScreen}/${Paths.sDetailOrderScreen}/$orderId');
-  }
+  // @pragma('vm:entry-point')
+  // static void notificationTapBackground(
+  //     NotificationResponse notificationResponse) {
+  //   Logger().i('Background Notification');
+  //   final String? orderId = notificationResponse.payload;
+  //   GoRouter.of(navigatorKey.currentContext!).push(
+  //       '${Paths.mainScreen}/${Paths.subHistoryOrderScreen}/${Paths.sDetailOrderScreen}/$orderId');
+  // }
 
   final Map<String, int> _notificationCount = {};
 

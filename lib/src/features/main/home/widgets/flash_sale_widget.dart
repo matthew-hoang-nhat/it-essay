@@ -25,7 +25,7 @@ class FlashSaleWidget extends StatelessWidget {
         .fileLink;
     return InkWell(
       onTap: () {
-        context.push(Paths.productScreen, extra: product);
+        context.push('${Paths.productScreen}/${product.slug}');
       },
       child: Container(
         margin: const EdgeInsets.only(right: 10),

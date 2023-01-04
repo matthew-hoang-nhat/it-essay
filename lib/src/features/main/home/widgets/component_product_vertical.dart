@@ -42,7 +42,7 @@ class ComponentProductVertical extends StatelessWidget {
                               onTap: () {
                                 context.push(
                                   Paths.productScreen,
-                                  extra: productOdd,
+                                  extra: productOdd.id,
                                 );
                               },
                               child: ProductWidget(
@@ -67,7 +67,7 @@ class ComponentProductVertical extends StatelessWidget {
                                     onTap: () {
                                       context.push(
                                         Paths.productScreen,
-                                        extra: productEven,
+                                        extra: productEven.id,
                                       );
                                     },
                                     child: ProductWidget(

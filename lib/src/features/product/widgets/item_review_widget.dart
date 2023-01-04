@@ -1,109 +1,147 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:it_project/main.dart';
+import 'package:it_project/src/features/app/fuser_local.dart';
+import 'package:it_project/src/features/product/cubit/product_cubit.dart';
+
+import 'package:it_project/src/utils/remote/model/review/review.dart';
+import 'package:it_project/src/widgets/matt.dart';
+import 'package:it_project/src/widgets/me_alert_dialog.dart';
 import 'package:it_project/src/widgets/start_widget.dart';
 
 import '../../../configs/constants/app_colors.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:intl/intl.dart';
 
 enum LikeReviewEnum { like, dislike, nothing }
 
-class ItemReviewWidget extends StatefulWidget {
-  const ItemReviewWidget({super.key});
+class ItemReviewWidget extends StatelessWidget {
+  const ItemReviewWidget({Key? key, required this.review}) : super(key: key);
 
-  @override
-  State<ItemReviewWidget> createState() => _ItemReviewWidgetState();
-}
-
-class _ItemReviewWidgetState extends State<ItemReviewWidget> {
-  var likeReviewState = LikeReviewEnum.nothing;
+  final Review review;
 
   @override
   Widget build(BuildContext context) {
+    final name = review.user?['info']['firstName'] +
+        ' ' +
+        review.user?['info']['lastName'];
+    final avatarUrl = review.user?['info']['avatar'];
+    String dateTimeStr = '';
+
+    if (review.dateTime != null) {
+      final DateTime dateTime = DateTime.parse(review.dateTime!);
+      dateTimeStr = DateFormat('yyyy-MM-dd | kk:mm').format(dateTime);
+    }
+
     return Container(
       padding: const EdgeInsets.only(bottom: 10),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              RichText(
-                  text: TextSpan(
-                      style: GoogleFonts.nunito(color: AppColors.greyColor),
-                      children: const [
-                    TextSpan(text: 'Hoàng Trung Nhật'),
-                    TextSpan(text: ' | '),
-                    TextSpan(text: '12 - 11 - 2020'),
-                  ])),
-              const Spacer(),
-              ...starWidget(4, 5)
-            ],
-          ),
-          Text('Sản phẩm tốt lắm',
-              style: GoogleFonts.nunito(
-                  fontSize: 16, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
-          Row(children: [
-            labelContent('Mua thôi'),
-            labelContent('Khuyên dùng')
-          ]),
-          const SizedBox(height: 10),
-          Text(
-            'Sau mấy ngày trông ngóng thì cuối cùng em ấy cũng đã về với mình. Mở ra phải nói là rất ưng cái bụng luôn. Giầy đẹp đi êm chân cực ý .Về size giày thì chuẩn nha mn. Khoản đóng gói shop cũng chu đáo để thêm 2 miếng giữ fom giày. Ncl giày đẹp giá rẻ mn nên mua nh',
-            style: GoogleFonts.nunito(color: AppColors.greyColor, fontSize: 16),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Row(children: [
-                InkWell(
-                  onTap: () {
-                    switch (likeReviewState) {
-                      case LikeReviewEnum.like:
-                        likeReviewState = LikeReviewEnum.nothing;
-                        break;
-
-                      case LikeReviewEnum.nothing:
-                      case LikeReviewEnum.dislike:
-                        likeReviewState = LikeReviewEnum.like;
-                        break;
-                    }
-                    setState(() {});
-                  },
-                  child: likeReviewState == LikeReviewEnum.like
-                      ? Icon(MaterialCommunityIcons.thumb_up,
-                          color: AppColors.blueColor)
-                      : Icon(MaterialCommunityIcons.thumb_up_outline,
-                          color: AppColors.blueColor),
+              ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: PhotoView(
+                      imageProvider: CachedNetworkImageProvider(
+                        avatarUrl,
+                      ),
+                    ),
+                  )),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                        text: TextSpan(
+                            style:
+                                GoogleFonts.nunito(color: AppColors.greyColor),
+                            children: [
+                          TextSpan(text: name),
+                        ])),
+                    Row(
+                      children: starWidget(review.ratingNumber.toInt(), 5),
+                    ),
+                    Text(review.text,
+                        style: GoogleFonts.nunito(
+                          fontSize: 16,
+                          // fontWeight: FontWeight.bold,
+                        )),
+                    if (review.attaches?.isNotEmpty == true)
+                      SizedBox(
+                        height: 100,
+                        width: double.infinity,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: review.attaches?.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final item = review.attaches![index];
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Matt.imageInkwell(
+                                  image: CachedNetworkImage(
+                                    imageUrl: item['fileLink'] ?? '',
+                                    width: 100,
+                                    fit: BoxFit.cover,
+                                    errorWidget: (context, url, error) =>
+                                        Container(),
+                                  ),
+                                  context: context,
+                                  imageProvider: CachedNetworkImageProvider(
+                                    item['fileLink'] ?? '',
+                                  )),
+                            );
+                          },
+                        ),
+                      ),
+                    const SizedBox(height: 10),
+                    Text(dateTimeStr,
+                        style: GoogleFonts.nunito(color: AppColors.greyColor)),
+                  ],
                 ),
-                const SizedBox(width: 10),
-                Text('16',
-                    style: GoogleFonts.nunito(color: AppColors.blueColor)),
-              ]),
-              const SizedBox(width: 10),
-              Row(children: [
-                InkWell(
-                    onTap: () {
-                      switch (likeReviewState) {
-                        case LikeReviewEnum.like:
-                        case LikeReviewEnum.nothing:
-                          likeReviewState = LikeReviewEnum.dislike;
-                          break;
-
-                        case LikeReviewEnum.dislike:
-                          likeReviewState = LikeReviewEnum.nothing;
-                          break;
-                      }
-                      setState(() {});
-                    },
-                    child: likeReviewState == LikeReviewEnum.dislike
-                        ? const Icon(MaterialCommunityIcons.thumb_down)
-                        : const Icon(
-                            MaterialCommunityIcons.thumb_down_outline)),
-                const SizedBox(width: 10),
-                const Text('3'),
-              ]),
+              ),
+              if (review.user?['_id'] == getIt<FUserLocal>().userId)
+                BlocBuilder<ProductCubit, ProductState>(
+                  buildWhen: (previous, current) => false,
+                  builder: (context, state) {
+                    return InkWell(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (dialogContext) => MeAlertDialog(
+                                  notificationTitle:
+                                      const Text('Bạn muốn xóa đánh giá này?'),
+                                  redActionTexts: {
+                                    'Xóa': () {
+                                      BlocProvider.of<ProductCubit>(context)
+                                          .deleteReview(review);
+                                      Navigator.of(context).pop();
+                                    }
+                                  },
+                                  normalActionTexts: {
+                                    'Không': Navigator.of(dialogContext).pop
+                                  },
+                                ));
+                      },
+                      child: Icon(
+                        MaterialCommunityIcons.delete,
+                        color: AppColors.greyColor,
+                      ),
+                    );
+                  },
+                ),
             ],
           ),
+          const SizedBox(height: 10),
           const Divider(),
         ],
       ),

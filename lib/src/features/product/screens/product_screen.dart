@@ -16,23 +16,23 @@ import 'package:it_project/src/configs/constants/app_dimensions.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/product/cubit/product_cubit.dart';
-import 'package:it_project/src/features/product/widgets/component_review_widget.dart';
-import 'package:it_project/src/utils/remote/model/product/product.dart';
+import 'package:it_project/src/features/product/widgets/review_component_widget.dart';
 import 'package:it_project/src/utils/remote/model/product/product_picture.dart';
 import 'package:it_project/src/widgets/load_widget.dart';
+import 'package:it_project/src/widgets/matt.dart';
 import 'package:it_project/src/widgets/start_widget.dart';
 
 class ProductScreen extends StatelessWidget {
   const ProductScreen({
     Key? key,
-    required this.product,
+    required this.slug,
   }) : super(key: key);
-  final Product product;
+  final String slug;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ProductCubit>(
-        create: (context) => ProductCubit(product: product)..initCubit(),
+        create: (context) => ProductCubit()..initCubit(slug),
         child: Scaffold(
             extendBodyBehindAppBar: true,
             appBar: topBar(),
@@ -51,17 +51,19 @@ class ProductScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               imgPoster(),
+
                               topProductInfo(),
                               const SizedBox(height: 20),
                               meDivider(),
                               sellerInfo(),
                               meDivider(),
-                              moreInfo(product),
+                              moreInfo(),
                               meDivider(),
                               describeProduct(),
                               meDivider(),
-                              if (isFuture) const ComponentReviewWidget(),
-                              const SizedBox(height: 70),
+                              // if (isFuture)
+                              const ReviewComponentWidget(),
+                              const SizedBox(height: 80),
                             ],
                           ),
                         );
@@ -150,35 +152,44 @@ class ProductScreen extends StatelessWidget {
 
   Widget topProductInfo() {
     return BlocBuilder<ProductCubit, ProductState>(
-      // bloc: bloc,
-      buildWhen: (previous, current) => false,
-      builder: (context, state) => Container(
-        constraints: const BoxConstraints(minHeight: 140),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        buildWhen: (previous, current) => false,
+        builder: (context, state) {
+          if (state.product == null) return Container();
+          final product = state.product!;
+
+          if (product.productImages == null) return Container();
+          // final firstImage = (product.productImages as List)
+          //     .map((e) => ProductPicture.fromJson(e))
+          //     .first
+          //     .fileLink;
+          return Container(
+            constraints: const BoxConstraints(minHeight: 140),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Text(state.product.category!.name),
-                // Icon(MaterialCommunityIcons.heart_outline),
-                if (isFuture) const Icon(MaterialCommunityIcons.heart_outline),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Text(state.product.category!.name),
+                    // Icon(MaterialCommunityIcons.heart_outline),
+                    if (isFuture)
+                      const Icon(MaterialCommunityIcons.heart_outline),
+                  ],
+                ),
+                Text(
+                  product.name,
+                  maxLines: 2,
+                  style: GoogleFonts.nunito(
+                      fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                starAndReviewWidget(3, 128),
+                priceProduct(),
               ],
             ),
-            Text(
-              product.name,
-              maxLines: 2,
-              style:
-                  GoogleFonts.nunito(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            starAndReviewWidget(3, 128),
-            priceProduct(),
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 
   contentSellerInfo(title, sub) {
@@ -201,9 +212,12 @@ class ProductScreen extends StatelessWidget {
       // bloc: bloc,
       buildWhen: (previous, current) => previous.product != current.product,
       builder: (context, state) {
+        if (state.product == null) return Container();
+        final product = state.product!;
+
         return InkWell(
           onTap: () {
-            context.push(Paths.sellerScreen, extra: state.product.seller);
+            context.push(Paths.sellerScreen, extra: product.seller);
           },
           child: Container(
             height: 140,
@@ -216,13 +230,12 @@ class ProductScreen extends StatelessWidget {
                   SizedBox(
                     height: 70,
                     width: 70,
-                    child: state.product.seller?.logo?.fileLink == null
+                    child: product.seller?.logo?.fileLink == null
                         ? Container(
                             color: AppColors.whiteGreyColor,
                           )
                         : CachedNetworkImage(
-                            imageUrl:
-                                state.product.seller?.logo?.fileLink ?? '',
+                            imageUrl: product.seller?.logo?.fileLink ?? '',
                             errorWidget: (context, url, error) => Image.asset(
                               AppAssets.fkImHarryPotter2,
                               fit: BoxFit.cover,
@@ -235,7 +248,7 @@ class ProductScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        state.product.seller?.info.name ?? '',
+                        product.seller?.info.name ?? '',
                         style: GoogleFonts.nunito(
                             fontWeight: FontWeight.bold,
                             fontSize: AppDimensions.dp16),
@@ -281,14 +294,18 @@ class ProductScreen extends StatelessWidget {
     );
   }
 
-  imgPoster() {
+  Widget imgPoster() {
     return BlocBuilder<ProductCubit, ProductState>(
       buildWhen: ((previous, current) => previous.product != current.product),
       builder: (context, state) {
-        if (state.product.productImages == null ||
-            state.product.productImages.isEmpty) return Container();
+        if (state.product == null) return Container();
+        final product = state.product!;
 
-        final imagePictures = (state.product.productImages as List)
+        if (product.productImages == null || product.productImages.isEmpty) {
+          return Container();
+        }
+
+        final imagePictures = (product.productImages as List)
             .map((e) => ProductPicture.fromJson(e));
         return Stack(
           alignment: Alignment.bottomRight,
@@ -302,39 +319,48 @@ class ProductScreen extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   itemCount: imagePictures.length,
                   itemBuilder: (context, index) {
+                    final imageUrl = imagePictures.elementAt(index).fileLink;
                     if (index == 0) {
                       return Stack(
                         alignment: Alignment.bottomRight,
                         children: [
-                          ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(5),
-                                topRight: Radius.circular(5),
-                              ),
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                    imagePictures.elementAt(index).fileLink,
-                                width: double.infinity,
-                                height: 300,
-                                fit: BoxFit.fitHeight,
-                              )),
+                          Matt.imageInkwell(
+                              image: ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(5),
+                                    topRight: Radius.circular(5),
+                                  ),
+                                  child: CachedNetworkImage(
+                                    imageUrl: imageUrl,
+                                    width: double.infinity,
+                                    height: 300,
+                                    fit: BoxFit.fitHeight,
+                                  )),
+                              context: context,
+                              imageProvider:
+                                  CachedNetworkImageProvider(imageUrl)),
                         ],
                       );
                     }
                     return Stack(
                       alignment: Alignment.bottomRight,
                       children: [
-                        ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(5),
-                              topRight: Radius.circular(5),
-                            ),
-                            child: CachedNetworkImage(
-                              imageUrl: imagePictures.elementAt(index).fileLink,
-                              width: double.infinity,
-                              height: 300,
-                              fit: BoxFit.fitHeight,
-                            )),
+                        Matt.imageInkwell(
+                            image: ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(5),
+                                  topRight: Radius.circular(5),
+                                ),
+                                child: CachedNetworkImage(
+                                  imageUrl:
+                                      imagePictures.elementAt(index).fileLink,
+                                  width: double.infinity,
+                                  height: 300,
+                                  fit: BoxFit.fitHeight,
+                                )),
+                            context: context,
+                            imageProvider:
+                                CachedNetworkImageProvider(imageUrl)),
                       ],
                     );
                   }),
@@ -375,12 +401,14 @@ class ProductScreen extends StatelessWidget {
 
     return BlocBuilder<ProductCubit, ProductState>(
       builder: (context, state) {
-        if (state.product.price == null) return Container();
-        final priceAfterSaleOff = state.product.price! *
-            (100 - (state.product.discountPercent)) /
-            100;
+        if (state.product == null) return Container();
+        final product = state.product!;
 
-        final isDiscount = state.product.discountPercent != 0;
+        if (product.price == null) return Container();
+        final priceAfterSaleOff =
+            product.price! * (100 - (product.discountPercent)) / 100;
+
+        final isDiscount = product.discountPercent != 0;
         return Row(
           children: [
             Text(
@@ -396,7 +424,7 @@ class ProductScreen extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    state.product.price.toString(),
+                    product.price.toString(),
                     style: GoogleFonts.nunito(
                       color: AppColors.greyColor,
                       decoration: TextDecoration.lineThrough,
@@ -411,7 +439,7 @@ class ProductScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(1),
                         border: Border.all(color: AppColors.redColor)),
                     child: Text(
-                      '-${state.product.discountPercent.toString()}%',
+                      '-${product.discountPercent.toString()}%',
                       style: GoogleFonts.nunito(color: AppColors.redColor),
                     ),
                   )
@@ -511,8 +539,11 @@ class ProductScreen extends StatelessWidget {
           previous.isDescribeShowAll != current.isDescribeShowAll ||
           previous.product != current.product,
       builder: (context, state) {
-        if (state.product.productImages == null) return Container();
-        final firstImage = (state.product.productImages as List)
+        if (state.product == null) return Container();
+        final product = state.product!;
+
+        if (product.productImages == null) return Container();
+        final firstImage = (product.productImages as List)
             .map((e) => ProductPicture.fromJson(e))
             .first
             .fileLink;
@@ -530,7 +561,7 @@ class ProductScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      state.product.description ?? '',
+                      product.description ?? '',
                     ),
                   ],
                 ),
@@ -548,7 +579,7 @@ class ProductScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      state.product.description ?? '',
+                      product.description ?? '',
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -604,7 +635,7 @@ class ProductScreen extends StatelessWidget {
     );
   }
 
-  moreInfo(Product? product) {
+  moreInfo() {
     rowContent(String? leading, String? title, int index) {
       return Container(
         height: 50,
@@ -630,6 +661,9 @@ class ProductScreen extends StatelessWidget {
     return BlocBuilder<ProductCubit, ProductState>(
       buildWhen: (previous, current) => previous.product != current.product,
       builder: (context, state) {
+        if (state.product == null) return Container();
+        final product = state.product!;
+
         return SizedBox(
           width: double.infinity,
           child: Column(
@@ -645,9 +679,9 @@ class ProductScreen extends StatelessWidget {
                 ),
               ),
               rowContent('Danh mục', 'Kỹ năng sống', 0),
-              rowContent('Tác giả', product?.spec?.author, 1),
-              rowContent('Nhà xuất bản', product?.spec?.publisher, 2),
-              rowContent('Ngày xuất bản', product?.spec?.publicationDate, 3),
+              rowContent('Tác giả', product.spec?.author, 1),
+              rowContent('Nhà xuất bản', product.spec?.publisher, 2),
+              rowContent('Ngày xuất bản', product.spec?.publicationDate, 3),
               Center(
                   child: InkWell(
                       onTap: () {},
