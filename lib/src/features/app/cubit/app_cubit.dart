@@ -5,6 +5,7 @@ import 'package:it_project/src/features/app/fcart_local.dart';
 import 'package:it_project/src/features/app/fuser_local.dart';
 import 'package:it_project/src/features/shopping_cart/mixin/action_cart.dart';
 import 'package:it_project/src/local/dao/fuser_local_dao.dart';
+import 'package:it_project/src/services/socket_manager.dart';
 import 'package:it_project/src/utils/remote/model/order/get/address.dart';
 import 'package:it_project/src/utils/repository/profile_respository.dart';
 import 'package:it_project/src/utils/repository/profile_respository_impl.dart';
@@ -19,7 +20,6 @@ class AppCubit extends Cubit<AppState> with ActionCart {
             fUser: getIt<FUserLocal>().fUser,
             itemCartQuantity: getIt<FCartLocal>().itemCarts.length,
             address: null));
-
   final ProfileRepository _profileRepo = getIt<ProfileRepositoryImpl>();
 
   final _fUserLocal = getIt<FUserLocal>();
@@ -36,6 +36,7 @@ class AppCubit extends Cubit<AppState> with ActionCart {
   initCubit() async {
     if (_fUserLocal.isLogged) {
       fetchFUser();
+      getIt<SocketManager>().connect();
       await fetchItemCartsServerMixin();
     }
 
@@ -55,6 +56,7 @@ class AppCubit extends Cubit<AppState> with ActionCart {
   }
 
   logOut() {
+    getIt<SocketManager>().disconnect();
     _fUserLocal.logOut();
     _fCartLocal.itemCarts = [];
     emit(state.copyWith(itemCartQuantity: 0));

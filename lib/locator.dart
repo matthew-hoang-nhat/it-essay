@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:hive/hive.dart';
 import 'package:it_project/main.dart';
@@ -7,6 +8,8 @@ import 'package:it_project/src/features/app/fcart_local.dart';
 import 'package:it_project/src/features/app/fuser_local.dart';
 import 'package:it_project/src/local/dao/fuser_local_dao.dart';
 import 'package:it_project/src/local/dao/item_cart_dao.dart';
+import 'package:it_project/src/services/notification_manager.dart';
+import 'package:it_project/src/services/socket_manager.dart';
 import 'package:it_project/src/utils/remote/services/auth_service/auth_service.dart';
 import 'package:it_project/src/utils/remote/services/cart/cart_service.dart';
 import 'package:it_project/src/utils/remote/services/category/category_service.dart';
@@ -39,6 +42,8 @@ Future<void> initializeApp() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await setupDependenciesGraph();
+  getIt<NotificationManager>()
+      .getCurrentNotificationAndBackgroundTapNotification();
 }
 
 Future<void> setupDependenciesGraph() async {
@@ -74,6 +79,11 @@ registerAppSharedAsync() async {
   getIt.registerSingleton<Box>(box);
   getIt.registerSingleton<FCartLocal>(FCartLocal());
   getIt.registerSingleton<FUserLocal>(FUserLocal());
+  getIt.registerSingleton<NotificationManager>(NotificationManager());
+
+  getIt.registerSingleton<SocketManager>(SocketManager());
+
+  // getIt.registerSingleton<DeepLink>(DeepLink());
 }
 
 void _registerApiModule() {

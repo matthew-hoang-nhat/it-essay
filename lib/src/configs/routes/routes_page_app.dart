@@ -107,16 +107,6 @@ class AppPages {
       builder: (context, state) => const AddAddressScreen(),
     ),
     GoRoute(
-      path: Paths.historyOrderScreen,
-      builder: (context, state) => const HistoryOrderScreen(),
-    ),
-    GoRoute(
-      path: Paths.detailOrderScreen,
-      builder: (context, state) => DetailOrderScreen(
-        orderId: state.extra as String,
-      ),
-    ),
-    GoRoute(
       path: Paths.productScreen,
       builder: (context, state) => ProductScreen(
         product: state.extra as Product,
@@ -131,9 +121,16 @@ class AppPages {
             builder: (context, state) => const SuccessPaymentScreen(),
           ),
           GoRoute(
-            path: Paths.subHistoryOrderScreen,
-            builder: (context, state) => const HistoryOrderScreen(),
-          ),
+              path: Paths.subHistoryOrderScreen,
+              builder: (context, state) => const HistoryOrderScreen(),
+              routes: [
+                GoRoute(
+                    path: '${Paths.sDetailOrderScreen}/:orderId',
+                    builder: (context, state) {
+                      final orderId = state.params['orderId'];
+                      return DetailOrderScreen(orderId: orderId as String);
+                    }),
+              ]),
           GoRoute(
             path: Paths.sChangePasswordScreen,
             builder: (context, state) => const ChangePasswordScreen(),

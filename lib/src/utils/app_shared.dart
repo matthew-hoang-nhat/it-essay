@@ -8,11 +8,11 @@ import 'package:it_project/src/local/dao/item_cart_dao.dart';
 class AppSharedUser {
   AppSharedUser(this._box);
   final Box<dynamic> _box;
-  final String _keyFUserValue = "${AppConstants.keyBox}_keyFUserValue";
+  static const String keyFUserValue = "${AppConstants.keyBox}_keyFUserValue";
 
   Future<void> setFUserValue(FUserLocalDao? value) =>
-      _box.put(_keyFUserValue, value);
-  FUserLocalDao? getFUserValue() => _box.get(_keyFUserValue);
+      _box.put(keyFUserValue, value);
+  FUserLocalDao? getFUserValue() => _box.get(keyFUserValue);
 }
 
 class AppSharedCart {

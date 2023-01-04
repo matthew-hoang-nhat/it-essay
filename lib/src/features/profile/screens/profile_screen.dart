@@ -29,7 +29,8 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 20),
             InkWell(
                 onTap: () {
-                  context.push(Paths.historyOrderScreen);
+                  context.push(
+                      '${Paths.mainScreen}/${Paths.subHistoryOrderScreen}');
                 },
                 child: orderCard()),
             someChoice(context),
@@ -73,7 +74,8 @@ class ProfileScreen extends StatelessWidget {
                   color: AppColors.primaryColor,
                 ),
                 onTap: () {
-                  context.push(Paths.historyOrderScreen);
+                  context.push(
+                      '${Paths.mainScreen}/${Paths.subHistoryOrderScreen}');
                 },
                 title: const Text('Đơn hàng'),
                 trailing: const Icon(
@@ -124,6 +126,9 @@ class ProfileScreen extends StatelessWidget {
                   color: AppColors.primaryColor,
                 ),
                 title: const Text('Điều khoản và chính sách'),
+                onTap: () {
+                  // context.push('${Paths.mainScreen}/${Paths.sPrivacyScreen}');
+                },
                 trailing: const Icon(MaterialCommunityIcons.chevron_right),
               ),
               const Divider(),
@@ -132,11 +137,24 @@ class ProfileScreen extends StatelessWidget {
                   MaterialCommunityIcons.chat_question,
                   color: AppColors.primaryColor,
                 ),
+                onTap: () {
+                  // context.push('${Paths.mainScreen}/${Paths.sAboutMeScreen}');
+                },
                 title: const Text('Về chúng tôi'),
                 trailing: const Icon(
                   MaterialCommunityIcons.chevron_right,
                 ),
               ),
+              const Divider(),
+              // ListTile(
+              //   onTap: () {},
+              //   leading: Icon(
+              //     MaterialCommunityIcons.target,
+              //     color: AppColors.primaryColor,
+              //   ),
+              //   title: const Text('Tính năng thử nghiệm'),
+              //   trailing: const SwitchWidget(),
+              // )
             ]),
           ),
           const SizedBox(height: 20),

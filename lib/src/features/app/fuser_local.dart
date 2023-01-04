@@ -3,6 +3,7 @@
 import 'package:hive/hive.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/local/dao/fuser_local_dao.dart';
+import 'package:it_project/src/services/socket_manager.dart';
 import 'package:it_project/src/utils/app_shared.dart';
 
 class FUserLocal {
@@ -11,9 +12,16 @@ class FUserLocal {
 
   void logOut() => _appShared.setFUserValue(null);
 
-  set fUser(FUserLocalDao? fUser) => _appShared.setFUserValue(fUser);
-  FUserLocalDao? get fUser => _appShared.getFUserValue();
+  set fUser(FUserLocalDao? fUser) {
+    final newToken = fUser?.accessToken;
+    _appShared.setFUserValue(fUser);
 
+    if (newToken != acceptToken) {
+      getIt<SocketManager>().connect();
+    }
+  }
+
+  FUserLocalDao? get fUser => _appShared.getFUserValue();
   String? get refreshToken => _appShared.getFUserValue()?.refreshToken;
   String? get userId => _appShared.getFUserValue()?.userId;
   String? get acceptToken => _appShared.getFUserValue()?.accessToken;

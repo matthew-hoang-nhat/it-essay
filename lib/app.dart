@@ -24,23 +24,22 @@ class App extends StatelessWidget {
       statusBarColor: Colors.transparent,
     ));
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => AppCubit()..initCubit()),
-        BlocProvider(create: (context) => HomeCubit()..initCubit()),
-        BlocProvider(create: (context) => MainCubit()..reloadMainScreen()),
-        BlocProvider(
-            create: (context) => AddressCubit()..initCubit(), lazy: true),
-        BlocProvider(create: (context) => CartToOrderCubit()),
-        BlocProvider(create: (context) => HistoryOrderCubit(), lazy: true),
-        BlocProvider(create: (context) => ForgotPasswordCubit(), lazy: true),
-        BlocProvider(create: (context) => RegisterCubit(), lazy: true)
-      ],
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        theme: lightMode(),
-        routerConfig: router,
-      ),
-    );
+        providers: [
+          BlocProvider(create: (context) => AppCubit()..initCubit()),
+          BlocProvider(create: (context) => HomeCubit()..initCubit()),
+          BlocProvider(create: (context) => MainCubit()..reloadMainScreen()),
+          BlocProvider(
+              create: (context) => AddressCubit()..initCubit(), lazy: true),
+          BlocProvider(create: (context) => CartToOrderCubit()),
+          BlocProvider(create: (context) => HistoryOrderCubit(), lazy: true),
+          BlocProvider(create: (context) => ForgotPasswordCubit(), lazy: true),
+          BlocProvider(create: (context) => RegisterCubit(), lazy: true)
+        ],
+        child: MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          theme: lightMode(),
+          routerConfig: router,
+        ));
   }
 
   ThemeData lightMode() {
