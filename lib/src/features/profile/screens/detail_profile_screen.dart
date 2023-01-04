@@ -13,9 +13,8 @@ import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/profile/cubit/detail_profile_cubit.dart';
 import 'package:it_project/src/features/profile/widgets/me_drop_down.dart';
 import 'package:it_project/src/features/profile/widgets/me_pick_date.dart';
-import 'package:it_project/src/utils/helpers/validate.dart';
 import 'package:it_project/src/widgets/load_widget.dart';
-import 'package:it_project/src/widgets/me_text_field.dart';
+import 'package:it_project/src/widgets/me_text_field_v2.dart';
 
 enum EditFieldProfileEnum {
   phoneNumber,
@@ -47,7 +46,7 @@ class DetailProfileScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 componentAvatar(),
-                componentTextField(),
+                componentTextField(context),
               ],
             )),
           ),
@@ -64,21 +63,12 @@ class DetailProfileScreen extends StatelessWidget {
     );
   }
 
-  bool isAllValidated(lastName, firstName, phoneNumber) {
-    final isInvalidated =
-        (validateFunc(lastName, type: EditFieldProfileEnum.lastName) != null ||
-            validateFunc(firstName, type: EditFieldProfileEnum.firstName) !=
-                null ||
-            validateFunc(phoneNumber, type: EditFieldProfileEnum.phoneNumber) !=
-                null);
-    return !isInvalidated;
-  }
-
   Widget updateProfileButton() {
     return BlocBuilder<DetailProfileCubit, DetailProfileState>(
+      buildWhen: (previous, current) =>
+          previous.isAllValidated != current.isAllValidated,
       builder: (context, state) {
-        final isValidated =
-            isAllValidated(state.lastName, state.firstName, state.phoneNumber);
+        final isValidated = state.isAllValidated;
         return TextButton(
             style: TextButton.styleFrom(
               foregroundColor:
@@ -174,9 +164,7 @@ class DetailProfileScreen extends StatelessWidget {
                         .pickImage(source: ImageSource.gallery)
                         .then((value) {
                       if (value != null) {
-                        context
-                            .read<DetailProfileCubit>()
-                            .addNewEvent(DetailProfileEnum.newAvatar, value);
+                        context.read<DetailProfileCubit>().setNewAvatar(value);
                       }
                       return null;
                     });
@@ -203,130 +191,143 @@ class DetailProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget componentTextField() {
-    return BlocBuilder<DetailProfileCubit, DetailProfileState>(
-      buildWhen: (previous, current) => false,
-      builder: (context, state) {
-        final dateFormat = DateFormat('dd-MM-yyyy');
-        final emailEditingController = TextEditingController(text: state.email);
-        final firstNameEditingController =
-            TextEditingController(text: state.firstName);
-        final lastNameEditingController =
-            TextEditingController(text: state.lastName);
-        final phoneNumberController =
-            TextEditingController(text: state.phoneNumber);
-        String genderValue = state.gender;
-
-        return Container(
-          color: AppColors.whiteColor,
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-          ),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            textField(
-              'Email',
-              (value) => null,
-              controller: emailEditingController,
-              isEnabled: false,
-            ),
-            textField(
-                'Họ',
-                (value) =>
-                    validateFunc(value, type: EditFieldProfileEnum.firstName),
-                controller: firstNameEditingController, onChanged: () {
-              context.read<DetailProfileCubit>().addNewEvent(
-                  DetailProfileEnum.firstName, firstNameEditingController.text);
-            }),
-            textField(
-                'Tên',
-                (value) =>
-                    validateFunc(value, type: EditFieldProfileEnum.lastName),
-                controller: lastNameEditingController, onChanged: () {
-              context.read<DetailProfileCubit>().addNewEvent(
-                  DetailProfileEnum.lastName, lastNameEditingController.text);
-            }),
-            textField(
-                'Số điện thoại',
-                (value) =>
-                    validateFunc(value, type: EditFieldProfileEnum.phoneNumber),
-                controller: phoneNumberController, onChanged: () {
-              context.read<DetailProfileCubit>().addNewEvent(
-                  DetailProfileEnum.phoneNumber, phoneNumberController.text);
-            }),
-            const SizedBox(height: 10),
-            Text('Ngày sinh nhật',
-                style: GoogleFonts.nunito(
-                    color: AppColors.greyColor, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
-            MePickDate(
+  Widget componentTextField(context) {
+    final dateFormat = DateFormat('dd-MM-yyyy');
+    return Container(
+      color: AppColors.whiteColor,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const SizedBox(height: 10),
+        BlocBuilder<DetailProfileCubit, DetailProfileState>(
+          builder: (context, state) {
+            return MeTextFieldV2(
+                text: 'Email',
+                isEnabled: false,
+                textEditingController:
+                    context.read<DetailProfileCubit>().emailEditingController,
+                announcement: null,
+                onChanged: (value) => null);
+          },
+        ),
+        const SizedBox(height: 10),
+        BlocBuilder<DetailProfileCubit, DetailProfileState>(
+          buildWhen: (previous, current) =>
+              previous.firstNameAnnouncement != current.firstNameAnnouncement,
+          builder: (context, state) {
+            return MeTextFieldV2(
+                text: 'Họ',
+                textEditingController: context
+                    .read<DetailProfileCubit>()
+                    .firstNameEditingController,
+                announcement: state.firstNameAnnouncement,
+                onChanged: (value) {
+                  context.read<DetailProfileCubit>()
+                    ..setFirstName(value)
+                    ..checkTextFieldValidate(value,
+                        type: EditFieldProfileEnum.firstName);
+                });
+          },
+        ),
+        const SizedBox(height: 10),
+        BlocBuilder<DetailProfileCubit, DetailProfileState>(
+          buildWhen: (previous, current) =>
+              previous.lastNameAnnouncement != current.lastNameAnnouncement,
+          builder: (context, state) {
+            return MeTextFieldV2(
+                text: 'Tên',
+                textEditingController: context
+                    .read<DetailProfileCubit>()
+                    .lastNameEditingController,
+                announcement: state.lastNameAnnouncement,
+                onChanged: (value) {
+                  context.read<DetailProfileCubit>()
+                    ..setLastName(value)
+                    ..checkTextFieldValidate(value,
+                        type: EditFieldProfileEnum.lastName);
+                });
+          },
+        ),
+        const SizedBox(height: 10),
+        BlocBuilder<DetailProfileCubit, DetailProfileState>(
+          buildWhen: (previous, current) =>
+              previous.phoneNumberAnnouncement !=
+              current.phoneNumberAnnouncement,
+          builder: (context, state) {
+            return MeTextFieldV2(
+                text: 'Số điện thoại',
+                textEditingController:
+                    context.read<DetailProfileCubit>().phoneNumberController,
+                announcement: state.phoneNumberAnnouncement,
+                onChanged: (value) {
+                  context.read<DetailProfileCubit>()
+                    ..setPhoneNumber(value)
+                    ..checkTextFieldValidate(value,
+                        type: EditFieldProfileEnum.phoneNumber);
+                });
+          },
+        ),
+        const SizedBox(height: 10),
+        Text('Ngày sinh nhật',
+            style: GoogleFonts.nunito(
+                color: AppColors.greyColor, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        BlocBuilder<DetailProfileCubit, DetailProfileState>(
+          buildWhen: (previous, current) =>
+              previous.dateTime != current.dateTime,
+          builder: (context, state) {
+            return MePickDate(
               initDateTime: (state.dateTime == '' || state.dateTime == null)
                   ? DateTime.now()
                   : DateFormat("dd-MM-yyyy").parse(state.dateTime!),
               func: (DateTime? value) {
                 final dateTime =
                     value == null ? null : dateFormat.format(value);
-                context
-                    .read<DetailProfileCubit>()
-                    .addNewEvent(DetailProfileEnum.dateTime, dateTime);
+                context.read<DetailProfileCubit>().setDateTime(dateTime);
               },
-            ),
-            const SizedBox(height: 20),
-            Text('Giới tính',
-                style: GoogleFonts.nunito(
-                    color: AppColors.greyColor, fontWeight: FontWeight.bold)),
-            MeDropDown(
-                value: genderValue,
+            );
+          },
+        ),
+        const SizedBox(height: 20),
+        Text('Giới tính',
+            style: GoogleFonts.nunito(
+                color: AppColors.greyColor, fontWeight: FontWeight.bold)),
+        BlocBuilder<DetailProfileCubit, DetailProfileState>(
+          builder: (context, state) {
+            return MeDropDown(
+                value: state.gender,
                 items: const ['male', 'female'],
                 func: (value) {
-                  genderValue = value;
-                  context
-                      .read<DetailProfileCubit>()
-                      .addNewEvent(DetailProfileEnum.gender, genderValue);
-                }),
-          ]),
-        );
-      },
+                  final genderValue = value;
+                  context.read<DetailProfileCubit>().setGender(genderValue);
+                });
+          },
+        ),
+      ]),
     );
   }
 
-  String? validateFunc(value, {required EditFieldProfileEnum type}) {
-    switch (type) {
-      case EditFieldProfileEnum.firstName:
-      case EditFieldProfileEnum.lastName:
-        if (Validate().isInvalidName(value)) {
-          return 'Tên không hợp lệ';
-        }
-        break;
-      case EditFieldProfileEnum.phoneNumber:
-        if (Validate().isInvalidPhoneNumber(value)) {
-          return 'Số điện thoại bao gồm 10 số';
-        }
-        break;
-      default:
-    }
-    return null;
-  }
-
-  Widget textField(String title, String? Function(String) funcValidate,
-      {bool? isEnabled,
-      Function()? onChanged,
-      required TextEditingController controller}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title,
-              style: GoogleFonts.nunito(
-                  color: AppColors.greyColor, fontWeight: FontWeight.bold)),
-          MeTextField(
-              isEnabled: isEnabled,
-              functionValidation: funcValidate,
-              callFuncOnChange: onChanged,
-              textEditingController: controller),
-        ],
-      ),
-    );
-  }
+  // Widget textField(String title, String? Function(String) funcValidate,
+  //     {bool? isEnabled,
+  //     Function(String value)? onChanged,
+  //     required TextEditingController controller}) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 10),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Text(title,
+  //             style: GoogleFonts.nunito(
+  //                 color: AppColors.greyColor, fontWeight: FontWeight.bold)),
+  //                 MeTextFieldV2(textEditingController: controller, announcement: funcValidate(), onChanged: onChanged),
+  //         MeTextField(
+  //             isEnabled: isEnabled,
+  //             functionValidation: funcValidate,
+  //             callFuncOnChange: onChanged,
+  //             textEditingController: controller),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

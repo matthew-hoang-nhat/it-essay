@@ -13,24 +13,6 @@ class ProductRepositoryImpl extends ProductRepository {
   final limitLProduct = 10;
 
   @override
-  Future<FResult<List<Product>>> getProducts(
-      {required int numberPage, String? name}) async {
-    try {
-      final dataResponse = await productService.getProductsPage(
-          currentPage: numberPage, limit: limitSProduct, name: name);
-      final List<dynamic> dataItems = dataResponse.data;
-      List<Product> products = List.generate(dataItems.length,
-          (index) => Product.fromJson(dataItems.elementAt(index)));
-      return FResult.success(products);
-    } catch (ex) {
-      if (ex is DioError) {
-        log('getProducts: ${ex.error}');
-      }
-      return FResult.error(ex.toString());
-    }
-  }
-
-  @override
   Future<FResult<Product>> getDetailProduct(String slug) async {
     try {
       final dataResponse = await productService.getDetailProduct(slug);
@@ -68,6 +50,35 @@ class ProductRepositoryImpl extends ProductRepository {
     try {
       final dataResponse = await productService.getProductsPage(
           currentPage: numberPage, limit: limitLProduct, name: name);
+      final List<dynamic> dataItems = dataResponse.data;
+      List<Product> products = List.generate(dataItems.length,
+          (index) => Product.fromJson(dataItems.elementAt(index)));
+      return FResult.success(products);
+    } catch (ex) {
+      if (ex is DioError) {
+        log('getProducts: ${ex.error}');
+      }
+      return FResult.error(ex.toString());
+    }
+  }
+
+  @override
+  Future<FResult<List<Product>>> getProducts(
+      {required int numberPage,
+      String? name,
+      String? sellerId,
+      String? categoryId,
+      double? minPrice,
+      String? summary}) async {
+    try {
+      final dataResponse = await productService.getProductsPage(
+          currentPage: numberPage,
+          limit: limitSProduct,
+          name: name,
+          sellerId: sellerId,
+          categoryId: categoryId,
+          summary: summary,
+          minPrice: minPrice);
       final List<dynamic> dataItems = dataResponse.data;
       List<Product> products = List.generate(dataItems.length,
           (index) => Product.fromJson(dataItems.elementAt(index)));

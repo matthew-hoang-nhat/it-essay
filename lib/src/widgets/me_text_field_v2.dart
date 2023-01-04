@@ -23,7 +23,7 @@ class MeTextFieldV2 extends StatefulWidget {
   final TextEditingController textEditingController;
   final bool isCheckEmpty;
   final String? announcement;
-  final Function() onChanged;
+  final Function(String) onChanged;
 
   @override
   State<MeTextFieldV2> createState() => _MeTextFieldV2State();
@@ -60,7 +60,7 @@ class _MeTextFieldV2State extends State<MeTextFieldV2> {
           obscureText: isHide,
           enabled: widget.isEnabled,
           onChanged: (value) {
-            widget.onChanged();
+            widget.onChanged(value);
           },
           decoration: InputDecoration(
             alignLabelWithHint: true,

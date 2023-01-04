@@ -1,6 +1,6 @@
 part of 'app_cubit.dart';
 
-abstract class AppState extends Equatable {
+class AppState extends Equatable {
   const AppState({
     required this.fUser,
     required this.itemCartQuantity,
@@ -13,6 +13,18 @@ abstract class AppState extends Equatable {
 
   @override
   List<Object?> get props => [fUser, itemCartQuantity, address?.id];
+
+  AppState copyWith({
+    FUserLocalDao? fUser,
+    int? itemCartQuantity,
+    Address? address,
+  }) {
+    return AppState(
+      fUser: fUser ?? this.fUser,
+      itemCartQuantity: itemCartQuantity ?? this.itemCartQuantity,
+      address: address ?? this.address,
+    );
+  }
 }
 
 class AppInitial extends AppState {
@@ -21,17 +33,4 @@ class AppInitial extends AppState {
     required super.itemCartQuantity,
     required super.address,
   });
-}
-
-class NewAppState extends AppState {
-  NewAppState.fromOldSettingState(
-    AppState oldState, {
-    FUserLocalDao? fUser,
-    int? itemCartQuantity,
-    Address? address,
-  }) : super(
-          fUser: fUser ?? oldState.fUser,
-          itemCartQuantity: itemCartQuantity ?? oldState.itemCartQuantity,
-          address: address ?? oldState.address,
-        );
 }

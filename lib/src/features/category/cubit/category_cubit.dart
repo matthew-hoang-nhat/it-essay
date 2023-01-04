@@ -36,8 +36,8 @@ class CategoryCubit extends Cubit<CategoryState>
   void getCategories() async {
     isLoadingCategories = true;
     final categoryResponse = await categoryRepository.getCategories(
-      numberPage: _currentPageCategories,
-    );
+        // numberPage: _currentPageCategories,
+        );
     if (categoryResponse.isSuccess) {
       addNewEvent(CategoryEnum.categories,
           [...state.categories, ...categoryResponse.data!]);

@@ -44,11 +44,11 @@ class ComponentFlashSaleWidget extends StatelessWidget {
                           color: AppColors.redColor,
                           fontWeight: FontWeight.bold),
                     ),
-                    Text('XEM THÊM',
-                        style: GoogleFonts.nunito(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryColor))
+                    // Text('XEM THÊM',
+                    //     style: GoogleFonts.nunito(
+                    //         fontSize: 12,
+                    //         fontWeight: FontWeight.bold,
+                    //         color: AppColors.primaryColor))
                   ],
                 ),
               ),
