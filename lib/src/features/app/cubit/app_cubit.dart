@@ -3,9 +3,9 @@ import 'package:equatable/equatable.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/features/app/fcart_local.dart';
 import 'package:it_project/src/features/app/fuser_local.dart';
-import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
 import 'package:it_project/src/features/shopping_cart/mixin/action_cart.dart';
 import 'package:it_project/src/local/dao/fuser_local_dao.dart';
+import 'package:it_project/src/services/socket_manager.dart';
 import 'package:it_project/src/utils/remote/model/order/get/address.dart';
 import 'package:it_project/src/utils/repository/profile_respository.dart';
 import 'package:it_project/src/utils/repository/profile_respository_impl.dart';
@@ -14,15 +14,12 @@ part 'app_state.dart';
 
 enum AppCubitEnum { fUser, itemCartQuantity, address }
 
-class AppCubit extends Cubit<AppState>
-    with ActionCart
-    implements ParentCubit<AppCubitEnum> {
+class AppCubit extends Cubit<AppState> with ActionCart {
   AppCubit()
       : super(AppInitial(
             fUser: getIt<FUserLocal>().fUser,
             itemCartQuantity: getIt<FCartLocal>().itemCarts.length,
             address: null));
-
   final ProfileRepository _profileRepo = getIt<ProfileRepositoryImpl>();
 
   final _fUserLocal = getIt<FUserLocal>();
@@ -32,9 +29,14 @@ class AppCubit extends Cubit<AppState>
 
   bool isLoadingProfileUser = false;
 
+  addAddress(Address address) {
+    emit(state.copyWith(address: address));
+  }
+
   initCubit() async {
     if (_fUserLocal.isLogged) {
       fetchFUser();
+      getIt<SocketManager>().connect();
       await fetchItemCartsServerMixin();
     }
 
@@ -49,14 +51,15 @@ class AppCubit extends Cubit<AppState>
   }
 
   reGetItemCartQuantity() {
-    addNewEvent(AppCubitEnum.itemCartQuantity, _fCartLocal.itemCarts.length);
+    final itemCartQuantity = _fCartLocal.itemCarts.length;
+    emit(state.copyWith(itemCartQuantity: itemCartQuantity));
   }
 
   logOut() {
+    getIt<SocketManager>().disconnect();
     _fUserLocal.logOut();
     _fCartLocal.itemCarts = [];
-
-    addNewEvent(AppCubitEnum.itemCartQuantity, 0);
+    emit(state.copyWith(itemCartQuantity: 0));
   }
 
   fetchUserAndLoadItemCartsServer() async {
@@ -91,28 +94,30 @@ class AppCubit extends Cubit<AppState>
               gender: profileUser?.info.gender ?? 'male');
         }
         _fUserLocal.fUser = newProfileUser;
-        addNewEvent(AppCubitEnum.fUser, newProfileUser);
+
+        emit(state.copyWith(fUser: newProfileUser));
       }
     }
 
     isLoadingProfileUser = false;
   }
 
-  @override
-  void addNewEvent(AppCubitEnum key, value) {
-    if (isClosed) return;
-    switch (key) {
-      case AppCubitEnum.fUser:
-        _fUserLocal.fUser = value;
-        emit(NewAppState.fromOldSettingState(state, fUser: value));
-        break;
-      case AppCubitEnum.itemCartQuantity:
-        emit(NewAppState.fromOldSettingState(state, itemCartQuantity: value));
-        break;
-      case AppCubitEnum.address:
-        emit(NewAppState.fromOldSettingState(state, address: value));
-        break;
-      default:
-    }
-  }
+  // @override
+  // void addNewEvent(AppCubitEnum key, value) {
+  //   if (isClosed) return;
+  //   switch (key) {
+  //     case AppCubitEnum.fUser:
+  //       _fUserLocal.fUser = value;
+  //       emit(state.copyWith(fUser: value));
+  //       // NewAppState.fromOldSettingState(state, fUser: value));
+  //       break;
+  //     case AppCubitEnum.itemCartQuantity:
+  //       emit(NewAppState.fromOldSettingState(state, itemCartQuantity: value));
+  //       break;
+  //     case AppCubitEnum.address:
+  //       emit(NewAppState.fromOldSettingState(state, address: value));
+  //       break;
+  //     default:
+  //   }
+  // }
 }

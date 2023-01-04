@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:it_project/main.dart';
-import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
 import 'package:it_project/src/features/shopping_cart/mixin/action_cart.dart';
 import 'package:it_project/src/local/dao/item_cart_dao.dart';
 import 'package:it_project/src/utils/repository/product_repository.dart';
@@ -20,9 +19,7 @@ enum CartEnum {
 
 enum CartActionEnum { inc, dec, removeItem }
 
-class CartCubit extends Cubit<CartState>
-    with ActionCart
-    implements ParentCubit<CartEnum> {
+class CartCubit extends Cubit<CartState> with ActionCart {
   CartCubit()
       : super(const CartInitial(
             itemCarts: [],
@@ -61,28 +58,33 @@ class CartCubit extends Cubit<CartState>
             ? e.quantity * e.price * (100 - e.discountPercent) / 100
             : 0)).toList());
 
-    addNewEvent(CartEnum.price, price);
-    addNewEvent(CartEnum.priceAfterSaleOff, priceAfterSaleOff);
+    emit(state.copyWith(price: price, priceAfterSaleOff: priceAfterSaleOff));
+    // addNewEvent(CartEnum.price, price);
+    // addNewEvent(CartEnum.priceAfterSaleOff, priceAfterSaleOff);
   }
 
   _getItemCartLocal() {
     final itemCarts = cartLocal.itemCarts;
-    addNewEvent(CartEnum.itemCarts, itemCarts);
+    emit(state.copyWith(itemCarts: itemCarts));
+    // addNewEvent(CartEnum.itemCarts, itemCarts);
     _reloadPrice();
   }
 
   _getItemCartServer() async {
     await fetchItemCartsServerMixin();
     final itemCarts = cartLocal.itemCarts;
-    addNewEvent(CartEnum.itemCarts, itemCarts);
+    emit(state.copyWith(itemCarts: itemCarts));
+    // addNewEvent(CartEnum.itemCarts, itemCarts);
     _reloadPrice();
   }
 
   initCubit() async {
-    addNewEvent(CartEnum.isLoading, true);
+    emit(state.copyWith(isLoading: true));
+    // addNewEvent(CartEnum.isLoading, true);
     _getItemCartLocal();
     await _getItemCartServer();
-    addNewEvent(CartEnum.isLoading, false);
+    // addNewEvent(CartEnum.isLoading, false);
+    emit(state.copyWith(isLoading: false));
   }
 
   actionCart(CartActionEnum cartAction, {required String id}) {
@@ -116,7 +118,8 @@ class CartCubit extends Cubit<CartState>
         if (item.id == id) item.copyWith(quantity: item.quantity + 1) else item
     ];
 
-    addNewEvent(CartEnum.itemCarts, itemCarts);
+    emit(state.copyWith(itemCarts: itemCarts));
+    // addNewEvent(CartEnum.itemCarts, itemCarts);
     updateItemCartsMixin(itemCarts: itemCarts, type: ActionCartTypeEnum.local);
   }
 
@@ -129,7 +132,8 @@ class CartCubit extends Cubit<CartState>
           item
     ];
 
-    addNewEvent(CartEnum.itemCarts, itemCarts);
+    emit(state.copyWith(itemCarts: itemCarts));
+    // addNewEvent(CartEnum.itemCarts, itemCarts);
     updateItemCartsMixin(itemCarts: itemCarts, type: ActionCartTypeEnum.local);
   }
 
@@ -138,7 +142,9 @@ class CartCubit extends Cubit<CartState>
       for (var item in state.itemCarts)
         if (item.id != id) item
     ];
-    addNewEvent(CartEnum.itemCarts, itemCarts);
+
+    emit(state.copyWith(itemCarts: itemCarts));
+    // addNewEvent(CartEnum.itemCarts, itemCarts);
     updateItemCartsMixin(itemCarts: itemCarts, type: ActionCartTypeEnum.local);
   }
 
@@ -156,8 +162,8 @@ class CartCubit extends Cubit<CartState>
         newItemCartsChecked.add(id);
         break;
     }
-
-    addNewEvent(CartEnum.itemCartsChecked, newItemCartsChecked);
+    emit(state.copyWith(itemCartsChecked: newItemCartsChecked));
+    // addNewEvent(CartEnum.itemCartsChecked, newItemCartsChecked);
     _reloadPrice();
 
     // if (itemCartsChecked.contains(id)) {
@@ -175,28 +181,28 @@ class CartCubit extends Cubit<CartState>
     // _reloadPrice();
   }
 
-  @override
-  void addNewEvent(CartEnum key, value) {
-    if (isClosed) return;
-    switch (key) {
-      case CartEnum.itemCarts:
-        emit(NewCartState.fromOldSettingState(state, itemCarts: value));
-        break;
-      case CartEnum.price:
-        emit(NewCartState.fromOldSettingState(state, price: value));
-        break;
-      case CartEnum.priceAfterSaleOff:
-        emit(NewCartState.fromOldSettingState(state, priceAfterSaleOff: value));
-        break;
-      case CartEnum.isLoading:
-        emit(NewCartState.fromOldSettingState(state, isLoading: value));
-        break;
-      case CartEnum.itemCartsChecked:
-        emit(NewCartState.fromOldSettingState(state, itemCartsChecked: value));
-        break;
-      // case CartEnum.itemQuantity:
-      //   emit(NewCartState.fromOldSettingState(state, itemQuantity: value));
-      //   break;
-    }
-  }
+  // @override
+  // void addNewEvent(CartEnum key, value) {
+  //   if (isClosed) return;
+  //   switch (key) {
+  //     case CartEnum.itemCarts:
+  //       emit(NewCartState.fromOldSettingState(state, itemCarts: value));
+  //       break;
+  //     case CartEnum.price:
+  //       emit(NewCartState.fromOldSettingState(state, price: value));
+  //       break;
+  //     case CartEnum.priceAfterSaleOff:
+  //       emit(NewCartState.fromOldSettingState(state, priceAfterSaleOff: value));
+  //       break;
+  //     case CartEnum.isLoading:
+  //       emit(NewCartState.fromOldSettingState(state, isLoading: value));
+  //       break;
+  //     case CartEnum.itemCartsChecked:
+  //       emit(NewCartState.fromOldSettingState(state, itemCartsChecked: value));
+  //       break;
+  //     // case CartEnum.itemQuantity:
+  //     //   emit(NewCartState.fromOldSettingState(state, itemQuantity: value));
+  //     //   break;
+  //   }
+  // }
 }

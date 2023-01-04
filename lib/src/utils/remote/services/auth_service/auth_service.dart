@@ -35,15 +35,17 @@ abstract class AuthService {
   // @GET("/api/oauth/google")
   // Future<> googleLogin(@Body() LoginRequest loginRequest);
 
-  // @POST("/auth/email-reset-password")
-  // Future<SuccessResponse> emailResetPassword(@Body() String email);
+  @POST("/auth/email-reset-password")
+  Future<Map<String, String>> emailResetPassword(
+      @Body() Map<String, String> emailResetRequest);
 
-  // @POST("/auth/otp-reset-password")
-  // Future<SuccessResponse> otpResetPassword(@Body() int otp);
+  @POST("/auth/otp-reset-password")
+  Future<SuccessResponse> otpResetPassword(
+      @Body() Map<String, String> otpResetPasswordRequest);
 
-  // @POST("/auth/reset-password")
-  // Future<SuccessResponse> resetPassword(
-  //     {@Body() required Map<String, String> tokenAndPassword});
+  @POST("/auth/reset-password")
+  Future<SuccessResponse> finalResetPassword(
+      {@Body() required Map<String, String> resetPasswordRequest});
 
   // @GET("/api/me")
   // Future<GetMeResponse> getMe();

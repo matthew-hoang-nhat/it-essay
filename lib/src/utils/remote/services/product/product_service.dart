@@ -14,6 +14,10 @@ abstract class ProductService {
     @Query("name") String? name,
     @Query("limit") required int limit,
     @Query("currentPage") required int currentPage,
+    @Query("categoryId") String? categoryId,
+    @Query("summary") String? summary,
+    @Query("price[gt]") double? minPrice,
+    @Query("sellerId") String? sellerId,
   });
 
   @GET("/product/{slug}")

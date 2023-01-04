@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:it_project/main.dart';
 
 import 'package:it_project/src/configs/constants/app_assets.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
@@ -59,7 +60,7 @@ class ProductScreen extends StatelessWidget {
                               meDivider(),
                               describeProduct(),
                               meDivider(),
-                              const ComponentReviewWidget(),
+                              if (isFuture) const ComponentReviewWidget(),
                               const SizedBox(height: 70),
                             ],
                           ),
@@ -160,9 +161,10 @@ class ProductScreen extends StatelessWidget {
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
+              children: [
                 // Text(state.product.category!.name),
-                Icon(MaterialCommunityIcons.heart_outline),
+                // Icon(MaterialCommunityIcons.heart_outline),
+                if (isFuture) const Icon(MaterialCommunityIcons.heart_outline),
               ],
             ),
             Text(
@@ -583,8 +585,7 @@ class ProductScreen extends StatelessWidget {
                     Center(
                         child: InkWell(
                             onTap: () {
-                              context.read<ProductCubit>().addNewEvent(
-                                  ProductEnum.isDescribeShowAll, true);
+                              context.read<ProductCubit>().setShowAll();
                             },
                             child: Container(
                                 height: 30,

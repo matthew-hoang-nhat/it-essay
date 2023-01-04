@@ -1,6 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'cart_cubit.dart';
 
-abstract class CartState extends Equatable {
+class CartState extends Equatable {
   const CartState({
     required this.itemCarts,
     required this.price,
@@ -23,6 +24,22 @@ abstract class CartState extends Equatable {
         isLoading,
         itemCartsChecked,
       ];
+
+  CartState copyWith({
+    List<ItemCart>? itemCarts,
+    List<String>? itemCartsChecked,
+    dynamic price,
+    dynamic priceAfterSaleOff,
+    bool? isLoading,
+  }) {
+    return CartState(
+      itemCarts: itemCarts ?? this.itemCarts,
+      itemCartsChecked: itemCartsChecked ?? this.itemCartsChecked,
+      price: price ?? this.price,
+      priceAfterSaleOff: priceAfterSaleOff ?? this.priceAfterSaleOff,
+      isLoading: isLoading ?? this.isLoading,
+    );
+  }
 }
 
 class CartInitial extends CartState {
@@ -33,22 +50,4 @@ class CartInitial extends CartState {
     required super.priceAfterSaleOff,
     required super.isLoading,
   });
-}
-
-class NewCartState extends CartState {
-  NewCartState.fromOldSettingState(
-    CartState oldState, {
-    List<ItemCart>? itemCarts,
-    List<String>? itemCartsChecked,
-    dynamic price,
-    dynamic priceAfterSaleOff,
-    bool? isLoading,
-    // int? itemQuantity,
-  }) : super(
-          itemCarts: itemCarts ?? oldState.itemCarts,
-          itemCartsChecked: itemCartsChecked ?? oldState.itemCartsChecked,
-          price: price ?? oldState.price,
-          priceAfterSaleOff: priceAfterSaleOff ?? oldState.priceAfterSaleOff,
-          isLoading: isLoading ?? oldState.isLoading,
-        );
 }

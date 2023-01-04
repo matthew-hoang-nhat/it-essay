@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
+import 'package:it_project/src/features/search/screens/detail_search_screen.dart';
 import 'package:it_project/src/features/search/widgets/concrete_search_bar.dart';
 import 'package:it_project/src/features/seller/cubit/seller_cubit.dart';
 import 'package:it_project/src/features/seller/screens/seller_tab_category.dart';
@@ -68,9 +69,25 @@ class _SellerScreenState extends State<SellerScreen>
                               Expanded(
                                   child: InkWell(
                                       onTap: () {
-                                        context.push(Paths.searchScreen);
+                                        final sellerId = state.profileSeller.id;
+
+                                        // context.read<SearchCubit>()
+                                        //   ..setField(
+                                        //       SearchCubitEnum.sellerIdFilter,
+                                        //       value: sellerId)
+                                        //   ..oldRefreshSearch(SearchRefreshEnum
+                                        //       .productsInSeller);
+
+                                        context.push(
+                                            '${Paths.sellerScreen}/${Paths.sDetailSearchScreen}',
+                                            extra: {
+                                              DetailSearchExtraEnum.sellerId:
+                                                  sellerId
+                                            });
+
+                                        // ..loadPageProducts(SearchCubitLoadProductEnum.refreshFilterAndProducts);
                                       },
-                                      child: concreteSearchBar(context))),
+                                      child: concreteSearchBar())),
                               const CartButton()
                             ],
                           ),
@@ -125,7 +142,7 @@ class _SellerScreenState extends State<SellerScreen>
         labelPadding: EdgeInsets.zero,
         indicatorColor: Colors.black87,
         onTap: (value) {
-          context.read<SellerCubit>().addNewEvent(SellerEnum.tabIndex, value);
+          context.read<SellerCubit>().setTabIndex(value);
         },
         tabs: tabs
             .map((e) => Container(

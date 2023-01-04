@@ -75,13 +75,13 @@ class HistoryOrderScreen extends StatelessWidget {
                                   children: state.orders
                                       .map((e) => InkWell(
                                             onTap: () {
-                                              final String extra = e
+                                              final String orderId = e
                                                       is OrderResponse
                                                   ? e.id
                                                   : (e as ItemOrder).orderId!;
+
                                               context.push(
-                                                  Paths.detailOrderScreen,
-                                                  extra: extra);
+                                                  '${Paths.mainScreen}/${Paths.subHistoryOrderScreen}/${Paths.sDetailOrderScreen}/$orderId');
                                             },
                                             child: Padding(
                                               padding: const EdgeInsets.only(

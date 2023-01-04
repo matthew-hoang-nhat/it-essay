@@ -6,7 +6,6 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/features/app/fuser_local.dart';
-import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
 import 'package:it_project/src/features/main/home/home_screen.dart';
 import 'package:it_project/src/features/profile/screens/profile_screen.dart';
 import 'package:it_project/src/widgets/login_popup_widget.dart';
@@ -19,7 +18,7 @@ enum MainEnum {
   tabs,
 }
 
-class MainCubit extends Cubit<MainState> implements ParentCubit<MainEnum> {
+class MainCubit extends Cubit<MainState> {
   MainCubit()
       : super(const MainInitial(tab: 0, barItems: [], tabs: [
           HomeScreen(),
@@ -29,13 +28,17 @@ class MainCubit extends Cubit<MainState> implements ParentCubit<MainEnum> {
 
   bool get isLogin => getIt<FUserLocal>().isLogged;
 
+  setTab(int value) {
+    emit(state.copyWith(tab: value));
+  }
+
   reloadMainScreen() {
-    addNewEvent(MainEnum.barItems, [
+    final newBarItems = [
       const BottomNavigationBarItem(
           icon: Icon(MaterialCommunityIcons.home, size: 20.0), label: 'Home'),
-      const BottomNavigationBarItem(
-          icon: Icon(MaterialCommunityIcons.heart, size: 20.0),
-          label: 'Wishlist'),
+      // const BottomNavigationBarItem(
+      //     icon: Icon(MaterialCommunityIcons.heart, size: 20.0),
+      //     label: 'Wishlist'),
       BottomNavigationBarItem(
           icon: isLogin
               ? ClipRRect(
@@ -58,39 +61,20 @@ class MainCubit extends Cubit<MainState> implements ParentCubit<MainEnum> {
                                   width: 20 + 5,
                                   height: 20 + 5,
                                   fit: BoxFit.cover,
-                                )
-                          // Image.asset(
-                          //   AppAssets.fkImHarryPotter1,
-                          //   height: 20.0 + 5,
-                          //   width: 20.0 + 5,
-                          //   fit: BoxFit.cover,
-                          // ),
-                          )))
+                                ))))
               : const Icon(MaterialCommunityIcons.contacts, size: 20.0),
           label: 'Profile'),
-    ]);
-    addNewEvent(MainEnum.tabs, [
-      const HomeScreen(),
-      isLogin == true ? const ProfileScreen() : const LoginPopup(),
-      isLogin == true ? const ProfileScreen() : const LoginPopup()
-    ]);
-    addNewEvent(MainEnum.tab, 0);
-  }
+    ];
+    emit(state.copyWith(barItems: newBarItems));
 
-  @override
-  void addNewEvent(MainEnum key, value) {
-    if (isClosed) return;
-    switch (key) {
-      case MainEnum.tab:
-        emit(NewMainState.fromOldSettingState(state, tab: value));
-        break;
-      case MainEnum.tabs:
-        emit(NewMainState.fromOldSettingState(state, tabs: value));
-        break;
-      case MainEnum.barItems:
-        emit(NewMainState.fromOldSettingState(state, barItems: value));
-        break;
-      default:
-    }
+    final newTabs = [
+      const HomeScreen(),
+      // isLogin == true ? const ProfileScreen() : const LoginPopup(),
+      isLogin == true ? const ProfileScreen() : const LoginPopup()
+    ];
+    emit(state.copyWith(
+      tabs: newTabs,
+      tab: 0,
+    ));
   }
 }

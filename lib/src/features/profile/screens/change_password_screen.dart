@@ -11,9 +11,6 @@ class ChangePasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController oldPassword = TextEditingController();
-    TextEditingController newPassword = TextEditingController();
-    TextEditingController confirmPassword = TextEditingController();
     return BlocProvider(
       create: (context) => ChangePasswordCubit(),
       child: Scaffold(
@@ -34,12 +31,14 @@ class ChangePasswordScreen extends StatelessWidget {
                       return MeTextFieldV2(
                         text: 'Mật khẩu cũ',
                         isPassword: true,
-                        textEditingController: oldPassword,
+                        textEditingController: context
+                            .read<ChangePasswordCubit>()
+                            .oldPasswordController,
                         announcement: state.oldPasswordAnnouncement,
-                        onChanged: () {
+                        onChanged: (value) {
+                          final oldPassword = value;
                           context.read<ChangePasswordCubit>()
-                            ..addNewEvent(ChangePasswordStateEnum.oldPassword,
-                                oldPassword.text)
+                            ..setOldPassword(oldPassword)
                             ..checkAllTextFields();
                         },
                       );
@@ -53,12 +52,14 @@ class ChangePasswordScreen extends StatelessWidget {
                       return MeTextFieldV2(
                         text: 'Mật khẩu mới',
                         isPassword: true,
-                        textEditingController: newPassword,
+                        textEditingController: context
+                            .read<ChangePasswordCubit>()
+                            .newPasswordController,
                         announcement: state.newPasswordAnnouncement,
-                        onChanged: () {
+                        onChanged: (value) {
+                          final newPassword = value;
                           context.read<ChangePasswordCubit>()
-                            ..addNewEvent(ChangePasswordStateEnum.newPassword,
-                                newPassword.text)
+                            ..setNewPassword(newPassword)
                             ..checkAllTextFields();
                         },
                       );
@@ -72,13 +73,14 @@ class ChangePasswordScreen extends StatelessWidget {
                       return MeTextFieldV2(
                         text: 'Nhập lại mật khẩu mới',
                         isPassword: true,
-                        textEditingController: confirmPassword,
+                        textEditingController: context
+                            .read<ChangePasswordCubit>()
+                            .confirmPasswordController,
                         announcement: state.confirmPasswordAnnouncement,
-                        onChanged: () {
+                        onChanged: (value) {
+                          final confirmPassword = value;
                           context.read<ChangePasswordCubit>()
-                            ..addNewEvent(
-                                ChangePasswordStateEnum.confirmPassword,
-                                confirmPassword.text)
+                            ..setConfirmPassword(confirmPassword)
                             ..checkAllTextFields();
                         },
                       );

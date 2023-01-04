@@ -14,7 +14,8 @@ class ComponentProductVertical extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = context.read<HomeCubit>();
 
-    return Column(
+    return Stack(
+      alignment: Alignment.bottomCenter,
       children: [
         BlocBuilder<HomeCubit, HomeState>(
             bloc: bloc,

@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:it_project/main.dart';
 import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/shopping_cart/cubit/cart_cubit.dart';
 import 'package:it_project/src/local/dao/item_cart_dao.dart';
@@ -223,9 +224,10 @@ class ItemCartWidget extends StatelessWidget {
                 ),
               ),
             ),
-            IconHeartWidget(
-              isHeart: false,
-            )
+            if (isFuture)
+              IconHeartWidget(
+                isHeart: false,
+              )
           ]),
           const Divider()
         ],

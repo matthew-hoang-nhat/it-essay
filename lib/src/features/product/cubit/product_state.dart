@@ -1,6 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'product_cubit.dart';
 
-abstract class ProductState extends Equatable {
+class ProductState extends Equatable {
   const ProductState({
     required this.product,
     required this.isTop,
@@ -23,6 +24,22 @@ abstract class ProductState extends Equatable {
         isDescribeShowAll,
         isLoading,
       ];
+
+  ProductState copyWith({
+    Product? product,
+    bool? isTop,
+    bool? isLoading,
+    bool? isDescribeShowAll,
+    int? indexImage,
+  }) {
+    return ProductState(
+      product: product ?? this.product,
+      isTop: isTop ?? this.isTop,
+      isLoading: isLoading ?? this.isLoading,
+      isDescribeShowAll: isDescribeShowAll ?? this.isDescribeShowAll,
+      indexImage: indexImage ?? this.indexImage,
+    );
+  }
 }
 
 class ProductInitial extends ProductState {
@@ -34,21 +51,4 @@ class ProductInitial extends ProductState {
     required super.indexImage,
     required super.isDescribeShowAll,
   });
-}
-
-class NewProductState extends ProductState {
-  NewProductState.fromOldSettingState(
-    ProductState oldState, {
-    Product? product,
-    bool? isTop,
-    bool? isDescribeShowAll,
-    bool? isLoading,
-    int? indexImage,
-  }) : super(
-          product: product ?? oldState.product,
-          isTop: isTop ?? oldState.isTop,
-          indexImage: indexImage ?? oldState.indexImage,
-          isLoading: isLoading ?? oldState.isLoading,
-          isDescribeShowAll: isDescribeShowAll ?? oldState.isDescribeShowAll,
-        );
 }

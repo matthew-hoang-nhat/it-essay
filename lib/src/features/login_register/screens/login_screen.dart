@@ -123,7 +123,10 @@ class LoginScreen extends StatelessWidget {
                             child: InkWell(
                               highlightColor: AppColors.whiteColor,
                               splashColor: AppColors.whiteColor,
-                              onTap: () {},
+                              onTap: () {
+                                context.push(
+                                    '${Paths.loginScreen}/${Paths.sForgotPasswordScreen}');
+                              },
                               child: Text(
                                   meLocalKey[MeLocaleKey.forgotPasswordLabel] ??
                                       'Err: Quên mật khẩu',
@@ -227,7 +230,8 @@ class LoginScreen extends StatelessWidget {
                                     highlightColor: AppColors.whiteColor,
                                     splashColor: AppColors.whiteColor,
                                     onTap: () {
-                                      showRegister(context);
+                                      context.push(
+                                          '${Paths.loginScreen}/${Paths.sRegisterScreen}');
                                     },
                                     child: Text(
                                         meLocalKey[MeLocaleKey.registerLabel] ??
