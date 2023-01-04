@@ -1,6 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'detail_search_cubit.dart';
 
-abstract class DetailSearchState extends Equatable {
+class DetailSearchState extends Equatable {
   const DetailSearchState({
     // required this.contentSearches,
     required this.products,
@@ -24,6 +25,16 @@ abstract class DetailSearchState extends Equatable {
         products,
         // isShowProducts,
       ];
+
+  DetailSearchState copyWith({
+    List<Product>? products,
+    bool? isLoading,
+  }) {
+    return DetailSearchState(
+      products: products ?? this.products,
+      isLoading: isLoading ?? this.isLoading,
+    );
+  }
 }
 
 class DetailSearchInitial extends DetailSearchState {
@@ -36,23 +47,4 @@ class DetailSearchInitial extends DetailSearchState {
     // required super.categories,
     // required super.isShowProducts,
   });
-}
-
-class NewDetailSearchState extends DetailSearchState {
-  NewDetailSearchState.fromOldSettingState(
-    DetailSearchState oldState, {
-    // List<ContentSearch>? contentSearches,
-    List<Product>? products,
-    // List<Category>? categories,
-    bool? isLoading,
-    // bool? isShowProducts,
-    // bool? isEmpty,
-  }) : super(
-          // contentSearches: contentSearches ?? oldState.contentSearches,
-          products: products ?? oldState.products,
-          isLoading: isLoading ?? oldState.isLoading,
-          // isEmpty: isEmpty ?? oldState.isEmpty,
-          // categories: categories ?? oldState.categories,
-          // isShowProducts: isShowProducts ?? oldState.isShowProducts,
-        );
 }

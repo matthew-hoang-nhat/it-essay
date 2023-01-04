@@ -8,30 +8,26 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<MainCubit>();
-    return Stack(children: [
-      BlocBuilder<MainCubit, MainState>(
-        bloc: bloc,
-        builder: (context, state) {
-          return Scaffold(
-            extendBody: true,
-            extendBodyBehindAppBar: true,
-            body: state.tabs.elementAt(state.tab),
-            bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              selectedItemColor: AppColors.primaryColor,
-              unselectedItemColor: AppColors.brownColor,
-              items: state.barItems,
-              currentIndex: state.tab,
-              onTap: ((value) {
-                bloc.addNewEvent(MainEnum.tab, value);
-              }),
-            ),
-          );
-        },
-      ),
-    ]);
+    return BlocBuilder<MainCubit, MainState>(
+      builder: (context, state) {
+        return Scaffold(
+          extendBody: true,
+          extendBodyBehindAppBar: true,
+          body: state.tabs.elementAt(state.tab),
+          bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            selectedItemColor: AppColors.primaryColor,
+            unselectedItemColor: AppColors.brownColor,
+            items: state.barItems,
+            currentIndex: state.tab,
+            onTap: ((value) {
+              context.read<MainCubit>().setTab(value);
+            }),
+          ),
+        );
+      },
+    );
   }
 }

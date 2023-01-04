@@ -1,6 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'change_password_cubit.dart';
 
-abstract class ChangePasswordState extends Equatable {
+class ChangePasswordState extends Equatable {
   const ChangePasswordState({
     required this.oldPasswordAnnouncement,
     required this.newPasswordAnnouncement,
@@ -35,6 +36,33 @@ abstract class ChangePasswordState extends Equatable {
         isLoading,
         isAllValidated,
       ];
+
+  ChangePasswordState copyWith({
+    String? oldPasswordAnnouncement,
+    String? newPasswordAnnouncement,
+    String? confirmPasswordAnnouncement,
+    String? totalAnnouncement,
+    String? oldPassword,
+    String? newPassword,
+    String? confirmPassword,
+    bool? isLoading,
+    bool? isAllValidated,
+  }) {
+    return ChangePasswordState(
+      oldPasswordAnnouncement:
+          oldPasswordAnnouncement ?? this.oldPasswordAnnouncement,
+      newPasswordAnnouncement:
+          newPasswordAnnouncement ?? this.newPasswordAnnouncement,
+      confirmPasswordAnnouncement:
+          confirmPasswordAnnouncement ?? this.confirmPasswordAnnouncement,
+      totalAnnouncement: totalAnnouncement ?? this.totalAnnouncement,
+      oldPassword: oldPassword ?? this.oldPassword,
+      newPassword: newPassword ?? this.newPassword,
+      confirmPassword: confirmPassword ?? this.confirmPassword,
+      isLoading: isLoading ?? this.isLoading,
+      isAllValidated: isAllValidated ?? this.isAllValidated,
+    );
+  }
 }
 
 class ChangePasswordInitial extends ChangePasswordState {
@@ -49,32 +77,4 @@ class ChangePasswordInitial extends ChangePasswordState {
     required super.isLoading,
     required super.isAllValidated,
   });
-}
-
-class NewChangePasswordState extends ChangePasswordState {
-  NewChangePasswordState.fromOldSettingState(
-    ChangePasswordState oldState, {
-    String? oldPasswordAnnouncement,
-    String? newPasswordAnnouncement,
-    String? confirmPasswordAnnouncement,
-    String? totalAnnouncement,
-    String? oldPassword,
-    String? newPassword,
-    String? confirmPassword,
-    bool? isLoading,
-    bool? isAllValidated,
-  }) : super(
-          oldPasswordAnnouncement:
-              oldPasswordAnnouncement ?? oldState.oldPasswordAnnouncement,
-          newPasswordAnnouncement:
-              newPasswordAnnouncement ?? oldState.newPasswordAnnouncement,
-          confirmPasswordAnnouncement: confirmPasswordAnnouncement ??
-              oldState.confirmPasswordAnnouncement,
-          totalAnnouncement: totalAnnouncement ?? oldState.totalAnnouncement,
-          oldPassword: oldPassword ?? oldState.oldPassword,
-          newPassword: newPassword ?? oldState.newPassword,
-          confirmPassword: confirmPassword ?? oldState.confirmPassword,
-          isLoading: isLoading ?? oldState.isLoading,
-          isAllValidated: isAllValidated ?? oldState.isAllValidated,
-        );
 }

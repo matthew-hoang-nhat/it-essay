@@ -230,7 +230,8 @@ class LoginScreen extends StatelessWidget {
                                     highlightColor: AppColors.whiteColor,
                                     splashColor: AppColors.whiteColor,
                                     onTap: () {
-                                      showRegister(context);
+                                      context.push(
+                                          '${Paths.loginScreen}/${Paths.sRegisterScreen}');
                                     },
                                     child: Text(
                                         meLocalKey[MeLocaleKey.registerLabel] ??

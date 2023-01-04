@@ -1,8 +1,12 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'detail_profile_cubit.dart';
 
-abstract class DetailProfileState extends Equatable {
+class DetailProfileState extends Equatable {
   const DetailProfileState(
       {required this.isLoading,
+      required this.firstNameAnnouncement,
+      required this.lastNameAnnouncement,
+      required this.phoneNumberAnnouncement,
       required this.email,
       required this.firstName,
       required this.lastName,
@@ -10,17 +14,22 @@ abstract class DetailProfileState extends Equatable {
       required this.newAvatar,
       required this.phoneNumber,
       required this.dateTime,
-      required this.gender});
+      required this.gender,
+      required this.isAllValidated});
 
   final bool isLoading;
   final String email;
   final String firstName;
   final String lastName;
   final String phoneNumber;
+  final String firstNameAnnouncement;
+  final String lastNameAnnouncement;
+  final String phoneNumberAnnouncement;
   final String? dateTime;
   final String gender;
   final XFile? newAvatar;
   final String? avatar;
+  final bool isAllValidated;
 
   @override
   List<Object?> get props => [
@@ -32,14 +41,56 @@ abstract class DetailProfileState extends Equatable {
         firstName,
         lastName,
         phoneNumber,
+        isAllValidated,
+        firstNameAnnouncement,
+        lastNameAnnouncement,
+        phoneNumberAnnouncement
       ];
+
+  DetailProfileState copyWith({
+    bool? isLoading,
+    String? email,
+    String? firstName,
+    String? lastName,
+    String? phoneNumber,
+    String? firstNameAnnouncement,
+    String? lastNameAnnouncement,
+    String? phoneNumberAnnouncement,
+    String? dateTime,
+    String? gender,
+    XFile? newAvatar,
+    String? avatar,
+    bool? isAllValidated,
+  }) {
+    return DetailProfileState(
+      isLoading: isLoading ?? this.isLoading,
+      email: email ?? this.email,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      firstNameAnnouncement:
+          firstNameAnnouncement ?? this.firstNameAnnouncement,
+      lastNameAnnouncement: lastNameAnnouncement ?? this.lastNameAnnouncement,
+      phoneNumberAnnouncement:
+          phoneNumberAnnouncement ?? this.phoneNumberAnnouncement,
+      dateTime: dateTime ?? this.dateTime,
+      gender: gender ?? this.gender,
+      newAvatar: newAvatar ?? this.newAvatar,
+      avatar: avatar ?? this.avatar,
+      isAllValidated: isAllValidated ?? this.isAllValidated,
+    );
+  }
 }
 
 class DetailProfileInitial extends DetailProfileState {
   const DetailProfileInitial({
     required super.isLoading,
+    required super.isAllValidated,
     required super.avatar,
     required super.dateTime,
+    required super.firstNameAnnouncement,
+    required super.lastNameAnnouncement,
+    required super.phoneNumberAnnouncement,
     required super.email,
     required super.gender,
     required super.firstName,
@@ -47,28 +98,4 @@ class DetailProfileInitial extends DetailProfileState {
     required super.newAvatar,
     required super.phoneNumber,
   });
-}
-
-class NewDetailProfileState extends DetailProfileState {
-  NewDetailProfileState.fromOldSettingState(
-    DetailProfileState oldState, {
-    bool? isLoading,
-    String? dateTime,
-    String? email,
-    String? gender,
-    String? phoneNumber,
-    String? firstName,
-    String? lastName,
-    String? avatar,
-    XFile? newAvatar,
-  }) : super(
-            isLoading: isLoading ?? oldState.isLoading,
-            dateTime: dateTime ?? oldState.dateTime,
-            email: email ?? oldState.email,
-            gender: gender ?? oldState.gender,
-            firstName: firstName ?? oldState.firstName,
-            lastName: lastName ?? oldState.lastName,
-            avatar: avatar ?? oldState.avatar,
-            newAvatar: newAvatar ?? oldState.newAvatar,
-            phoneNumber: phoneNumber ?? oldState.phoneNumber);
 }

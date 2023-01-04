@@ -1,6 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'search_cubit.dart';
 
-abstract class SearchState extends Equatable {
+class SearchState extends Equatable {
   const SearchState({
     required this.contentSearches,
     // required this.products,
@@ -24,6 +25,18 @@ abstract class SearchState extends Equatable {
         // products,
         // isShowProducts,
       ];
+
+  SearchState copyWith({
+    List<ContentSearch>? contentSearches,
+    List<Category>? categories,
+    bool? isLoading,
+  }) {
+    return SearchState(
+      contentSearches: contentSearches ?? this.contentSearches,
+      categories: categories ?? this.categories,
+      isLoading: isLoading ?? this.isLoading,
+    );
+  }
 }
 
 class SearchInitial extends SearchState {
@@ -35,23 +48,4 @@ class SearchInitial extends SearchState {
     required super.categories,
     // required super.isShowProducts,
   });
-}
-
-class NewSearchState extends SearchState {
-  NewSearchState.fromOldSettingState(
-    SearchState oldState, {
-    List<ContentSearch>? contentSearches,
-    List<Product>? products,
-    List<Category>? categories,
-    bool? isLoading,
-    bool? isShowProducts,
-    // bool? isEmpty,
-  }) : super(
-          contentSearches: contentSearches ?? oldState.contentSearches,
-          // products: products ?? oldState.products,
-          isLoading: isLoading ?? oldState.isLoading,
-          // isEmpty: isEmpty ?? oldState.isEmpty,
-          categories: categories ?? oldState.categories,
-          // isShowProducts: isShowProducts ?? oldState.isShowProducts,
-        );
 }

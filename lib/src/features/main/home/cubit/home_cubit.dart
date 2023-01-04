@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
@@ -32,12 +33,23 @@ class HomeCubit extends Cubit<HomeState> implements ParentCubit<HomeEnum> {
   bool isLoadingFlashSales = false;
   bool isLoadingCategories = false;
 
+  final controller = ScrollController();
+  _addListenerScroll() {
+    controller.addListener(() {
+      if (controller.position.pixels >=
+          controller.position.maxScrollExtent * 0.7) {
+        loadPage(HomeEnum.products);
+      }
+    });
+  }
+
   initCubit() async {
     await Future.wait([
       loadPage(HomeEnum.products),
       loadPage(HomeEnum.categories),
       loadPage(HomeEnum.flashSaleProducts)
     ]);
+    _addListenerScroll();
     FlutterNativeSplash.remove();
   }
 

@@ -7,43 +7,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/src/configs/constants/app_assets.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/constants/app_dimensions.dart';
-import 'package:it_project/src/configs/locates/lang_vi.dart';
-import 'package:it_project/src/configs/locates/me_locale_key.dart';
 import 'package:it_project/src/features/login_register/cubit/forgot_password_cubit.dart';
 import 'package:it_project/src/widgets/load_widget.dart';
-import 'package:logger/logger.dart';
 
-class OTPCheckScreenV2 extends StatefulWidget {
-  const OTPCheckScreenV2({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<OTPCheckScreenV2> createState() => _OTPCheckScreenV2State();
-}
-
-class _OTPCheckScreenV2State extends State<OTPCheckScreenV2> {
-  final meLocalKey = viVN;
-
-  final textEditingControllers =
-      List.generate(6, (_) => TextEditingController());
-  late List<Widget> otpTextField;
-
-  @override
-  void initState() {
-    otpTextField = List.generate(
-        6,
-        (index) => otpWidget(
-              index,
-              6,
-              textEditingControllers[index],
-            ));
-    super.initState();
-  }
+class OTPCheckScreenV2 extends StatelessWidget {
+  const OTPCheckScreenV2({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Logger().i('Rebuild screen');
     return Scaffold(
       body: Stack(
         children: [
@@ -60,8 +31,7 @@ class _OTPCheckScreenV2State extends State<OTPCheckScreenV2> {
                 const SizedBox(
                   height: 20,
                 ),
-                Text(meLocalKey[MeLocaleKey.sendOtpToEmail] ??
-                    'error: sendOtpToEmail'),
+                const Text('Chúng tôi đã gửi mã OTP đến'),
                 BlocBuilder<ForgotPasswordCubit, ForgotPasswordState>(
                   buildWhen: (previous, current) =>
                       previous.emailUser != current.emailUser,
@@ -75,17 +45,25 @@ class _OTPCheckScreenV2State extends State<OTPCheckScreenV2> {
                 const SizedBox(height: 20),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: otpTextField),
+                    children: List.generate(
+                        6,
+                        (index) => otpWidget(
+                              context,
+                              index,
+                              6,
+                              context
+                                  .read<ForgotPasswordCubit>()
+                                  .otpControllers[index],
+                            ))),
                 const SizedBox(height: 20),
                 BlocBuilder<ForgotPasswordCubit, ForgotPasswordState>(
                   buildWhen: (previous, current) => previous.otp != current.otp,
                   builder: (context, state) {
                     return InkWell(
                       onTap: () async {
-                        final otpCodeStr = otpCode(textEditingControllers);
-                        context.read<ForgotPasswordCubit>()
-                          ..addNewEvent(ForgotPasswordStateEnum.otp, otpCodeStr)
-                          ..sendOtpOnClick(context);
+                        context
+                            .read<ForgotPasswordCubit>()
+                            .sendOtpOnClick(context);
                       },
                       child: Container(
                         width: 300,
@@ -96,7 +74,7 @@ class _OTPCheckScreenV2State extends State<OTPCheckScreenV2> {
                           color: AppColors.blueColor,
                         ),
                         child: Text(
-                          meLocalKey[MeLocaleKey.sendLabel] ?? 'err: sendLabel',
+                          'Gửi',
                           style: GoogleFonts.nunito(
                               color: AppColors.whiteColor,
                               fontWeight: FontWeight.bold,
@@ -123,7 +101,11 @@ class _OTPCheckScreenV2State extends State<OTPCheckScreenV2> {
   }
 
   Container otpWidget(
-      index, otpLength, TextEditingController textEditingController) {
+    context,
+    index,
+    otpLength,
+    TextEditingController textEditingController,
+  ) {
     const size = 40.0;
     const padding = 2.0;
 
@@ -165,13 +147,5 @@ class _OTPCheckScreenV2State extends State<OTPCheckScreenV2> {
         ),
       ),
     );
-  }
-
-  String otpCode(List<TextEditingController> textEditingControllers) {
-    String otpCode = '';
-    for (var item in textEditingControllers) {
-      otpCode += item.text;
-    }
-    return otpCode;
   }
 }

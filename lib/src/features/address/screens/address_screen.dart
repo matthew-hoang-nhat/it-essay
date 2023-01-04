@@ -64,9 +64,7 @@ class AddressScreen extends StatelessWidget {
                 child: Column(
               children: [
                 BlocBuilder<AddressCubit, AddressState>(
-                  bloc: context.read<AddressCubit>()
-                    ..addNewEvent(AddressEnum.addressId,
-                        context.read<AppCubit>().state.address?.id),
+                  bloc: context.read<AddressCubit>(),
                   buildWhen: (previous, current) =>
                       previous.addressId != current.addressId ||
                       previous.addresses != current.addresses,
@@ -180,10 +178,12 @@ class _InlineAddress extends StatelessWidget {
                                   value: addressId,
                                   groupValue: state.addressId,
                                   onChanged: (value) {
-                                    context.read<AddressCubit>().addNewEvent(
-                                        AddressEnum.addressId, value);
-                                    context.read<AppCubit>().addNewEvent(
-                                        AppCubitEnum.address, address);
+                                    context
+                                        .read<AddressCubit>()
+                                        .setAddressId(value);
+                                    context
+                                        .read<AppCubit>()
+                                        .addAddress(address);
                                   });
                             },
                           )

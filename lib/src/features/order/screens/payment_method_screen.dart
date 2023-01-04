@@ -17,9 +17,7 @@ class PaymentMethodScreen extends StatelessWidget {
         child: Column(children: [
           ListTile(
             onTap: () {
-              context
-                  .read<CartToOrderCubit>()
-                  .addNewEvent(CartToOrderEnum.paymentMethod, 'paypal');
+              context.read<CartToOrderCubit>().setPaymentMethod('paypal');
 
               context.pop();
             },
@@ -37,9 +35,7 @@ class PaymentMethodScreen extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              context
-                  .read<CartToOrderCubit>()
-                  .addNewEvent(CartToOrderEnum.paymentMethod, 'cod');
+              context.read<CartToOrderCubit>().setPaymentMethod('cod');
               context.pop();
             },
             leading: const Icon(MaterialCommunityIcons.gift),

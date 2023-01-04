@@ -7,7 +7,9 @@ import 'package:it_project/src/features/category/screens/category_screen.dart';
 import 'package:it_project/src/features/category/screens/detail_category_screen.dart';
 import 'package:it_project/src/features/login_register/screens/forgot_password_screen.dart';
 import 'package:it_project/src/features/login_register/screens/login_screen.dart';
+import 'package:it_project/src/features/login_register/screens/otp_check_screen.dart';
 import 'package:it_project/src/features/login_register/screens/otp_check_screen_v2.dart';
+import 'package:it_project/src/features/login_register/screens/register_screen.dart';
 import 'package:it_project/src/features/login_register/screens/reset_password_screen.dart';
 
 import 'package:it_project/src/features/main/main_screen.dart';
@@ -53,6 +55,14 @@ class AppPages {
         path: Paths.loginScreen,
         builder: (context, state) => const LoginScreen(),
         routes: [
+          GoRoute(
+            path: Paths.sRegisterScreen,
+            builder: (context, state) => const RegisterScreen(),
+          ),
+          GoRoute(
+            path: Paths.sOtpCheckScreen,
+            builder: (context, state) => const OtpCheckScreen(),
+          ),
           GoRoute(
               path: Paths.sForgotPasswordScreen,
               builder: (context, state) => const ForgotPasswordScreen(),

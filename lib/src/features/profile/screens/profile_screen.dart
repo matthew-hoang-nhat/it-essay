@@ -18,12 +18,9 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sizeWidth = MediaQuery.of(context).size.width;
     context.read<AppCubit>().fetchFUser();
+    final sizeWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      // appBar: AppBar(
-      //     backgroundColor: AppColors.blueColor,
-      //     title: const Text('Ví của tôi')),
       backgroundColor: AppColors.whiteGreyColor.withOpacity(0.3),
       body: SingleChildScrollView(
         child: Column(

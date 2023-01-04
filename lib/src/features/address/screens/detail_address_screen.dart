@@ -5,13 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/features/address/cubit/address_cubit.dart';
 import 'package:it_project/src/features/address/cubit/detail_address_cubit.dart';
-import 'package:it_project/src/utils/helpers/validate.dart';
 import 'package:it_project/src/utils/remote/model/order/get/address.dart';
 import 'package:it_project/src/utils/remote/model/order/get/district.dart';
 import 'package:it_project/src/utils/remote/model/order/get/province.dart';
 import 'package:it_project/src/utils/remote/model/order/get/ward.dart';
 import 'package:it_project/src/widgets/load_widget.dart';
-import 'package:it_project/src/widgets/me_text_field.dart';
+import 'package:it_project/src/widgets/me_text_field_v2.dart';
 
 class DetailAddressScreen extends StatelessWidget {
   const DetailAddressScreen({super.key, required this.address});
@@ -19,13 +18,6 @@ class DetailAddressScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late final TextEditingController nameController =
-        TextEditingController(text: address.name);
-    late final TextEditingController addressController =
-        TextEditingController(text: address.addressCode!.street);
-    late final TextEditingController phoneController =
-        TextEditingController(text: address.phoneNumber);
-
     return BlocProvider(
       create: (context) => DetailAddressCubit(address: address)..initCubit(),
       child: Stack(
@@ -35,86 +27,87 @@ class DetailAddressScreen extends StatelessWidget {
                 title: const Text('Địa chỉ'),
                 actions: [
                   saveNewAddressButton(
-                    nameController,
-                    phoneController,
-                    addressController,
-                  )
+                      // nameController,
+                      // phoneController,
+                      // addressController,
+                      )
                 ],
               ),
               body: SafeArea(
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  child: BlocBuilder<DetailAddressCubit, DetailAddressState>(
-                    buildWhen: (previous, current) => false,
-                    builder: (context, state) {
-                      return SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            MeTextField(
-                              text: 'Tên người nhận',
-                              textEditingController: nameController,
-                              functionValidation: (value) => null,
-                              callFuncOnChange: () {
-                                context.read<DetailAddressCubit>().addNewEvent(
-                                    DetailAddressEnum.name,
-                                    nameController.text);
-                              },
-                            ),
-                            MeTextField(
-                              text: 'Số điện thoại',
-                              textEditingController: phoneController,
-                              functionValidation: (value) {
-                                if (value.isEmpty) return null;
-                                if (Validate().isInvalidPhoneNumber(value)) {
-                                  return 'Số điện thoại bao gồm 10 chữ số';
-                                }
-                                return null;
-                              },
-                              callFuncOnChange: () {
-                                context.read<DetailAddressCubit>().addNewEvent(
-                                    DetailAddressEnum.phoneNumber,
-                                    phoneController.text);
-                              },
-                            ),
-                            addressComponent(context),
-                            BlocBuilder<DetailAddressCubit, DetailAddressState>(
-                              buildWhen: (previous, current) =>
-                                  previous.isDefault != current.isDefault,
-                              builder: (context, state) {
-                                return TextButton(
-                                    onPressed: state.isDefault
-                                        ? null
-                                        : () {
-                                            context
-                                                .read<DetailAddressCubit>()
-                                                .addNewEvent(
-                                                    DetailAddressEnum.isDefault,
-                                                    true);
-                                          },
-                                    child: state.isDefault
-                                        ? Container(
-                                            padding: const EdgeInsets.all(10),
-                                            color: AppColors.primaryColor,
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  'Mặc định',
-                                                  style: GoogleFonts.nunito(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color:
-                                                          AppColors.whiteColor),
-                                                ),
-                                              ],
-                                            ))
-                                        : const Text('Chọn làm mặc định'));
-                              },
-                            )
-                          ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        BlocBuilder<DetailAddressCubit, DetailAddressState>(
+                          buildWhen: (previous, current) =>
+                              previous.nameAnnouncement !=
+                              current.nameAnnouncement,
+                          builder: (context, state) {
+                            return MeTextFieldV2(
+                                text: 'Tên người nhận',
+                                textEditingController: context
+                                    .read<DetailAddressCubit>()
+                                    .nameController,
+                                announcement: state.nameAnnouncement,
+                                onChanged: (value) {
+                                  context.read<DetailAddressCubit>()
+                                    ..setName(value)
+                                    ..checkAll();
+                                });
+                          },
                         ),
-                      );
-                    },
+                        BlocBuilder<DetailAddressCubit, DetailAddressState>(
+                          buildWhen: (previous, current) =>
+                              previous.phoneNumberAnnouncement !=
+                              current.phoneNumberAnnouncement,
+                          builder: (context, state) {
+                            return MeTextFieldV2(
+                                text: 'Số điện thoại',
+                                textEditingController: context
+                                    .read<DetailAddressCubit>()
+                                    .phoneController,
+                                announcement: state.phoneNumberAnnouncement,
+                                onChanged: (value) {
+                                  context.read<DetailAddressCubit>()
+                                    ..setPhoneNumber(value)
+                                    ..checkAll();
+                                });
+                          },
+                        ),
+                        addressComponent(context),
+                        BlocBuilder<DetailAddressCubit, DetailAddressState>(
+                          buildWhen: (previous, current) =>
+                              previous.isDefault != current.isDefault,
+                          builder: (context, state) {
+                            return TextButton(
+                                onPressed: state.isDefault
+                                    ? null
+                                    : () {
+                                        context
+                                            .read<DetailAddressCubit>()
+                                            .setDefault();
+                                      },
+                                child: state.isDefault
+                                    ? Container(
+                                        padding: const EdgeInsets.all(10),
+                                        color: AppColors.primaryColor,
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              'Mặc định',
+                                              style: GoogleFonts.nunito(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: AppColors.whiteColor),
+                                            ),
+                                          ],
+                                        ))
+                                    : const Text('Chọn làm mặc định'));
+                          },
+                        )
+                      ],
+                    ),
                   ),
                 ),
               )),
@@ -132,8 +125,6 @@ class DetailAddressScreen extends StatelessWidget {
   }
 
   Column addressComponent(BuildContext context) {
-    TextEditingController streetController = TextEditingController(
-        text: context.read<DetailAddressCubit>().state.street);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -159,9 +150,8 @@ class DetailAddressScreen extends StatelessWidget {
                     .toList(),
                 value: state.province,
                 onChanged: (value) {
-                  context
-                      .read<DetailAddressCubit>()
-                      .addNewEvent(DetailAddressEnum.province, value);
+                  final province = value!;
+                  context.read<DetailAddressCubit>().setProvince(province);
                 },
               ),
             );
@@ -189,9 +179,8 @@ class DetailAddressScreen extends StatelessWidget {
                     .toList(),
                 value: state.district,
                 onChanged: (value) {
-                  context
-                      .read<DetailAddressCubit>()
-                      .addNewEvent(DetailAddressEnum.district, value);
+                  final district = value!;
+                  context.read<DetailAddressCubit>().setDistrict(district);
                 },
               ),
             );
@@ -218,32 +207,32 @@ class DetailAddressScreen extends StatelessWidget {
                     .toList(),
                 value: state.ward,
                 onChanged: (value) {
-                  context
-                      .read<DetailAddressCubit>()
-                      .addNewEvent(DetailAddressEnum.ward, value);
+                  final ward = value!;
+                  context.read<DetailAddressCubit>().setWard(ward);
                 },
               ),
             );
           },
         ),
-        MeTextField(
-          text: 'Địa chỉ cụ thể',
-          textEditingController: streetController,
-          callFuncOnChange: () {
-            context
-                .read<DetailAddressCubit>()
-                .addNewEvent(DetailAddressEnum.street, streetController.text);
+        BlocBuilder<DetailAddressCubit, DetailAddressState>(
+          builder: (context, state) {
+            return MeTextFieldV2(
+                textEditingController:
+                    context.read<DetailAddressCubit>().streetController,
+                announcement: state.streetAnnouncement,
+                onChanged: (value) {
+                  final street = value;
+                  context.read<DetailAddressCubit>()
+                    ..setStreet(street)
+                    ..checkAll();
+                });
           },
-          functionValidation: (value) => null,
-        ),
+        )
       ],
     );
   }
 
-  Widget saveNewAddressButton(
-      TextEditingController nameController,
-      TextEditingController phoneController,
-      TextEditingController streetController) {
+  Widget saveNewAddressButton() {
     return BlocBuilder<DetailAddressCubit, DetailAddressState>(
       // buildWhen: (previous, current) =>
       //     previous.isAllValidated != current.isAllValidated,
@@ -253,7 +242,7 @@ class DetailAddressScreen extends StatelessWidget {
               ? () async {
                   await context
                       .read<DetailAddressCubit>()
-                      .updateAddress()
+                      .callAPIUpdateAddress()
                       .then((value) async {
                     context.read<AddressCubit>().getAddresses();
                     context.pop();

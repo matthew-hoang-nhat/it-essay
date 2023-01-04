@@ -20,23 +20,12 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<HomeCubit>();
-    final controller = ScrollController();
-    controller.addListener(() {
-      if (controller.position.pixels >=
-          controller.position.maxScrollExtent * 0.7) {
-        bloc.loadPage(HomeEnum.products);
-      }
-    });
-
     return Scaffold(
-        // backgroundColor: AppColors.whiteGreyColor,
         resizeToAvoidBottomInset: false,
         appBar: appBarHome(context),
         body: SafeArea(
           child: SingleChildScrollView(
-            controller: controller,
-            // physics: const BouncingScrollPhysics(),
+            controller: context.read<HomeCubit>().controller,
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               poster(),

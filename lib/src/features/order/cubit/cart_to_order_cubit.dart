@@ -7,7 +7,6 @@ import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/app/cubit/app_cubit.dart';
-import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
 import 'package:it_project/src/local/dao/item_cart_dao.dart';
 import 'package:it_project/src/utils/remote/model/order/add/add_order_request.dart';
 import 'package:it_project/src/utils/remote/model/order/add/item_add_order_request.dart';
@@ -33,8 +32,7 @@ enum CartToOrderEnum {
   // paymentUrl,
 }
 
-class CartToOrderCubit extends Cubit<CartToOrderState>
-    implements ParentCubit<CartToOrderEnum> {
+class CartToOrderCubit extends Cubit<CartToOrderState> {
   CartToOrderCubit()
       : super(const CartToOrderInitial(
           isLoading: false,
@@ -63,6 +61,10 @@ class CartToOrderCubit extends Cubit<CartToOrderState>
   //   getPrice();
   // }
 
+  setPaymentMethod(String value) {
+    emit(state.copyWith(paymentMethod: value));
+  }
+
   getPrice() {
     num subTotalPrice = 0;
     for (var item in state.itemCarts) {
@@ -71,12 +73,15 @@ class CartToOrderCubit extends Cubit<CartToOrderState>
     }
     num shippingPrice = 10000 * state.itemCarts.length;
 
-    addNewEvent(
-        CartToOrderEnum.subTotalPrice, formatCurrency.format(subTotalPrice));
-    addNewEvent(
-        CartToOrderEnum.shippingPrice, formatCurrency.format(shippingPrice));
-    addNewEvent(CartToOrderEnum.totalPrice,
-        formatCurrency.format(shippingPrice + subTotalPrice));
+    final subTotalPriceStr = formatCurrency.format(subTotalPrice);
+    final shippingPriceStr = formatCurrency.format(shippingPrice);
+    final totalPriceStr = formatCurrency.format(shippingPrice + subTotalPrice);
+
+    emit(state.copyWith(
+      subTotalPrice: subTotalPriceStr,
+      shippingPrice: shippingPriceStr,
+      totalPrice: totalPriceStr,
+    ));
   }
 
   Future<void> paymentClick(context) async {
@@ -90,7 +95,7 @@ class CartToOrderCubit extends Cubit<CartToOrderState>
       return;
     }
 
-    addNewEvent(CartToOrderEnum.isLoading, true);
+    emit(state.copyWith(isLoading: true));
 
     final String addressId = selectAddress!.id!;
     final Map<String, dynamic> orderResult = await createOrder(addressId);
@@ -118,8 +123,7 @@ class CartToOrderCubit extends Cubit<CartToOrderState>
         break;
       default:
     }
-
-    addNewEvent(CartToOrderEnum.isLoading, false);
+    emit(state.copyWith(isLoading: false));
   }
 
   Future<Map<String, dynamic>> createOrder(String addressId) async {
@@ -175,49 +179,5 @@ class CartToOrderCubit extends Cubit<CartToOrderState>
     final result = await orderRepository.checkStatusOrder(paymentId: paymentId);
     final isCompleted = (result.data == 'completed');
     return isCompleted;
-  }
-
-  @override
-  void addNewEvent(CartToOrderEnum key, value) {
-    if (isClosed) return;
-    switch (key) {
-      case CartToOrderEnum.itemCarts:
-        emit(NewCartToOrderState.fromOldSettingState(state, itemCarts: value));
-        break;
-
-      case CartToOrderEnum.isLoading:
-        emit(NewCartToOrderState.fromOldSettingState(state, isLoading: value));
-        break;
-      case CartToOrderEnum.totalPrice:
-        emit(NewCartToOrderState.fromOldSettingState(state, totalPrice: value));
-        break;
-      case CartToOrderEnum.shippingPrice:
-        emit(NewCartToOrderState.fromOldSettingState(state,
-            shippingPrice: value));
-        break;
-      case CartToOrderEnum.subTotalPrice:
-        emit(NewCartToOrderState.fromOldSettingState(state,
-            subTotalPrice: value));
-        break;
-      case CartToOrderEnum.paymentMethod:
-        emit(NewCartToOrderState.fromOldSettingState(state,
-            paymentMethod: value));
-        break;
-      // case CartToOrderEnum.paymentStatus:
-      //   emit(NewCartToOrderState.fromOldSettingState(state,
-      //       paymentStatus: value));
-      //   break;
-      // case CartToOrderEnum.orderStatus:
-      //   emit(
-      //       NewCartToOrderState.fromOldSettingState(state, orderStatus: value));
-      //   break;
-      // case CartToOrderEnum.paymentUrl:
-      //   emit(NewCartToOrderState.fromOldSettingState(state, paymentUrl: value));
-      //   break;
-      // case CartToOrderEnum.paymentId:
-      //   emit(NewCartToOrderState.fromOldSettingState(state, paymentId: value));
-      //   break;
-      default:
-    }
   }
 }

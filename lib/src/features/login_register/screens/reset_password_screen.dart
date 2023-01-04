@@ -9,9 +9,6 @@ class ResetPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController oldPassword = TextEditingController();
-    TextEditingController newPassword = TextEditingController();
-    TextEditingController confirmPassword = TextEditingController();
     return Scaffold(
       appBar: AppBar(title: const Text('Đổi mật khẩu')),
       body: Stack(
@@ -30,12 +27,14 @@ class ResetPasswordScreen extends StatelessWidget {
                     return MeTextFieldV2(
                       text: 'Mật khẩu mới',
                       isPassword: true,
-                      textEditingController: newPassword,
+                      textEditingController: context
+                          .read<ForgotPasswordCubit>()
+                          .newPasswordController,
                       announcement: state.newPasswordAnnouncement,
-                      onChanged: () {
+                      onChanged: (value) {
+                        final newPassword = value;
                         context.read<ForgotPasswordCubit>()
-                          ..addNewEvent(ForgotPasswordStateEnum.newPassword,
-                              newPassword.text)
+                          ..setNewPassword(newPassword)
                           ..checkNewPasswordAndConfirmPassword();
                       },
                     );
@@ -49,12 +48,14 @@ class ResetPasswordScreen extends StatelessWidget {
                     return MeTextFieldV2(
                       text: 'Nhập lại mật khẩu mới',
                       isPassword: true,
-                      textEditingController: confirmPassword,
+                      textEditingController: context
+                          .read<ForgotPasswordCubit>()
+                          .confirmPasswordController,
                       announcement: state.confirmPasswordAnnouncement,
-                      onChanged: () {
+                      onChanged: (value) {
+                        final confirmPassword = value;
                         context.read<ForgotPasswordCubit>()
-                          ..addNewEvent(ForgotPasswordStateEnum.confirmPassword,
-                              confirmPassword.text)
+                          ..setConfirmPassword(confirmPassword)
                           ..checkNewPasswordAndConfirmPassword();
                       },
                     );

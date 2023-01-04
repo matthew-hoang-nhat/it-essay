@@ -1,6 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'seller_cubit.dart';
 
-abstract class SellerState extends Equatable {
+class SellerState extends Equatable {
   const SellerState({
     required this.products,
     required this.isEmpty,
@@ -34,6 +35,28 @@ abstract class SellerState extends Equatable {
         productsOfCategory,
         profileSeller
       ];
+
+  SellerState copyWith({
+    List<Product>? products,
+    Map<String, List<Product>>? productsOfCategory,
+    List<Category>? categories,
+    bool? isEmpty,
+    bool? isLoading,
+    bool? isLoadingProducts,
+    int? tabIndex,
+    ProfileSeller? profileSeller,
+  }) {
+    return SellerState(
+      products: products ?? this.products,
+      productsOfCategory: productsOfCategory ?? this.productsOfCategory,
+      categories: categories ?? this.categories,
+      isEmpty: isEmpty ?? this.isEmpty,
+      isLoading: isLoading ?? this.isLoading,
+      isLoadingProducts: isLoadingProducts ?? this.isLoadingProducts,
+      tabIndex: tabIndex ?? this.tabIndex,
+      profileSeller: profileSeller ?? this.profileSeller,
+    );
+  }
 }
 
 class DetailSellerInitial extends SellerState {
@@ -48,27 +71,4 @@ class DetailSellerInitial extends SellerState {
     // required super.controller,
     required super.profileSeller,
   });
-}
-
-class NewSellerState extends SellerState {
-  NewSellerState.fromOldSettingState(
-    SellerState oldState, {
-    List<Product>? products,
-    List<Category>? categories,
-    bool? isEmpty,
-    bool? isLoading,
-    bool? isLoadingProducts,
-    Map<String, List<Product>>? productsOfCategory,
-    int? tabIndex,
-    ProfileSeller? profileSeller,
-  }) : super(
-          categories: categories ?? oldState.categories,
-          productsOfCategory: productsOfCategory ?? oldState.productsOfCategory,
-          products: products ?? oldState.products,
-          isEmpty: isEmpty ?? oldState.isEmpty,
-          isLoading: isLoading ?? oldState.isLoading,
-          isLoadingProducts: isLoadingProducts ?? oldState.isLoadingProducts,
-          tabIndex: tabIndex ?? oldState.tabIndex,
-          profileSeller: profileSeller ?? oldState.profileSeller,
-        );
 }

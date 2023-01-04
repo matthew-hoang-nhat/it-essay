@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/locates/lang_vi.dart';
 import 'package:it_project/src/features/app/fcart_local.dart';
-import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
 import 'package:it_project/src/features/shopping_cart/mixin/action_cart.dart';
 import 'package:it_project/src/local/dao/item_cart_dao.dart';
 import 'package:it_project/src/utils/remote/model/product/product.dart';
@@ -14,21 +13,11 @@ import 'package:it_project/src/utils/repository/product_repository_impl.dart';
 
 part 'product_state.dart';
 
-enum ProductEnum {
-  isTop,
-  product,
-  indexImage,
-  isDescribeShowAll,
-  isLoading,
-}
-
 enum ProductCartActionEnum {
   addItem,
 }
 
-class ProductCubit extends Cubit<ProductState>
-    with ActionCart
-    implements ParentCubit<ProductEnum> {
+class ProductCubit extends Cubit<ProductState> with ActionCart {
   ProductCubit({required Product product})
       : super(ProductInitial(
           isTop: true,
@@ -49,33 +38,39 @@ class ProductCubit extends Cubit<ProductState>
     _settingController();
   }
 
+  setShowAll() {
+    emit(state.copyWith(isDescribeShowAll: true));
+  }
+
   _getDetailProduct() async {
-    addNewEvent(ProductEnum.isLoading, true);
+    emit(state.copyWith(isLoading: true));
+
     final productResponse =
         await productRepository.getDetailProduct(state.product.slug!);
 
     if (productResponse.isSuccess) {
-      addNewEvent(ProductEnum.product, productResponse.data);
+      final product = productResponse.data;
+      emit(state.copyWith(product: product));
     }
-    addNewEvent(ProductEnum.isLoading, false);
+    emit(state.copyWith(isLoading: false));
   }
 
   _settingController() {
     pageController.addListener(() {
       final newIndex = pageController.page?.round() ?? 0;
       if (newIndex == state.indexImage) return;
-      addNewEvent(ProductEnum.indexImage, newIndex);
+      emit(state.copyWith(indexImage: newIndex));
     });
 
     controller.addListener(() {
       double currentScroll = controller.position.pixels;
       if (currentScroll - 20 <= 0) {
         if (state.isTop == false) {
-          addNewEvent(ProductEnum.isTop, true);
+          emit(state.copyWith(isTop: true));
         }
       } else {
         if (state.isTop == true) {
-          addNewEvent(ProductEnum.isTop, false);
+          emit(state.copyWith(isTop: false));
         }
       }
     });
@@ -110,32 +105,5 @@ class ProductCubit extends Cubit<ProductState>
             .itemCarts
             .firstWhere((element) => element.id == itemCart.id),
         type: ActionCartTypeEnum.server);
-  }
-
-  @override
-  void addNewEvent(ProductEnum key, value) {
-    if (isClosed) return;
-    switch (key) {
-      case ProductEnum.isTop:
-        emit(NewProductState.fromOldSettingState(state, isTop: value));
-        break;
-      // case ProductEnum.slug:
-      //   emit(NewProductState.fromOldSettingState(state, slug: value));
-      //   break;
-      case ProductEnum.product:
-        emit(NewProductState.fromOldSettingState(state, product: value));
-        break;
-      case ProductEnum.isDescribeShowAll:
-        emit(NewProductState.fromOldSettingState(state,
-            isDescribeShowAll: value));
-        break;
-      case ProductEnum.indexImage:
-        emit(NewProductState.fromOldSettingState(state, indexImage: value));
-        break;
-      case ProductEnum.isLoading:
-        emit(NewProductState.fromOldSettingState(state, isLoading: value));
-        break;
-      default:
-    }
   }
 }

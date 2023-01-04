@@ -8,145 +8,148 @@ import 'package:it_project/src/configs/locates/me_locale_key.dart';
 import 'package:it_project/src/configs/constants/app_assets.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/constants/app_dimensions.dart';
-import 'package:it_project/src/features/login_register/cubit/otp_cubit.dart';
+import 'package:it_project/src/features/login_register/cubit/register_cubit.dart';
 import 'package:it_project/src/widgets/load_widget.dart';
 
 class OtpCheckScreen extends StatelessWidget {
-  const OtpCheckScreen(
-      {super.key, required this.userId, required this.emailUser});
-  final String userId;
-  final String emailUser;
+  const OtpCheckScreen({
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context) {
-    const otpLength = 6;
-    final textEditingControllers =
-        List.generate(otpLength, (_) => TextEditingController());
-
-    List<Widget> otpTextField = List.generate(
-        otpLength,
-        (index) => otpWidget(
-              context,
-              index,
-              otpLength,
-              textEditingControllers[index],
-            ));
     final meLocalKey = viVN;
-    final bloc = OtpCubit();
-
-    bloc.startTimer();
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                  meLocalKey[MeLocaleKey.otpSendLabel] ??
-                      'error: OTP send label',
-                  style: GoogleFonts.ruda(
-                      fontSize: AppDimensions.dp30,
-                      fontWeight: FontWeight.bold)),
-              Image.asset(
-                AppAssets.imOtp,
-                height: 400,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(meLocalKey[MeLocaleKey.sendOtpToEmail] ??
-                  'error: sendOtpToEmail'),
-              Text(
-                emailUser,
-                style: GoogleFonts.nunito(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 40,
-                child: BlocBuilder<OtpCubit, OtpState>(
-                    bloc: bloc,
-                    builder: (context, state) {
-                      return bloc.state.time == '0'
-                          ? Column(
-                              children: [
-                                Text(meLocalKey[MeLocaleKey
-                                        .notReceiveOtpWantToReSendOtp] ??
-                                    'err: notReceiveOtpWantToReSendOtp'),
-                                InkWell(
-                                  onTap: () async {
-                                    bloc.startTimer();
-                                  },
-                                  child: Text(
-                                    meLocalKey[MeLocaleKey.reSendOTPLabel] ??
-                                        'err: reSendOTPLabel',
-                                    style: GoogleFonts.nunito(
-                                        color: AppColors.blueColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                )
-                              ],
-                            )
-                          : Text(
-                              '${meLocalKey[MeLocaleKey.waitingLabel]} ${bloc.state.time}');
-                    }),
-              ),
-              BlocBuilder<OtpCubit, OtpState>(
-                  bloc: bloc,
-                  builder: (context, state) => Center(
-                          child: Text(
-                        bloc.state.announcement,
-                        style: GoogleFonts.nunito(
-                          color: AppColors.redColor,
-                        ),
-                      ))),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [...otpTextField],
-              ),
-              const SizedBox(height: 20),
-              InkWell(
-                onTap: () async {
-                  await bloc
-                      .sendButtonClick(otpCode(textEditingControllers), userId)
-                      .then((value) {
-                    if (value) {
-                      Navigator.pop(context);
-                    }
-                  });
-                },
-                child: Container(
-                  width: 300,
-                  height: 50,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: AppColors.blueColor,
-                  ),
-                  child: Text(
-                    meLocalKey[MeLocaleKey.sendLabel] ?? 'err: sendLabel',
-                    style: GoogleFonts.nunito(
-                        color: AppColors.whiteColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
+    context.read<RegisterCubit>().startTimer();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.whiteColor,
+        foregroundColor: AppColors.brownColor,
+      ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Text(
+                    meLocalKey[MeLocaleKey.otpSendLabel] ??
+                        'error: OTP send label',
+                    style: GoogleFonts.ruda(
+                        fontSize: AppDimensions.dp30,
+                        fontWeight: FontWeight.bold)),
+                Image.asset(
+                  AppAssets.imOtp,
+                  height: 400,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Text(meLocalKey[MeLocaleKey.sendOtpToEmail] ??
+                    'error: sendOtpToEmail'),
+                BlocBuilder<RegisterCubit, RegisterState>(
+                  builder: (context, state) {
+                    return Text(
+                      state.emailUser ?? '',
+                      style: GoogleFonts.nunito(fontWeight: FontWeight.bold),
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: 40,
+                  child: BlocBuilder<RegisterCubit, RegisterState>(
+                      builder: (context, state) {
+                    return state.time == '0'
+                        ? Column(
+                            children: [
+                              Text(meLocalKey[MeLocaleKey
+                                      .notReceiveOtpWantToReSendOtp] ??
+                                  'err: notReceiveOtpWantToReSendOtp'),
+                              InkWell(
+                                onTap: () async {
+                                  context.read<RegisterCubit>().startTimer();
+                                },
+                                child: Text(
+                                  meLocalKey[MeLocaleKey.reSendOTPLabel] ??
+                                      'err: reSendOTPLabel',
+                                  style: GoogleFonts.nunito(
+                                      color: AppColors.blueColor,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              )
+                            ],
+                          )
+                        : Text(
+                            '${meLocalKey[MeLocaleKey.waitingLabel]} ${state.time}');
+                  }),
+                ),
+                BlocBuilder<RegisterCubit, RegisterState>(
+                    buildWhen: (previous, current) =>
+                        previous.otpAnnouncement != current.otpAnnouncement,
+                    builder: (context, state) => Center(
+                            child: Text(
+                          state.otpAnnouncement ?? '',
+                          style: GoogleFonts.nunito(
+                            color: AppColors.redColor,
+                          ),
+                        ))),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: List.generate(
+                        context.read<RegisterCubit>().otpLength,
+                        (index) => otpWidget(
+                              context,
+                              index,
+                              context.read<RegisterCubit>().otpLength,
+                              context
+                                  .read<RegisterCubit>()
+                                  .textEditingControllers[index],
+                            ))),
+                const SizedBox(height: 20),
+                InkWell(
+                  onTap: () async {
+                    await context
+                        .read<RegisterCubit>()
+                        .sendOtpButtonClick()
+                        .then((value) {
+                      if (value) {
+                        Navigator.pop(context);
+                      }
+                    });
+                  },
+                  child: Container(
+                    width: 300,
+                    height: 50,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: AppColors.blueColor,
+                    ),
+                    child: Text(
+                      meLocalKey[MeLocaleKey.sendLabel] ?? 'err: sendLabel',
+                      style: GoogleFonts.nunito(
+                          color: AppColors.whiteColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
-            ],
+              ],
+            ),
           ),
-        ),
-        BlocBuilder(
-            bloc: bloc,
-            builder: (context, state) {
-              return bloc.state.isLoading == true
-                  ? const LoadingWidget()
-                  : Container();
-            })
-      ],
+          BlocBuilder<RegisterCubit, RegisterState>(builder: (context, state) {
+            if (state.isLoading) {
+              return const LoadingWidget();
+            }
+            return Container();
+          })
+        ],
+      ),
     );
   }
 
@@ -193,13 +196,5 @@ class OtpCheckScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String otpCode(textEditingControllers) {
-    String otpCode = '';
-    for (var item in textEditingControllers) {
-      otpCode += item.text;
-    }
-    return otpCode;
   }
 }

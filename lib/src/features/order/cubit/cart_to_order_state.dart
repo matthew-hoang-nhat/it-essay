@@ -1,6 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'cart_to_order_cubit.dart';
 
-abstract class CartToOrderState extends Equatable {
+class CartToOrderState extends Equatable {
   const CartToOrderState({
     required this.itemCarts,
     required this.isLoading,
@@ -30,6 +31,26 @@ abstract class CartToOrderState extends Equatable {
         shippingPrice,
         subTotalPrice,
       ];
+
+  CartToOrderState copyWith({
+    List<ItemCart>? itemCarts,
+    bool? isLoading,
+    String? paymentMethod,
+    String? totalPrice,
+    String? shippingPrice,
+    String? subTotalPrice,
+    String? addressId,
+  }) {
+    return CartToOrderState(
+      itemCarts: itemCarts ?? this.itemCarts,
+      isLoading: isLoading ?? this.isLoading,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      totalPrice: totalPrice ?? this.totalPrice,
+      shippingPrice: shippingPrice ?? this.shippingPrice,
+      subTotalPrice: subTotalPrice ?? this.subTotalPrice,
+      addressId: addressId ?? this.addressId,
+    );
+  }
 }
 
 class CartToOrderInitial extends CartToOrderState {
@@ -42,25 +63,4 @@ class CartToOrderInitial extends CartToOrderState {
     required super.totalPrice,
     required super.paymentMethod,
   });
-}
-
-class NewCartToOrderState extends CartToOrderState {
-  NewCartToOrderState.fromOldSettingState(
-    CartToOrderState oldState, {
-    List<ItemCart>? itemCarts,
-    bool? isLoading,
-    String? addressId,
-    String? shippingPrice,
-    String? subTotalPrice,
-    String? totalPrice,
-    String? paymentMethod,
-  }) : super(
-          itemCarts: itemCarts ?? oldState.itemCarts,
-          isLoading: isLoading ?? oldState.isLoading,
-          shippingPrice: shippingPrice ?? oldState.shippingPrice,
-          subTotalPrice: subTotalPrice ?? oldState.subTotalPrice,
-          addressId: addressId ?? oldState.addressId,
-          totalPrice: totalPrice ?? oldState.totalPrice,
-          paymentMethod: paymentMethod ?? oldState.paymentMethod,
-        );
 }

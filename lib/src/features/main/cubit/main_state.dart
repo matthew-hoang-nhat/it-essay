@@ -1,6 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'main_cubit.dart';
 
-abstract class MainState extends Equatable {
+class MainState extends Equatable {
   const MainState({
     required this.tab,
     required this.barItems,
@@ -17,6 +18,18 @@ abstract class MainState extends Equatable {
         tabs,
         barItems,
       ];
+
+  MainState copyWith({
+    int? tab,
+    List<BottomNavigationBarItem>? barItems,
+    List? tabs,
+  }) {
+    return MainState(
+      tab: tab ?? this.tab,
+      barItems: barItems ?? this.barItems,
+      tabs: tabs ?? this.tabs,
+    );
+  }
 }
 
 class MainInitial extends MainState {
@@ -25,17 +38,4 @@ class MainInitial extends MainState {
     required super.barItems,
     required super.tabs,
   });
-}
-
-class NewMainState extends MainState {
-  NewMainState.fromOldSettingState(
-    MainState oldState, {
-    int? tab,
-    List<BottomNavigationBarItem>? barItems,
-    List? tabs,
-  }) : super(
-          tab: tab ?? oldState.tab,
-          barItems: barItems ?? oldState.barItems,
-          tabs: tabs ?? oldState.tabs,
-        );
 }
