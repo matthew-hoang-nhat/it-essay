@@ -11,7 +11,7 @@ abstract class CategoryService {
 
   @GET("/categories")
   Future<SuccessResponse> getCategoriesPage({
-    @Query("limit") required int limit,
-    @Query("currentPage") required int currentPage,
+    @Query("limit") int? limit,
+    @Query("currentPage") int? currentPage,
   });
 }

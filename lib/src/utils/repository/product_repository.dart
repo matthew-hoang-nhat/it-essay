@@ -8,7 +8,12 @@ abstract class ProductRepository {
   ProductRepository({required this.productService});
 
   Future<FResult<List<Product>>> getProducts(
-      {required int numberPage, String? name});
+      {required int numberPage,
+      String? name,
+      String? sellerId,
+      String? categoryId,
+      String? summary,
+      double? minPrice});
 
   Future<FResult<List<Product>>> getFlashSaleProducts(
       {required int numberPage, String? name});

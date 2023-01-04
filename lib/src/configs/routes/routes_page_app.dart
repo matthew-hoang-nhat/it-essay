@@ -82,11 +82,15 @@ class AppPages {
               ])
         ]),
     GoRoute(
-      path: Paths.detailSearchScreen,
-      builder: (context, state) => DetailSearchScreen(
-        textSearch: state.extra as String,
-      ),
-    ),
+        path: Paths.preSearchScreen,
+        builder: (context, state) => const SearchScreen(),
+        routes: [
+          GoRoute(
+              path: Paths.sDetailSearchScreen,
+              builder: (context, state) => DetailSearchScreen(
+                    extra: state.extra as Map<DetailSearchExtraEnum, dynamic>?,
+                  )),
+        ]),
     GoRoute(
       path: Paths.addressScreen,
       builder: (context, state) =>
@@ -113,10 +117,6 @@ class AppPages {
       ),
     ),
     GoRoute(
-      path: Paths.searchScreen,
-      builder: (context, state) => const SearchScreen(),
-    ),
-    GoRoute(
       path: Paths.productScreen,
       builder: (context, state) => ProductScreen(
         product: state.extra as Product,
@@ -137,7 +137,15 @@ class AppPages {
           GoRoute(
             path: Paths.sChangePasswordScreen,
             builder: (context, state) => const ChangePasswordScreen(),
-          )
+          ),
+          // GoRoute(
+          //   path: Paths.sPrivacyScreen,
+          //   builder: (context, state) => const PrivacyScreen(),
+          // ),
+          // GoRoute(
+          //   path: Paths.sAboutMeScreen,
+          //   builder: (context, state) => const AboutMeScreen(),
+          // ),
         ]),
     GoRoute(
         path: Paths.detailProfileScreen,
@@ -146,11 +154,25 @@ class AppPages {
         path: Paths.detailCategoryScreen,
         builder: (context, state) => DetailCategoryScreen(
               category: state.extra as Category,
-            )),
+            ),
+        routes: [
+          GoRoute(
+              path: Paths.sDetailSearchScreen,
+              builder: (context, state) => DetailSearchScreen(
+                    extra: state.extra as Map<DetailSearchExtraEnum, dynamic>?,
+                  )),
+        ]),
     GoRoute(
         path: Paths.sellerScreen,
         builder: (context, state) =>
-            SellerScreen(profileSeller: state.extra as ProfileSeller)),
+            SellerScreen(profileSeller: state.extra as ProfileSeller),
+        routes: [
+          GoRoute(
+              path: Paths.sDetailSearchScreen,
+              builder: (context, state) => DetailSearchScreen(
+                    extra: state.extra as Map<DetailSearchExtraEnum, dynamic>?,
+                  )),
+        ]),
     GoRoute(
         path: Paths.sellerProductsOfCategoryScreen,
         builder: (context, state) => SellerProductsInCategoryScreen(

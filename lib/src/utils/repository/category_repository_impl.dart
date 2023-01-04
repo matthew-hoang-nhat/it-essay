@@ -13,11 +13,9 @@ class CategoryRepositoryImpl extends CategoryRepository {
   final limitLProduct = 10;
 
   @override
-  Future<FResult<List<Category>>> getCategories(
-      {required int numberPage}) async {
+  Future<FResult<List<Category>>> getCategories() async {
     try {
-      final dataResponse = await categoryService.getCategoriesPage(
-          currentPage: numberPage, limit: limitLProduct);
+      final dataResponse = await categoryService.getCategoriesPage();
       final List<dynamic> dataItems = dataResponse.data;
       List<Category> categories = List.generate(dataItems.length,
           (index) => Category.fromJson(dataItems.elementAt(index)));

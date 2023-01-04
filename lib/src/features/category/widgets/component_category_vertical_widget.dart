@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
+import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/category/cubit/category_cubit.dart';
 import 'package:it_project/src/widgets/category_widget.dart';
 
@@ -27,25 +29,30 @@ class ComponentCategoryVerticalWidget extends StatelessWidget {
                 spacing: 20,
                 runSpacing: 10,
                 children: categories
-                    .map((e) => Container(
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 5),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 7,
-                                  offset: const Offset(
-                                      0, 3), // changes position of shadow
-                                ),
-                              ],
-                              color: AppColors.whiteColor),
-                          child: CategoryWidget(
-                            category: e,
-                            width: width,
-                            height: height,
+                    .map((e) => InkWell(
+                          onTap: () {
+                            context.push(Paths.detailCategoryScreen, extra: e);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 1,
+                                    blurRadius: 7,
+                                    offset: const Offset(
+                                        0, 3), // changes position of shadow
+                                  ),
+                                ],
+                                color: AppColors.whiteColor),
+                            child: CategoryWidget(
+                              category: e,
+                              width: width,
+                              height: height,
+                            ),
                           ),
                         ))
                     .toList(),

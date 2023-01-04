@@ -17,12 +17,22 @@ class _ProductService implements ProductService {
 
   @override
   Future<SuccessResponse> getProductsPage(
-      {name, required limit, required currentPage}) async {
+      {name,
+      required limit,
+      required currentPage,
+      categoryId,
+      summary,
+      minPrice,
+      sellerId}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'name': name,
       r'limit': limit,
-      r'currentPage': currentPage
+      r'currentPage': currentPage,
+      r'categoryId': categoryId,
+      r'summary': summary,
+      r'price[gt]': minPrice,
+      r'sellerId': sellerId
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};

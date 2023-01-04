@@ -6,7 +6,5 @@ abstract class CategoryRepository {
   final CategoryService categoryService;
   CategoryRepository({required this.categoryService});
 
-  Future<FResult<List<Category>>> getCategories({required int numberPage});
-
-  
+  Future<FResult<List<Category>>> getCategories();
 }
