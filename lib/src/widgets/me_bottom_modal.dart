@@ -4,13 +4,17 @@ import 'package:it_project/src/configs/constants/app_colors.dart';
 
 class MeBottomModal {
   static void showMeModalBottomSheet(context,
-      {required String title, required Widget widget, Widget? bottom}) {
+      {required String title,
+      required Widget widget,
+      // Widget? bottom,
+      double? sizeHeight}) {
+    final heightFactor = sizeHeight ?? 0.7;
     var scrollButton = Container(
       height: 7,
       width: 100,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
-          color: AppColors.whiteColor),
+          color: AppColors.whiteGreyColor),
     );
     showModalBottomSheet(
         isScrollControlled: true,
@@ -24,7 +28,7 @@ class MeBottomModal {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: FractionallySizedBox(
-              heightFactor: 0.7,
+              heightFactor: heightFactor,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -55,7 +59,7 @@ class MeBottomModal {
                           ],
                         )),
                   ),
-                  if (bottom != null) bottom,
+                  // if (bottom != null) bottom,
                 ],
               ),
             ),

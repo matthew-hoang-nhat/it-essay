@@ -7,6 +7,7 @@ import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/features/app/fuser_local.dart';
 import 'package:it_project/src/features/main/home/home_screen.dart';
+import 'package:it_project/src/features/main/notification/screens/notification_tab_screen.dart';
 import 'package:it_project/src/features/profile/screens/profile_screen.dart';
 import 'package:it_project/src/widgets/login_popup_widget.dart';
 
@@ -35,10 +36,18 @@ class MainCubit extends Cubit<MainState> {
   reloadMainScreen() {
     final newBarItems = [
       const BottomNavigationBarItem(
-          icon: Icon(MaterialCommunityIcons.home, size: 20.0), label: 'Home'),
+        icon: Icon(MaterialCommunityIcons.home_outline, size: 20.0),
+        activeIcon: Icon(MaterialCommunityIcons.home, size: 20.0),
+        label: 'Home',
+      ),
       // const BottomNavigationBarItem(
-      //     icon: Icon(MaterialCommunityIcons.heart, size: 20.0),
+      //     icon: Icon(MaterialCommunityIcons.heart_outline, size: 20.0),
+      //     activeIcon: Icon(MaterialCommunityIcons.heart, size: 20.0),
       //     label: 'Wishlist'),
+      const BottomNavigationBarItem(
+          icon: Icon(MaterialCommunityIcons.bell_ring_outline, size: 20.0),
+          activeIcon: Icon(MaterialCommunityIcons.bell_ring, size: 20.0),
+          label: 'Notification'),
       BottomNavigationBarItem(
           icon: isLogin
               ? ClipRRect(
@@ -69,9 +78,10 @@ class MainCubit extends Cubit<MainState> {
 
     final newTabs = [
       const HomeScreen(),
-      // isLogin == true ? const ProfileScreen() : const LoginPopup(),
+      isLogin == true ? const NotificationTabScreen() : const LoginPopup(),
       isLogin == true ? const ProfileScreen() : const LoginPopup()
     ];
+
     emit(state.copyWith(
       tabs: newTabs,
       tab: 0,

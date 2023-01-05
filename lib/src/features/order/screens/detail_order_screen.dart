@@ -22,7 +22,7 @@ class DetailOrderScreen extends StatelessWidget {
     return BlocProvider(
         create: (context) => DetailOrderCubit(orderId: orderId)..initCubit(),
         child: Scaffold(
-          appBar: AppBar(title: const Text('Thông tin đơn hàng')),
+          // appBar: AppBar(title: const Text('Thông tin đơn hàng')),
           backgroundColor: AppColors.whiteGreyColor,
           body: Stack(
             children: [
@@ -53,7 +53,7 @@ class DetailOrderScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                            padding: const EdgeInsets.only(top: 20, left: 20),
+                            padding: const EdgeInsets.only(top: 20),
                             width: double.infinity,
                             color: AppColors.whiteColor,
                             child: Row(
@@ -71,8 +71,7 @@ class DetailOrderScreen extends StatelessWidget {
                             Container(
                               width: double.infinity,
                               color: AppColors.whiteColor,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -195,7 +194,7 @@ class DetailOrderScreen extends StatelessWidget {
       String totalPrice) {
     final orderResponse = state.orderResponse!;
     return Container(
-      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+      padding: const EdgeInsets.only(bottom: 20),
       color: AppColors.whiteColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
