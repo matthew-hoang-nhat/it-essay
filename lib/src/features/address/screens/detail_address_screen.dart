@@ -244,7 +244,9 @@ class DetailAddressScreen extends StatelessWidget {
                       .read<DetailAddressCubit>()
                       .callAPIUpdateAddress()
                       .then((value) async {
-                    context.read<AddressCubit>().getAddresses();
+                    context
+                        .read<AddressCubit>()
+                        .getAddressesAndSetAddressAppCubit();
                     context.pop();
                   });
                 }

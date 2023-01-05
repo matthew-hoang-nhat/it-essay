@@ -66,7 +66,7 @@ class AddressScreen extends StatelessWidget {
                 BlocBuilder<AddressCubit, AddressState>(
                   bloc: context.read<AddressCubit>(),
                   buildWhen: (previous, current) =>
-                      previous.addressId != current.addressId ||
+                      // previous.addressId != current.addressId ||
                       previous.addresses != current.addresses,
                   builder: (context, state) {
                     return Padding(
@@ -94,7 +94,7 @@ class AddressScreen extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Icon(
+                            const Icon(
                               MaterialCommunityIcons.map_legend,
                               size: 100,
                               color: AppColors.primaryColor,
@@ -183,12 +183,12 @@ class _InlineAddress extends StatelessWidget {
                                         .setAddressId(value);
                                     context
                                         .read<AppCubit>()
-                                        .addAddress(address);
+                                        .changeSelectAddress(address);
                                   });
                             },
                           )
                         : Container(),
-                    Icon(
+                    const Icon(
                       MaterialCommunityIcons.google_maps,
                       color: AppColors.primaryColor,
                     ),
@@ -205,7 +205,7 @@ class _InlineAddress extends StatelessWidget {
                     if (address.isDefault)
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: AppColors.primaryColor,
                         ),
                         child: Text(
