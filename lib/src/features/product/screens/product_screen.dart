@@ -152,18 +152,14 @@ class ProductScreen extends StatelessWidget {
 
   Widget topProductInfo() {
     return BlocBuilder<ProductCubit, ProductState>(
-        buildWhen: (previous, current) => false,
+        buildWhen: (previous, current) => previous.product != current.product,
         builder: (context, state) {
           if (state.product == null) return Container();
           final product = state.product!;
 
           if (product.productImages == null) return Container();
-          // final firstImage = (product.productImages as List)
-          //     .map((e) => ProductPicture.fromJson(e))
-          //     .first
-          //     .fileLink;
           return Container(
-            constraints: const BoxConstraints(minHeight: 140),
+            constraints: const BoxConstraints(minHeight: 120),
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,8 +168,6 @@ class ProductScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Text(state.product.category!.name),
-                    // Icon(MaterialCommunityIcons.heart_outline),
                     if (isFuture)
                       const Icon(MaterialCommunityIcons.heart_outline),
                   ],

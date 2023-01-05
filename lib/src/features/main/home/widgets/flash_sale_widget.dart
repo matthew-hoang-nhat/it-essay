@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:it_project/src/configs/constants/app_assets.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
-import 'package:it_project/src/configs/constants/app_dimensions.dart';
+import 'package:it_project/src/configs/constants/app_constants.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/utils/remote/model/product/product.dart';
 import 'package:it_project/src/utils/remote/model/product/product_picture.dart';
@@ -35,35 +35,23 @@ class FlashSaleWidget extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(5),
-              child: Container(
-                  width: size,
-                  height: size,
-                  // constraints:
-                  //     const BoxConstraints(minHeight: 200, minWidth: 200),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(AppDimensions.dp5),
-                    color: AppColors.whiteBrownColor,
-                  ),
-                  alignment: Alignment.topCenter,
-                  child: CachedNetworkImage(
-                    imageUrl: firstImage,
-                    width: size,
-                    height: size,
-                    fit: BoxFit.cover,
-                    errorWidget: ((context, url, error) => Image.asset(
-                          AppAssets.fkImHarryPotter3,
-                        )),
-                  )),
+              child: CachedNetworkImage(
+                imageUrl: firstImage,
+                width: AppConstants.widthImage,
+                height: AppConstants.heightImage,
+                fit: BoxFit.cover,
+                errorWidget: ((context, url, error) =>
+                    Image.asset(AppAssets.fkImHarryPotter3)),
+              ),
             ),
             const SizedBox(height: 5),
             Text(
-              formatCurrency.format(
-                  product.price! * (100 - product.discountPercent) / 100),
-              maxLines: 2,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.nunito(
-                  color: AppColors.redColor, fontWeight: FontWeight.bold),
-            ),
+                formatCurrency.format(
+                    product.price! * (100 - product.discountPercent) / 100),
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.nunito(
+                    color: AppColors.redColor, fontWeight: FontWeight.bold)),
             Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
