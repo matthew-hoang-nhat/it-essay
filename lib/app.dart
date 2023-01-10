@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
@@ -11,6 +12,7 @@ import 'package:it_project/src/features/login_register/cubit/forgot_password_cub
 import 'package:it_project/src/features/login_register/cubit/register_cubit.dart';
 import 'package:it_project/src/features/main/cubit/main_cubit.dart';
 import 'package:it_project/src/features/main/home/cubit/home_cubit.dart';
+import 'package:it_project/src/features/main/notification/cubit/notification_cubit.dart';
 import 'package:it_project/src/features/order/cubit/cart_to_order_cubit.dart';
 import 'package:it_project/src/features/order/cubit/history_order_cubit.dart';
 
@@ -33,9 +35,12 @@ class App extends StatelessWidget {
           BlocProvider(create: (context) => CartToOrderCubit()),
           BlocProvider(create: (context) => HistoryOrderCubit(), lazy: true),
           BlocProvider(create: (context) => ForgotPasswordCubit(), lazy: true),
-          BlocProvider(create: (context) => RegisterCubit(), lazy: true)
+          BlocProvider(create: (context) => RegisterCubit(), lazy: true),
+          BlocProvider(create: (context) => NotificationCubit()..initCubit())
         ],
         child: MaterialApp.router(
+          // here
+          builder: FlutterSmartDialog.init(),
           debugShowCheckedModeBanner: false,
           theme: lightMode(),
           routerConfig: router,

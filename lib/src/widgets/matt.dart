@@ -8,7 +8,13 @@ class Matt {
       MeImage(image: image, context: context, imageProvider: imageProvider);
 
   static void showBottom(context,
-          {required String title, required Widget widget, Widget? bottom}) =>
+          {required String title,
+          required Widget widget,
+          Widget? bottom,
+          double? heightFactor}) =>
       MeBottomModal.showMeModalBottomSheet(context,
-          title: title, widget: widget, bottom: bottom);
+          title: title,
+          widget: widget,
+          // bottom: bottom,
+          sizeHeight: heightFactor);
 }

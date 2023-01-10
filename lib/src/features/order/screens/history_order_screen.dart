@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
-import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/order/cubit/history_order_cubit.dart';
 import 'package:it_project/src/utils/remote/model/order/get/item_order.dart';
 import 'package:it_project/src/utils/remote/model/order/get/order_response.dart';
 import 'package:it_project/src/widgets/load_widget.dart';
+import 'package:it_project/src/widgets/matt.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../widgets/inline_history_order_response_widget.dart';
 import '../widgets/inline_item_order_widget.dart';
+import 'detail_order_screen.dart';
 
 class HistoryOrderScreen extends StatelessWidget {
   const HistoryOrderScreen({super.key});
@@ -80,8 +80,13 @@ class HistoryOrderScreen extends StatelessWidget {
                                                   ? e.id
                                                   : (e as ItemOrder).orderId!;
 
-                                              context.push(
-                                                  '${Paths.mainScreen}/${Paths.subHistoryOrderScreen}/${Paths.sDetailOrderScreen}/$orderId');
+                                              Matt.showBottom(context,
+                                                  heightFactor: 0.9,
+                                                  title: 'Chi tiết đơn hàng',
+                                                  widget: DetailOrderScreen(
+                                                      orderId: orderId));
+                                              // context.push(
+                                              //     '${Paths.mainScreen}/${Paths.subHistoryOrderScreen}/${Paths.sDetailOrderScreen}/$orderId');
                                             },
                                             child: Padding(
                                               padding: const EdgeInsets.only(

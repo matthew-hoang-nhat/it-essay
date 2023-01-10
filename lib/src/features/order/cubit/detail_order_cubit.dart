@@ -37,4 +37,10 @@ class DetailOrderCubit extends Cubit<DetailOrderState> {
         await orderRepository.cancelAnItemOrder(itemOrderId: itemOrderId);
     _getDetailDetailOrder();
   }
+
+  @override
+  void emit(DetailOrderState state) {
+    if (isClosed) return;
+    super.emit(state);
+  }
 }
