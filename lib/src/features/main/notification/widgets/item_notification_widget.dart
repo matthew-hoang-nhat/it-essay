@@ -23,9 +23,9 @@ class _ItemNotificationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final isRead = notification.status;
     return InkWell(
-      // onTap: () => context
-      //     .read<NotificationCubit>()
-      //     .itemNotificationOnCLick(context, notification: notification),
+      onTap: () => context
+          .read<NotificationCubit>()
+          .itemNotificationOnCLick(context, notification: notification),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         color: isRead ? null : AppColors.primaryColor.withOpacity(0.1),

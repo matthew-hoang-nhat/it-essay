@@ -152,7 +152,7 @@ class LoginScreen extends StatelessWidget {
                                 if (value == true) {
                                   context
                                       .read<AppCubit>()
-                                      .fetchUserAndLoadItemCartsServer();
+                                      .afterLoginInAppCubit();
 
                                   context.go(Paths.mainScreen);
                                 }
