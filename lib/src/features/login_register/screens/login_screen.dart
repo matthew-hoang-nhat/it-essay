@@ -14,7 +14,6 @@ import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/login_register/cubit/login_cubit.dart';
 
 import 'package:it_project/src/features/login_register/screens/register_screen.dart';
-import 'package:it_project/src/features/login_register/widgets/google_button_widget.dart';
 import 'package:it_project/src/features/main/cubit/main_cubit.dart';
 import 'package:it_project/src/widgets/load_widget.dart';
 import 'package:it_project/src/widgets/me_text_field.dart';
@@ -203,7 +202,7 @@ class LoginScreen extends StatelessWidget {
                                 ],
                               ),
                               const SizedBox(height: 10),
-                              const Center(child: GoogleButtonWidget()),
+                              // const Center(child: GoogleButtonWidget()),
                               const SizedBox(
                                 height: 10,
                               ),

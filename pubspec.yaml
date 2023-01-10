@@ -33,6 +33,8 @@ dependencies:
   device_preview: ^1.1.0
   dio: ^4.0.6
   equatable: ^2.0.5
+  firebase_analytics: ^10.1.0
+  firebase_core: ^2.4.1
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.1
