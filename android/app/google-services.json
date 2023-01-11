@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "107967011607-k2kb30of8p4covea3j06rer2bol55dln.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bitini.android",
+            "certificate_hash": "d9d2cde09a6a9e927e717e56f74ec9729cca666c"
+          }
+        },
+        {
           "client_id": "107967011607-gduesgbq27gui7lj1r99sh4iltc85cjv.apps.googleusercontent.com",
           "client_type": 3
         }

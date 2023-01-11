@@ -18,9 +18,9 @@ ItemOrder _$ItemOrderFromJson(Map<String, dynamic> json) => ItemOrder(
       quantity: json['quantity'] as int?,
       shippingCost: json['shippingCost'],
       totalPaid: json['totalPaid'],
-      seller: json['seller'] != null
-          ? ProfileSeller.fromJson(json['seller'] as Map<String, dynamic>)
-          : null,
+      seller: json['seller'] == null
+          ? null
+          : ProfileSeller.fromJson(json['seller'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ItemOrderToJson(ItemOrder instance) => <String, dynamic>{
