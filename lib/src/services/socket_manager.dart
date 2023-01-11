@@ -11,7 +11,6 @@ class SocketManager {
 
   void connect() async {
     if (_socket?.connected == true) disconnect();
-    Logger().i('isInConnect()');
     final token = getIt<FUserLocal>().acceptToken;
     if (token == null) return;
 
@@ -20,15 +19,11 @@ class SocketManager {
         OptionBuilder().setTransports(['websocket']).setExtraHeaders(
             {'token': 'Bearer $token'}).build());
 
-    Logger().i(_socket?.id);
     if (_socket == null) return;
     _socket?.onConnect((_) {
-      Logger().i('Connected');
+      Logger().i('Connected Socket');
     });
 
-    _socket?.on('test', (data) async {
-      Logger().i(data);
-    });
     _socket?.on('send-noti-confirm-order', (data) async {
       Logger().i(data);
       final orderNotification = OrderNotification.fromJson(data);

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "107967011607",
+    "project_id": "bitini---book-ecommerce",
+    "storage_bucket": "bitini---book-ecommerce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:107967011607:android:d295beb45c56244fe17552",
+        "android_client_info": {
+          "package_name": "com.bitini.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "107967011607-k2kb30of8p4covea3j06rer2bol55dln.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bitini.android",
+            "certificate_hash": "d9d2cde09a6a9e927e717e56f74ec9729cca666c"
+          }
+        },
+        {
+          "client_id": "107967011607-gduesgbq27gui7lj1r99sh4iltc85cjv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEybZBY4SYoNWh_fuB4x-2ZkMN8efiU-8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "107967011607-gduesgbq27gui7lj1r99sh4iltc85cjv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

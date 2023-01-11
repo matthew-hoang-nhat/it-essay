@@ -1,26 +1,9 @@
-// part of 'auth_repository_impl.dart';
+part of '../../features/main/notification/screens/notification_tab_screen.dart';
 
-// // extension StringX on String {
-// //   String get toPrice {
-// //     final oCcy = NumberFormat("#,##", "en_US");
-// //     return oCcy.format(this);
-// //   }
-// // }
-
-// extension DioErrorX on DioError {
-//   String? errorsToString() {
-//     ErrorResponse errResponse = ErrorResponse.fromJson(response?.data);
-
-//     if (errResponse.error['message'] is String) {
-//       return errResponse.error['message'];
-//     }
-//     if (errResponse.error['message'] is List<String>) {
-//       String err = '';
-//       for (var item in errResponse.error['message']) {
-//         err += item;
-//       }
-//       return err;
-//     }
-//     return null;
-//   }
-// }
+extension DateTimeX on String {
+  String get toDateTimeStr {
+    final dateTime = DateTime.parse(this);
+    String date = DateFormat('dd-MM-yyyy').format(dateTime);
+    return date;
+  }
+}

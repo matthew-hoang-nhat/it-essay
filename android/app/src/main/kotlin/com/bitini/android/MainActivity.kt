@@ -1,4 +1,4 @@
-package com.example.it_project
+package com.bitini.android
 
 import io.flutter.embedding.android.FlutterActivity
 
