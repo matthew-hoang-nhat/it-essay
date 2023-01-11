@@ -22,6 +22,9 @@ abstract class AuthRepository {
     required String password,
   });
 
+  Future<FResult<LoginResponse>> googleLogin(
+      {required String idToken, required String accessToken});
+
   Future<FResult<String>> emailResetPassword({required String email});
   Future<FResult<Map<String, dynamic>>> otpResetPassword(
       {required String otp, required String userId});

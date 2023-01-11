@@ -1,14 +1,21 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/locates/lang_vi.dart';
 import 'package:it_project/src/configs/locates/me_locale_key.dart';
+import 'package:it_project/src/configs/routes/routes_name_app.dart';
+import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/app/fuser_local.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
+import 'package:it_project/src/features/main/cubit/main_cubit.dart';
 import 'package:it_project/src/local/dao/fuser_local_dao.dart';
 
 import 'package:it_project/src/utils/helpers/validate.dart';
+import 'package:it_project/src/utils/remote/model/login/login_response.dart';
+import 'package:it_project/src/utils/remote/services/fresult.dart';
 import 'package:it_project/src/utils/repository/auth_repository.dart';
 import 'package:it_project/src/utils/repository/auth_repository_impl.dart';
 
@@ -26,10 +33,6 @@ class LoginCubit extends Cubit<LoginState> implements ParentCubit<LoginEnum> {
           passwordController: TextEditingController(),
         ));
   final AuthRepository authRepository = getIt<AuthRepositoryImpl>();
-  // final AppShared _appShared = getIt<AppShared>();
-
-  // String? getTokenValue() => _appShared.getTokenValue();
-  // void setTokenValue(String value) => _appShared.setTokenValue(value);
 
   final meLocalKey = viVN;
 
@@ -50,12 +53,12 @@ class LoginCubit extends Cubit<LoginState> implements ParentCubit<LoginEnum> {
     return true;
   }
 
-  Future<bool> loginCallApi(emailText, passwordText) async {
+  Future<FResult<String>> manualLogin(emailText, passwordText) async {
     const isClickedLogin = true;
     addNewEvent(LoginEnum.isClickedLogin, isClickedLogin);
 
     if (isEmptyFill(emailText, passwordText) == true) {
-      return false;
+      return FResult.error('Thất bại');
     }
     if (isValidate(emailText, passwordText) == false) {
       final announcementLogin =
@@ -63,7 +66,7 @@ class LoginCubit extends Cubit<LoginState> implements ParentCubit<LoginEnum> {
               'err: emailOrPasswordNotValid';
 
       addNewEvent(LoginEnum.announcementLogin, announcementLogin);
-      return false;
+      return FResult.error('Thất bại');
     }
 
     bool isLoading = true;
@@ -85,24 +88,64 @@ class LoginCubit extends Cubit<LoginState> implements ParentCubit<LoginEnum> {
               'err: emailOrPasswordNotMatch';
 
       addNewEvent(LoginEnum.announcementLogin, announcementLogin);
-      return false;
+      return FResult.error('Thất bại');
     }
 
-    final user = responseManualLogin.data;
-    if (user != null) {
-      getIt<FUserLocal>().fUser = FUserLocalDao(
-          phoneNumber: '',
-          firstName: user.data['firstName'],
-          lastName: user.data['lastName'],
-          avatar: user.data['profilePicture'],
-          userId: user.data['_id']!,
-          refreshToken: user.refreshToken,
-          accessToken: user.accessToken,
-          gender: 'male');
+    final loginResponse = responseManualLogin.data;
+    if (loginResponse != null) {
+      _loginSuccessHandle(loginResponse);
     } else {
       addNewEvent(LoginEnum.announcementLogin, 'Something error');
     }
-    return true;
+    return FResult.success('Thành công');
+  }
+
+  Future<FResult<String>> googleLoginClick() async {
+    const serverClientId =
+        '177322333542-5s78k6m5htmshg70qiprq450413qafts.apps.googleusercontent.com';
+    final GoogleSignInAccount? googleUser =
+        await GoogleSignIn(serverClientId: serverClientId, scopes: [
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'https://www.googleapis.com/auth/userinfo.email'
+    ]).signIn();
+
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    final idToken = googleAuth?.idToken ?? '';
+    final accessToken = googleAuth?.accessToken ?? '';
+    final result = await authRepository.googleLogin(
+        idToken: idToken, accessToken: accessToken);
+
+    if (result.isSuccess) {
+      final loginResponse = result.data!;
+      _loginSuccessHandle(loginResponse);
+      return FResult.success('Đăng nhập thành công');
+    }
+    if (result.isError) {
+      _loginFailHandle();
+      return FResult.error('Đăng nhập thất bại');
+    }
+
+    return FResult.exception('Đăng nhập Exception');
+  }
+
+  _loginFailHandle() {}
+  _loginSuccessHandle(LoginResponse loginResponse) {
+    getIt<FUserLocal>().fUser = FUserLocalDao(
+        phoneNumber: '',
+        firstName: loginResponse.data['firstName'],
+        lastName: loginResponse.data['lastName'],
+        avatar: loginResponse.data['profilePicture'],
+        userId: loginResponse.data['_id']!,
+        refreshToken: loginResponse.refreshToken,
+        accessToken: loginResponse.accessToken,
+        gender: 'male');
+
+    final context = navigatorKey.currentContext!;
+    BlocProvider.of<AppCubit>(context).afterLoginInAppCubit();
+    GoRouter.of(context).go(Paths.mainScreen);
+    BlocProvider.of<MainCubit>(context).reloadMainScreen();
   }
 
   @override
