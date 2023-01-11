@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:hive/hive.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/constants/app_constants.dart';
@@ -44,6 +45,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 Future<void> initializeApp() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await setupDependenciesGraph();
 }
