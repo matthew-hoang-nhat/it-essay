@@ -10,13 +10,13 @@ import 'package:it_project/src/configs/constants/app_dimensions.dart';
 import 'package:it_project/src/configs/locates/lang_vi.dart';
 import 'package:it_project/src/configs/locates/me_locale_key.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
-import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/login_register/cubit/login_cubit.dart';
 
 import 'package:it_project/src/features/login_register/screens/register_screen.dart';
-import 'package:it_project/src/features/main/cubit/main_cubit.dart';
 import 'package:it_project/src/widgets/load_widget.dart';
 import 'package:it_project/src/widgets/me_text_field.dart';
+
+import '../widgets/google_button_widget.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({
@@ -141,22 +141,10 @@ class LoginScreen extends StatelessWidget {
                             splashColor: AppColors.whiteColor,
                             highlightColor: AppColors.whiteColor,
                             onTap: () {
-                              context
-                                  .read<LoginCubit>()
-                                  .loginCallApi(
+                              context.read<LoginCubit>().manualLogin(
                                     state.emailController.text,
                                     state.passwordController.text,
-                                  )
-                                  .then((value) {
-                                if (value == true) {
-                                  context
-                                      .read<AppCubit>()
-                                      .afterLoginInAppCubit();
-
-                                  context.go(Paths.mainScreen);
-                                }
-                                context.read<MainCubit>().reloadMainScreen();
-                              });
+                                  );
                             },
                             child: Container(
                                 alignment: Alignment.center,
@@ -202,7 +190,7 @@ class LoginScreen extends StatelessWidget {
                                 ],
                               ),
                               const SizedBox(height: 10),
-                              // const Center(child: GoogleButtonWidget()),
+                              const Center(child: GoogleButtonWidget()),
                               const SizedBox(
                                 height: 10,
                               ),
