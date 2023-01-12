@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dio/native_imp.dart';
 import 'package:it_project/main.dart';
+import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/app/fuser_local.dart';
 import 'package:it_project/src/utils/repository/auth_repository_impl.dart';
 
@@ -21,7 +22,6 @@ class DioHttpClient extends DioForNative {
   Future<void> _errorInterceptor(
       DioError err, ErrorInterceptorHandler handler) async {
     final authRepo = getIt<AuthRepositoryImpl>();
-
     if (err.response?.statusCode == 409) {
       final currentRefreshToken = fUserLocal.refreshToken;
       fUserLocal.fUser =
@@ -32,6 +32,10 @@ class DioHttpClient extends DioForNative {
         final newRefreshToken = result.data?['refreshToken'];
         fUserLocal.fUser = fUserLocal.fUser?.copyWith(
             accessToken: newAcceptToken, refreshToken: newRefreshToken);
+      }
+
+      if (result.isError) {
+        getIt<AppCubit>().logOut();
       }
     }
     handler.next(err);
