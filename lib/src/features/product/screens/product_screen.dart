@@ -676,19 +676,19 @@ class ProductScreen extends StatelessWidget {
               rowContent('Tác giả', product.spec?.author, 1),
               rowContent('Nhà xuất bản', product.spec?.publisher, 2),
               rowContent('Ngày xuất bản', product.spec?.publicationDate, 3),
-              Center(
-                  child: InkWell(
-                      onTap: () {},
-                      child: Container(
-                          height: 30,
-                          width: 100,
-                          alignment: Alignment.center,
-                          child: Text(
-                            'Xem tất cả',
-                            style: GoogleFonts.nunito(
-                                color: AppColors.blueColor,
-                                fontWeight: FontWeight.bold),
-                          )))),
+              // Center(
+              //     child: InkWell(
+              //         onTap: () {},
+              //         child: Container(
+              //             height: 30,
+              //             width: 100,
+              //             alignment: Alignment.center,
+              //             child: Text(
+              //               'Xem tất cả',
+              //               style: GoogleFonts.nunito(
+              //                   color: AppColors.blueColor,
+              //                   fontWeight: FontWeight.bold),
+              //             )))),
             ],
           ),
         );
