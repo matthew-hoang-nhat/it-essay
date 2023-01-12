@@ -1,9 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:it_project/main.dart';
+import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/locates/lang_vi.dart';
 import 'package:it_project/src/configs/locates/me_locale_key.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
@@ -22,6 +24,8 @@ import 'package:it_project/src/utils/repository/auth_repository_impl.dart';
 part 'login_state.dart';
 
 enum LoginEnum { isLoading, isClickedLogin, announcementLogin }
+
+enum TypeLoginEnum { manual, google }
 
 class LoginCubit extends Cubit<LoginState> implements ParentCubit<LoginEnum> {
   LoginCubit()
@@ -93,21 +97,27 @@ class LoginCubit extends Cubit<LoginState> implements ParentCubit<LoginEnum> {
 
     final loginResponse = responseManualLogin.data;
     if (loginResponse != null) {
-      _loginSuccessHandle(loginResponse);
+      _storeProfileUserInLocal(loginResponse, TypeLoginEnum.manual);
     } else {
       addNewEvent(LoginEnum.announcementLogin, 'Something error');
     }
     return FResult.success('Thành công');
   }
 
-  Future<FResult<String>> googleLoginClick() async {
-    const serverClientId =
-        '177322333542-5s78k6m5htmshg70qiprq450413qafts.apps.googleusercontent.com';
-    final GoogleSignInAccount? googleUser =
-        await GoogleSignIn(serverClientId: serverClientId, scopes: [
-      'https://www.googleapis.com/auth/userinfo.profile',
-      'https://www.googleapis.com/auth/userinfo.email'
-    ]).signIn();
+  final serverClientId =
+      '177322333542-5s78k6m5htmshg70qiprq450413qafts.apps.googleusercontent.com';
+  late final googleSignIn =
+      GoogleSignIn(serverClientId: serverClientId, scopes: [
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/userinfo.email'
+  ]);
+  Future<void> googleLoginClick() async {
+    addNewEvent(LoginEnum.isLoading, true);
+
+    if (await googleSignIn.isSignedIn() == true) {
+      googleSignIn.signOut();
+    }
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
     final GoogleSignInAuthentication? googleAuth =
         await googleUser?.authentication;
@@ -119,19 +129,24 @@ class LoginCubit extends Cubit<LoginState> implements ParentCubit<LoginEnum> {
 
     if (result.isSuccess) {
       final loginResponse = result.data!;
-      _loginSuccessHandle(loginResponse);
-      return FResult.success('Đăng nhập thành công');
+      await _storeProfileUserInLocal(loginResponse, TypeLoginEnum.google);
     }
     if (result.isError) {
-      _loginFailHandle();
-      return FResult.error('Đăng nhập thất bại');
+      _announceAccountNotExist();
     }
 
-    return FResult.exception('Đăng nhập Exception');
+    addNewEvent(LoginEnum.isLoading, false);
   }
 
-  _loginFailHandle() {}
-  _loginSuccessHandle(LoginResponse loginResponse) {
+  _announceAccountNotExist() {
+    Fluttertoast.showToast(
+        msg: 'Tài khoản chưa được đăng ký với Bitini',
+        backgroundColor: AppColors.redColor,
+        textColor: AppColors.whiteColor);
+  }
+
+  _storeProfileUserInLocal(
+      LoginResponse loginResponse, TypeLoginEnum typeLogin) {
     getIt<FUserLocal>().fUser = FUserLocalDao(
         phoneNumber: '',
         firstName: loginResponse.data['firstName'],
@@ -143,9 +158,28 @@ class LoginCubit extends Cubit<LoginState> implements ParentCubit<LoginEnum> {
         gender: 'male');
 
     final context = navigatorKey.currentContext!;
-    BlocProvider.of<AppCubit>(context).afterLoginInAppCubit();
     GoRouter.of(context).go(Paths.mainScreen);
+    BlocProvider.of<AppCubit>(context).afterLoginInAppCubit();
     BlocProvider.of<MainCubit>(context).reloadMainScreen();
+
+    String name = '';
+    switch (typeLogin) {
+      case TypeLoginEnum.manual:
+        final String lastName = loginResponse.data['lastName'] ?? '';
+        final String firstName = loginResponse.data['firstName'] ?? '';
+        name = '$firstName $lastName';
+        break;
+      case TypeLoginEnum.google:
+        final String firstName = loginResponse.data['name'] ?? '';
+        name = firstName;
+        break;
+      default:
+    }
+
+    Fluttertoast.showToast(
+        msg: 'Chào mừng $name đến với Bitini',
+        backgroundColor: AppColors.primaryColor,
+        textColor: AppColors.whiteColor);
   }
 
   @override
