@@ -7,6 +7,8 @@ import 'package:socket_io_client/socket_io_client.dart';
 
 class SocketManager {
   Socket? _socket;
+  bool get isConnected => _socket?.connected == true;
+
   final urlServer = 'https://external-server-v1.onrender.com';
 
   void connect() async {

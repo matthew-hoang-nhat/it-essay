@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:dio/native_imp.dart';
+import 'package:go_router/go_router.dart';
 import 'package:it_project/main.dart';
+import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/app/fuser_local.dart';
 import 'package:it_project/src/utils/repository/auth_repository_impl.dart';
@@ -36,6 +38,7 @@ class DioHttpClient extends DioForNative {
 
       if (result.isError) {
         getIt<AppCubit>().logOut();
+        GoRouter.of(navigatorKey.currentContext!).go(Paths.mainScreen);
       }
     }
     handler.next(err);
