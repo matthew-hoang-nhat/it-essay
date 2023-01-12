@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/main/cubit/main_cubit.dart';
+import 'package:it_project/src/features/profile/widgets/switch_widget.dart';
 import 'package:it_project/src/widgets/me_alert_dialog.dart';
 
 import '../../app/cubit/app_cubit.dart';
@@ -57,7 +58,7 @@ class ProfileScreen extends StatelessWidget {
                 color: AppColors.whiteColor),
             child: Column(children: [
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   MaterialCommunityIcons.account,
                   color: AppColors.primaryColor,
                 ),
@@ -69,7 +70,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               const Divider(),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   MaterialCommunityIcons.clipboard_text_clock_outline,
                   color: AppColors.primaryColor,
                 ),
@@ -87,7 +88,7 @@ class ProfileScreen extends StatelessWidget {
                 onTap: () {
                   context.push(Paths.addressScreen);
                 },
-                leading: Icon(
+                leading: const Icon(
                   MaterialCommunityIcons.map,
                   color: AppColors.primaryColor,
                 ),
@@ -102,7 +103,7 @@ class ProfileScreen extends StatelessWidget {
                   context.push(
                       '${Paths.mainScreen}/${Paths.sChangePasswordScreen}');
                 },
-                leading: Icon(
+                leading: const Icon(
                   MaterialCommunityIcons.form_textbox_password,
                   color: AppColors.primaryColor,
                 ),
@@ -121,7 +122,7 @@ class ProfileScreen extends StatelessWidget {
                 color: AppColors.whiteColor),
             child: Column(children: [
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   MaterialCommunityIcons.projector_screen_variant,
                   color: AppColors.primaryColor,
                 ),
@@ -133,7 +134,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               const Divider(),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   MaterialCommunityIcons.chat_question,
                   color: AppColors.primaryColor,
                 ),
@@ -146,15 +147,15 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const Divider(),
-              // ListTile(
-              //   onTap: () {},
-              //   leading: Icon(
-              //     MaterialCommunityIcons.target,
-              //     color: AppColors.primaryColor,
-              //   ),
-              //   title: const Text('Tính năng thử nghiệm'),
-              //   trailing: const SwitchWidget(),
-              // )
+              ListTile(
+                onTap: () {},
+                leading: const Icon(
+                  MaterialCommunityIcons.target,
+                  color: AppColors.primaryColor,
+                ),
+                title: const Text('Tính năng thử nghiệm'),
+                trailing: const SwitchWidget(),
+              )
             ]),
           ),
           const SizedBox(height: 20),
@@ -214,7 +215,7 @@ class ProfileScreen extends StatelessWidget {
       child: Column(children: [
         Row(
           children: [
-            Icon(
+            const Icon(
               MaterialCommunityIcons.billboard,
               color: AppColors.primaryColor,
             ),
