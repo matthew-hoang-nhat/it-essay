@@ -32,4 +32,6 @@ abstract class AuthRepository {
       {required String password,
       required String token,
       required String userId});
+
+  Future<FResult<Map<String, String>>> refreshToken();
 }

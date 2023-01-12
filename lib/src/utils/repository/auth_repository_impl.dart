@@ -123,15 +123,25 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<FResult<LoginResponse>> googleLogin(
       {required String idToken, required String accessToken}) async {
-    // try {
-    final loginResponse = await authService.googleLogin(
-        accessToken: accessToken, idToken: idToken);
+    try {
+      final loginResponse = await authService.googleLogin(
+          accessToken: accessToken, idToken: idToken);
 
-    return FResult.success(loginResponse);
-    // } catch (ex) {
-    //   Logger().e(ex);
-    //   return FResult.error(ex.toString());
-    // }
+      return FResult.success(loginResponse);
+    } catch (ex) {
+      Logger().e(ex);
+      return FResult.error(ex.toString());
+    }
+  }
+
+  @override
+  Future<FResult<Map<String, String>>> refreshToken() async {
+    try {
+      final response = await authService.refreshToken();
+      return FResult.success(response);
+    } catch (ex) {
+      return FResult.error(ex.toString());
+    }
   }
 
   // @override
