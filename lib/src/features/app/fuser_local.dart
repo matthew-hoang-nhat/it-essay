@@ -13,10 +13,10 @@ class FUserLocal {
   void logOut() => _appShared.setFUserValue(null);
 
   set fUser(FUserLocalDao? fUser) {
-    final newToken = fUser?.accessToken;
+    final socket = getIt<SocketManager>();
     _appShared.setFUserValue(fUser);
 
-    if (newToken != acceptToken) {
+    if (socket.isConnected == false) {
       getIt<SocketManager>().connect();
     }
   }
