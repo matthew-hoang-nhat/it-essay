@@ -22,6 +22,7 @@
 ## Table of contents
 
 - [How to Use](#how-to-use)
+- [Feature](#feature)
 - [Code Conventions](#code-conventions)
 - [Dependencies](#dependencies)
 - [Code structure](#code-structure)
@@ -42,6 +43,36 @@
   flutter packages pub run build_runner build
   ```
 
+# Feature
+- (1) Authentication
+  + Sign in, register (Username-password & Google)
+  + Forgot password
+  + Change password
+- (2) Product
+  + View information product
+  + Review product (optional: images - up to 2 images)
+  
+- (3) Search
+  + Search content
+  + Search products with many filters (price, category, name/summary, seller)
+
+- (4) Cart
+  + Local Cart (if you haven't logged in yet)
+  + Add/Remove a product
+  + Increase/Decrease quantity product
+
+- (5) Order
+  + Payment method: Paypal & COD
+  + History order
+
+- (6) View seller
+
+- (7) Notification
+  + Manage Socket to connect server push notification (handle foreground and background)
+  + Show and mark status read the notification
+  
+
+
 # Code Conventions
 - [analysis_options.yaml](analysis_options.yaml)
 - [About code analytics flutter](https://medium.com/flutter-community/effective-code-in-your-flutter-app-from-the-beginning-e597444e1273)
@@ -51,68 +82,54 @@
 
 # Dependencies
 
-  ![](resources/images/dependencies.jpg) 
-
 ## Helper
-- [logger](https://pub.dev/packages/logger): Small, easy to use and extensible logger which prints beautiful logs.
-
-- [url_launcher](https://pub.dev/packages/url_launcher): A Flutter plugin for launching a URL in the mobile platform. Supports iOS, Android, web, Windows, macOS, and Linux.
-
-- [go_router](https://pub.dev/packages/go_router): Uses the Router API to provide a convenient, url-based API for navigating between different screens
-
-- [get_it](https://pub.dev/packages/get_it): This is a simple Service Locator
-
+- [Logger](https://pub.dev/packages/logger): Small, easy to use and extensible logger which prints beautiful logs.
+- [Url Launcher](https://pub.dev/packages/url_launcher): A Flutter plugin for launching a URL in the mobile platform. Supports iOS, Android, web, Windows, macOS, and Linux.
 - [intl](https://pub.dev/packages/intl): This package provides internationalization and localization facilities, including message translation, plurals and genders, date/number formatting and parsing, and bidirectional text.
 
-- [Hive](https://pub.dev/packages/hive): Hive is a lightweight and blazing fast key-value database written in pure Dart
+## Management router
+- [Go router](https://pub.dev/packages/go_router): Uses the Router API to provide a convenient, url-based API for navigating between different screens. Don't generate code.
 
-- [package_info_plus](https://pub.dev/packages/package_info_plus): This Flutter plugin provides an API for querying information about an application package.
-
-- [device_info_plus](https://pub.dev/packages/device_info_plus): Get current device information from within the Flutter application.
-
-- [permission_handler](https://pub.dev/packages/permission_handler): Permission plugin for Flutter. This plugin provides a cross-platform (iOS, Android) API to request and check permissions.
-
-## HTTP, API
-- [dio](https://pub.dev/packages/dio): A powerful Http client for Dart, which supports Interceptors, Global configuration, FormData, Request Cancellation, File downloading, Timeout etc
-- [retrofit](https://pub.dev/packages/retrofit): Retrofit.dart is a type conversion dio client generator using source_gen and inspired by Chopper and Retrofit.
-
-
-
-
-## Flutter Fire
-  > The official Firebase plugins for Flutter. sign_in, analytics, crashlytics, storage, firestore
-- [Flutter Fire](https://firebase.flutter.dev/)
-
+## Dependency injection
+- [Get it](https://pub.dev/packages/get_it): This is a simple Service Locator
 
 ## State Management
   > State Management is still the hottest topic in Flutter Community. There are tons of choices available and it’s super intimidating for a beginner to choose one. Also, all of them have their pros and cons. So, what’s the best approach
 
 ![](resources/images/state.png) 
+- [Flutter bloc](https://pub.dev/packages/flutter_bloc): Widgets that make it easy to integrate blocs and cubits into Flutter. [Learn more](https://bloclibrary.dev/#/) 
 
-**A recommended approach**
-- [flutter_bloc](https://pub.dev/packages/flutter_bloc): Widgets that make it easy to integrate blocs and cubits into Flutter. [Learn more](https://bloclibrary.dev/#/) 
+## Local Database
+- [Hive](https://pub.dev/packages/hive): Hive is a lightweight and blazing fast key-value database written in pure Dart
 
+## Notification
+- [Flutter toast](https://pub.dev/packages/fluttertoast)
+- [Flutter smart dialog](https://pub.dev/packages/flutter_smart_dialog)
+- [Flutter local notification](https://pub.dev/packages/flutter_local_notifications)
 
-**Other favorite package**
-- [provider](https://pub.dev/packages/provider): A wrapper around InheritedWidget to make them easier to use and more reusable.
+## HTTP, API, Socket
+- [Dio](https://pub.dev/packages/dio): A powerful Http client for Dart, which supports Interceptors, Global configuration, FormData, Request Cancellation, File downloading, Timeout etc
+- [Retrofit](https://pub.dev/packages/retrofit): Retrofit.dart is a type conversion dio client generator using source_gen and inspired by Chopper and Retrofit.
+- [Socket](https://pub.dev/packages/socket_io_client)
 
-- [rxdart](https://pub.dev/packages/rxdart): RxDart adds additional capabilities to Dart Streams and StreamControllers. Using as bloc pattens
-
-- [RiverPod](https://pub.dev/packages/riverpod): This project can be considered as a rewrite of provider to make improvements that would be otherwise impossible.
-
-- [Get](https://pub.dev/packages/get): A simplified reactive state management solution.
-- [stacked](https://pub.dev/packages/stacked): This architecture was initially a version of MVVM.
-
-- [get](https://pub.dev/packages/get): GetX Ecosystem (State, Router, Dependency management, Theme, Utils)
-
-- [More about state management](https://flutter.dev/docs/development/data-and-backend/state-mgmt/options)
+## Firebase
+- [Flutter Fire](https://firebase.flutter.dev/)
+- crashlytics
+- firebase_auth
+- firebase_core
+- sign_in
 
 ## Widget
-- [loading_animation_widget](https://pub.dev/packages/loading_animation_widget): Loading animation
+- [Loading animation widget](https://pub.dev/packages/loading_animation_widget): Loading animation
+- [Flutter slidable](https://pub.dev/packages/flutter_slidable): implementation of slidable list item with directional slide actions that can be dismissed.
+- [Flutter rating bar](https://pub.dev/packages/flutter_rating_bar)
 
 ## Image
-- [cached_network_image](https://pub.dev/packages/cached_network_image)
-- [flutter_cache_manager](https://pub.dev/packages/flutter_cache_manager)
+- [Cached network image](https://pub.dev/packages/cached_network_image): show images from the internet and keep them in the cache directory.
+- [Photo view](https://pub.dev/packages/photo_view): enables images to become able to zoom and pan with user gestures such as pinch, rotate and drag.
+- [Image picker](https://pub.dev/packages/image_picker): A Flutter plugin for iOS and Android for picking images from the image library, and taking new pictures with the camera.
+
+
 
 # Code structure
 Here is the core folder structure which flutter provides.
@@ -134,7 +151,6 @@ lib/
     |- constant/
     |- locates/
     |- routes/
-  |- di/
   |- features/
   |- local/
     |- dao/
