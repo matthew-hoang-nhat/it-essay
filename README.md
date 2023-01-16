@@ -42,37 +42,7 @@
   ```
   flutter packages pub run build_runner build
   ```
-
-# Feature
-- (1) Authentication
-  + Sign in, register (Username-password & Google)
-  + Forgot password
-  + Change password
-- (2) Product
-  + View information product
-  + Review product (optional: images - up to 2 images)
   
-- (3) Search
-  + Search content
-  + Search products with many filters (price, category, name/summary, seller)
-
-- (4) Cart
-  + Local Cart (if you haven't logged in yet)
-  + Add/Remove a product
-  + Increase/Decrease quantity product
-
-- (5) Order
-  + Payment method: Paypal & COD
-  + History order
-
-- (6) View seller
-
-- (7) Notification
-  + Manage Socket to connect server push notification (handle foreground and background)
-  + Show and mark status read the notification
-  
-
-
 # Code Conventions
 - [analysis_options.yaml](analysis_options.yaml)
 - [About code analytics flutter](https://medium.com/flutter-community/effective-code-in-your-flutter-app-from-the-beginning-e597444e1273)
@@ -135,14 +105,15 @@
 Here is the core folder structure which flutter provides.
 ```
 flutter-app/
-|- android
-|- ios
-|- lib
-|- assets
-|- modules
-|- test
+|- android/
+|- ios/
+|- lib/
+|- assets/
+|- modules/
+|- test/
 ```
 Here is the folder structure we have been using in this project
+
 
 ```
 lib/
@@ -152,6 +123,19 @@ lib/
     |- locates/
     |- routes/
   |- features/
+    |- address/
+    |- app/
+    |- category/
+    |- login_register/
+    |- main/
+    |- order/
+    |- product/
+    |- profile/
+    |- search/
+    |- seller/
+    |- shopping_cart/
+    |- walk_throught/
+
   |- local/
     |- dao/
   |- utils/
