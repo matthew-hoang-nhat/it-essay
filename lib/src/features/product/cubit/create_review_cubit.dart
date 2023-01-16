@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/features/product/models/attach.dart';
-
 import 'package:it_project/src/utils/repository/review_repository_impl.dart';
 import 'package:it_project/src/utils/repository/up_file_repository_impl.dart';
 

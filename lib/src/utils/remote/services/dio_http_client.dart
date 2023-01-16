@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/app/cubit/app_cubit.dart';
-import 'package:it_project/src/features/app/fuser_local.dart';
+import 'package:it_project/src/features/app/f_user_local.dart';
 import 'package:it_project/src/utils/repository/auth_repository_impl.dart';
 
 const String keyAccept = 'Accept';

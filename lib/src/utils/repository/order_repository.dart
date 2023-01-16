@@ -1,7 +1,7 @@
 import 'package:it_project/src/utils/remote/model/order/add/add_order_request.dart';
 import 'package:it_project/src/utils/remote/model/order/get/item_order.dart';
 import 'package:it_project/src/utils/remote/model/order/get/order_response.dart';
-import 'package:it_project/src/utils/remote/services/fresult.dart';
+import 'package:it_project/src/utils/remote/services/f_result.dart';
 import 'package:it_project/src/utils/remote/services/order/order_service.dart';
 
 abstract class OrderRepository {

@@ -10,6 +10,7 @@ import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/app/cubit/app_cubit.dart';
 import 'package:it_project/src/features/order/cubit/cart_to_order_cubit.dart';
 import 'package:it_project/src/features/shopping_cart/cubit/cart_cubit.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:it_project/src/features/shopping_cart/widgets/component_cart_widget.dart';
 import 'package:it_project/src/widgets/load_widget.dart';
@@ -148,7 +149,7 @@ class _CartScreenState extends State<CartScreen> {
                       }
 
                       context.read<CartToOrderCubit>()
-                        ..emit(CartToOrderInitial(
+                        ..addNewState(CartToOrderInitial(
                           isLoading: false,
                           addressId: null,
                           paymentMethod: 'cod',

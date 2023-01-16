@@ -1,4 +1,3 @@
-import 'package:it_project/src/utils/remote/model/product/product.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'item_cart_request.g.dart';
 

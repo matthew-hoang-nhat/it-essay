@@ -102,7 +102,7 @@ class _ComponentSellerTabShop extends StatelessWidget {
                           fontSize: 16,
                           color: AppColors.primaryColor)),
                 ),
-                Icon(
+                const Icon(
                   MaterialCommunityIcons.chevron_right,
                   color: AppColors.primaryColor,
                 )

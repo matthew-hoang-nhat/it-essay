@@ -1,7 +1,7 @@
 import 'package:it_project/src/utils/remote/model/review/comment_review.dart';
 import 'package:it_project/src/utils/remote/model/review/review.dart';
 import 'package:it_project/src/utils/remote/model/review/review_request.dart';
-import 'package:it_project/src/utils/remote/services/fresult.dart';
+import 'package:it_project/src/utils/remote/services/f_result.dart';
 
 import 'package:it_project/src/utils/repository/review_repository.dart';
 import 'package:logger/logger.dart';
@@ -23,7 +23,7 @@ class ReviewRepositoryImpl extends ReviewRepository {
       if (getReviewsResponse.data == null) isHadReviews = false;
 
       final page = (isHadReviews == true) ? 1 : 0;
-      final createReviewResponse = await reviewService.addReview(
+      await reviewService.addReview(
           review: ReviewRequest(
               page: page,
               productId: productId,

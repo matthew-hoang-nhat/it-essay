@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'fuser_local_dao.dart';
+part of 'f_user_local_dao.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator

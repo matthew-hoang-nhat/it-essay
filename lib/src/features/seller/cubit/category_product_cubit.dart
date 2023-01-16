@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';

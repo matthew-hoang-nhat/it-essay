@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/main.dart';
-import 'package:it_project/src/features/app/fuser_local.dart';
+import 'package:it_project/src/features/app/f_user_local.dart';
 import 'package:it_project/src/features/product/cubit/product_cubit.dart';
 
 import 'package:it_project/src/utils/remote/model/review/review.dart';
@@ -15,6 +15,7 @@ import 'package:it_project/src/widgets/start_widget.dart';
 
 import '../../../configs/constants/app_colors.dart';
 import 'package:photo_view/photo_view.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
 enum LikeReviewEnum { like, dislike, nothing }

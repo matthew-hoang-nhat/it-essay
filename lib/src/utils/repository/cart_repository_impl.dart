@@ -1,8 +1,8 @@
 import 'package:it_project/main.dart';
-import 'package:it_project/src/features/app/fuser_local.dart';
+import 'package:it_project/src/features/app/f_user_local.dart';
 import 'package:it_project/src/utils/remote/model/cart/add_item_cart_request.dart';
 import 'package:it_project/src/utils/remote/model/cart/item_cart_request.dart';
-import 'package:it_project/src/utils/remote/services/fresult.dart';
+import 'package:it_project/src/utils/remote/services/f_result.dart';
 import 'package:it_project/src/local/dao/item_cart_dao.dart';
 import 'package:it_project/src/utils/repository/cart_repository.dart';
 

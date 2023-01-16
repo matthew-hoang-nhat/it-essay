@@ -10,7 +10,7 @@ import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/configs/constants/app_dimensions.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/utils/remote/model/product/product.dart';
-
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:it_project/src/utils/remote/model/product/product_picture.dart';
 

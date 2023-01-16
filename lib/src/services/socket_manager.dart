@@ -1,5 +1,5 @@
 import 'package:it_project/main.dart';
-import 'package:it_project/src/features/app/fuser_local.dart';
+import 'package:it_project/src/features/app/f_user_local.dart';
 import 'package:it_project/src/services/notification_manager.dart';
 import 'package:it_project/src/utils/remote/model/order_notification/order_notification.dart';
 import 'package:logger/logger.dart';
