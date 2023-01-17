@@ -18,6 +18,12 @@ abstract class AuthService {
   @POST("/auth/login-mobile")
   Future<LoginResponse> manualLogin(@Body() LoginRequest loginRequest);
 
+  @GET("/auth/oauth/mobile-google")
+  Future<LoginResponse> googleLogin({
+    @Query('id_token') required String idToken,
+    @Query('access_token') required String accessToken,
+  });
+
   @POST("/auth/mobile-register")
   Future<RegisterResponse> register(@Body() RegisterRequest loginRequest);
 

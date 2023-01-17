@@ -1,8 +1,10 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:it_project/main.dart';
+import 'package:it_project/src/features/address/cubit/address_cubit.dart';
 import 'package:it_project/src/features/app/fcart_local.dart';
 import 'package:it_project/src/features/app/fuser_local.dart';
+import 'package:it_project/src/features/main/notification/cubit/notification_cubit.dart';
 import 'package:it_project/src/features/shopping_cart/mixin/action_cart.dart';
 import 'package:it_project/src/local/dao/fuser_local_dao.dart';
 import 'package:it_project/src/services/socket_manager.dart';
@@ -29,15 +31,19 @@ class AppCubit extends Cubit<AppState> with ActionCart {
 
   bool isLoadingProfileUser = false;
 
-  addAddress(Address address) {
+  changeSelectAddress(Address address) {
     emit(state.copyWith(address: address));
+  }
+
+  afterLoginInAppCubit() {
+    _fetchUserAndLoadItemCartsServer();
+    initCubits();
   }
 
   initCubit() async {
     if (_fUserLocal.isLogged) {
-      fetchFUser();
       getIt<SocketManager>().connect();
-      await fetchItemCartsServerMixin();
+      afterLoginInAppCubit();
     }
 
     reGetItemCartQuantity();
@@ -47,7 +53,6 @@ class AppCubit extends Cubit<AppState> with ActionCart {
     await updateItemCartsMixin(
         itemCarts: FCartLocal().itemCarts, type: ActionCartTypeEnum.server);
     await fetchItemCartsServerMixin();
-    reGetItemCartQuantity();
   }
 
   reGetItemCartQuantity() {
@@ -62,9 +67,15 @@ class AppCubit extends Cubit<AppState> with ActionCart {
     emit(state.copyWith(itemCartQuantity: 0));
   }
 
-  fetchUserAndLoadItemCartsServer() async {
-    await fetchFUser();
-    await _loadItemCartsServer();
+  initCubits() {
+    final context = navigatorKey.currentContext!;
+    context.read<NotificationCubit>().initCubit();
+    context.read<AddressCubit>().initCubit();
+  }
+
+  _fetchUserAndLoadItemCartsServer() async {
+    fetchFUser();
+    _loadItemCartsServer();
   }
 
   fetchFUser() async {
@@ -101,23 +112,4 @@ class AppCubit extends Cubit<AppState> with ActionCart {
 
     isLoadingProfileUser = false;
   }
-
-  // @override
-  // void addNewEvent(AppCubitEnum key, value) {
-  //   if (isClosed) return;
-  //   switch (key) {
-  //     case AppCubitEnum.fUser:
-  //       _fUserLocal.fUser = value;
-  //       emit(state.copyWith(fUser: value));
-  //       // NewAppState.fromOldSettingState(state, fUser: value));
-  //       break;
-  //     case AppCubitEnum.itemCartQuantity:
-  //       emit(NewAppState.fromOldSettingState(state, itemCartQuantity: value));
-  //       break;
-  //     case AppCubitEnum.address:
-  //       emit(NewAppState.fromOldSettingState(state, address: value));
-  //       break;
-  //     default:
-  //   }
-  // }
 }

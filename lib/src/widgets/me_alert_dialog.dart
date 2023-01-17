@@ -39,7 +39,7 @@ class MeAlertDialog extends StatelessWidget {
   normalActionWidget(String text, Function() func) {
     return ElevatedButton(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(AppColors.blueColor),
+        backgroundColor: MaterialStateProperty.all<Color>(AppColors.greyColor),
         padding: MaterialStateProperty.all<EdgeInsets>(
             const EdgeInsets.symmetric(horizontal: 20)),
       ),

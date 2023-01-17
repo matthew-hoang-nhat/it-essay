@@ -2,7 +2,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -53,9 +52,33 @@ class InlineItemOrderWidget extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Icon(MaterialCommunityIcons.store_outline),
+            // const Icon(MaterialCommunityIcons.store_outline),
+            if (productOrder.seller?.logo?.fileLink != null)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: CachedNetworkImage(
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                    imageUrl: productOrder.seller!.logo!.fileLink),
+              ),
+            if (productOrder.product.seller?.logo?.fileLink != null)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: CachedNetworkImage(
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                    imageUrl: productOrder.product.seller!.logo!.fileLink),
+              ),
+            const SizedBox(width: 10),
+
             Text(
-              'BabyWorldShop',
+              productOrder.product.seller?.info.name ?? '',
+              style: GoogleFonts.nunito(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              productOrder.seller?.info.name ?? '',
               style: GoogleFonts.nunito(fontWeight: FontWeight.bold),
             ),
             const Spacer(),

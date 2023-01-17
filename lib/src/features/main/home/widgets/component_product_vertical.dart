@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
-import 'package:it_project/src/configs/routes/routes_name_app.dart';
 import 'package:it_project/src/features/main/home/cubit/home_cubit.dart';
-import 'package:it_project/src/widgets/product_general/product_widget.dart';
+import 'package:it_project/src/widgets/product_general/product_home_widget.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class ComponentProductVertical extends StatelessWidget {
@@ -38,51 +36,14 @@ class ComponentProductVertical extends StatelessWidget {
                       child: Row(
                         children: [
                           Flexible(
-                            child: InkWell(
-                              onTap: () {
-                                context.push(
-                                  Paths.productScreen,
-                                  extra: productOdd,
-                                );
-                              },
-                              child: ProductWidget(
-                                  product: productOdd,
-                                  // product: BriefProductModel(
-                                  //     slug: productOdd.slug,
-                                  //     mainCategory: productOdd.category.name,
-                                  //     name: productOdd.name,
-                                  //     price: productOdd.price,
-                                  //     productImage:
-                                  //         productOdd.productImages.first.fileLink,
-                                  //     discountPercent: productOdd.
-                                  //     discountPercent),
-                                  isHeart: false),
-                            ),
+                            child: ProductHomeWidget(product: productOdd),
                           ),
                           const SizedBox(width: 5),
                           productEven == null
                               ? Flexible(child: Container())
                               : Flexible(
-                                  child: InkWell(
-                                    onTap: () {
-                                      context.push(
-                                        Paths.productScreen,
-                                        extra: productEven,
-                                      );
-                                    },
-                                    child: ProductWidget(
-                                        product: productEven,
-                                        // product: BriefProductModel(
-                                        //     slug: productEven.slug,
-                                        //     mainCategory: productEven.category.name,
-                                        //     name: productEven.name,
-                                        //     price: productEven.price,
-                                        //     productImage: productEven
-                                        //         .productImages.first.fileLink,
-                                        //     discountPercent:
-                                        //         productEven.discountPercent),
-                                        isHeart: false),
-                                  ),
+                                  child:
+                                      ProductHomeWidget(product: productEven),
                                 ),
                         ],
                       ),

@@ -16,8 +16,10 @@ import 'package:it_project/src/utils/remote/services/category/category_service.d
 import 'package:it_project/src/utils/remote/services/delivery/delivery_service.dart';
 import 'package:it_project/src/utils/remote/services/delivery/location_service.dart';
 import 'package:it_project/src/utils/remote/services/dio_http_client.dart';
+import 'package:it_project/src/utils/remote/services/notification/notification_service.dart';
 import 'package:it_project/src/utils/remote/services/order/order_service.dart';
 import 'package:it_project/src/utils/remote/services/product/product_service.dart';
+import 'package:it_project/src/utils/remote/services/review/review_service.dart';
 import 'package:it_project/src/utils/remote/services/search/search_service.dart';
 import 'package:it_project/src/utils/remote/services/seller/seller_service.dart';
 
@@ -27,9 +29,11 @@ import 'package:it_project/src/utils/repository/cart_repository_impl.dart';
 import 'package:it_project/src/utils/repository/category_repository_impl.dart';
 import 'package:it_project/src/utils/repository/delivery_repository_impl.dart';
 import 'package:it_project/src/utils/repository/location_repository_impl.dart';
+import 'package:it_project/src/utils/repository/notification_repository_impl.dart';
 import 'package:it_project/src/utils/repository/order_repository_impl.dart';
 import 'package:it_project/src/utils/repository/product_repository_impl.dart';
 import 'package:it_project/src/utils/repository/profile_respository_impl.dart';
+import 'package:it_project/src/utils/repository/review_repository_impl.dart';
 import 'package:it_project/src/utils/repository/search_repository_impl.dart';
 import 'package:it_project/src/utils/repository/seller_repository_impl.dart';
 
@@ -42,8 +46,6 @@ Future<void> initializeApp() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await setupDependenciesGraph();
-  getIt<NotificationManager>()
-      .getCurrentNotificationAndBackgroundTapNotification();
 }
 
 Future<void> setupDependenciesGraph() async {
@@ -102,6 +104,8 @@ void _registerApiModule() {
   );
   getIt.registerSingleton(
       UpFileService(getIt<DioHttpClient>(instanceName: 'upFileServer')));
+  getIt.registerSingleton(ReviewService(getIt<DioHttpClient>()));
+  getIt.registerSingleton(NotificationService(getIt<DioHttpClient>()));
 }
 
 Future<void> _registerRepositoriesModule() async {
@@ -137,6 +141,10 @@ Future<void> _registerRepositoriesModule() async {
 
   getIt.registerSingleton(
       UpFileRepositoryImpl(upFileService: getIt<UpFileService>()));
+  getIt.registerSingleton(
+      ReviewRepositoryImpl(reviewService: getIt<ReviewService>()));
+  getIt.registerSingleton(
+      NotificationRepositoryImpl(getIt<NotificationService>()));
 
   // getIt.registerSingleton<AppCubit>(AppCubit());
 }

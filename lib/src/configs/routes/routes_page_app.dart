@@ -30,7 +30,6 @@ import 'package:it_project/src/features/seller/screens/seller_screen.dart';
 import 'package:it_project/src/features/shopping_cart/cart_screen.dart';
 import 'package:it_project/src/utils/remote/model/category/category.dart';
 import 'package:it_project/src/utils/remote/model/order/get/address.dart';
-import 'package:it_project/src/utils/remote/model/product/product.dart';
 import 'package:it_project/src/utils/remote/model/seller/profile_seller.dart';
 
 class AppPages {
@@ -109,10 +108,13 @@ class AppPages {
       builder: (context, state) => const AddAddressScreen(),
     ),
     GoRoute(
-      path: Paths.productScreen,
-      builder: (context, state) => ProductScreen(
-        product: state.extra as Product,
-      ),
+      path: '${Paths.productScreen}/:slug',
+      builder: (context, state) {
+        final slug = state.params['slug']!;
+        return ProductScreen(
+          slug: slug,
+        );
+      },
     ),
     GoRoute(
         path: Paths.mainScreen,

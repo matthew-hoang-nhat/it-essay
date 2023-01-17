@@ -218,7 +218,9 @@ class AddAddressScreen extends StatelessWidget {
                       .read<AddAddressCubit>()
                       .callAPIAddNewAddress()
                       .then((value) async {
-                    context.read<AddressCubit>().getAddresses();
+                    context
+                        .read<AddressCubit>()
+                        .getAddressesAndSetAddressAppCubit();
                     context.pop();
                   });
                 }
