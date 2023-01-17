@@ -1,5 +1,5 @@
 import 'package:it_project/src/utils/remote/model/product/product.dart';
-import 'package:it_project/src/utils/remote/services/fresult.dart';
+import 'package:it_project/src/utils/remote/services/f_result.dart';
 import 'package:it_project/src/utils/remote/services/product/product_service.dart';
 
 abstract class ProductRepository {

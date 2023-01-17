@@ -9,8 +9,10 @@ import 'package:it_project/src/features/search/widgets/search_bar_detail_widget.
 import 'package:it_project/src/utils/remote/model/category/category.dart';
 import 'package:it_project/src/widgets/cart_button.dart';
 import 'package:it_project/src/widgets/load_widget.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+
 enum DetailSearchExtraEnum { searchText, sellerId, category }
 
 class DetailSearchScreen extends StatelessWidget {

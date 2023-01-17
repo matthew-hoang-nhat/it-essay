@@ -1,5 +1,5 @@
 import 'package:it_project/main.dart';
-import 'package:it_project/src/features/app/fcart_local.dart';
+import 'package:it_project/src/features/app/f_cart_local.dart';
 import 'package:it_project/src/local/dao/item_cart_dao.dart';
 import 'package:it_project/src/utils/remote/model/product/product.dart';
 import 'package:it_project/src/utils/remote/model/product/product_picture.dart';
@@ -12,11 +12,11 @@ mixin ActionCart {
   final cartRepo = getIt<CartRepositoryImpl>();
 
   updateAnItemCartServer(ItemCart itemCart) async {
-    final result = await cartRepo.updateItem(itemCart);
+    await cartRepo.updateItem(itemCart);
   }
 
   removeItemCartServer(ItemCart itemCart) async {
-    final result = await cartRepo.removeItem(itemCart);
+    await cartRepo.removeItem(itemCart);
   }
 
   fetchItemCartsServerMixin() async {

@@ -1,6 +1,7 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/features/login_register/cubit/parent_cubit.dart';
@@ -28,7 +29,6 @@ class HomeCubit extends Cubit<HomeState> implements ParentCubit<HomeEnum> {
 
   int _currentPageProducts = 0;
   int _currentPageFlashSale = 0;
-  int _currentPageCategory = 0;
 
   bool isLoadingFlashSales = false;
   bool isLoadingCategories = false;
@@ -65,7 +65,7 @@ class HomeCubit extends Cubit<HomeState> implements ParentCubit<HomeEnum> {
         break;
       case HomeEnum.categories:
         if (isLoadingCategories) return;
-        _currentPageCategory++;
+
         getCategories();
         break;
       case HomeEnum.flashSaleProducts:

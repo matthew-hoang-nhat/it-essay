@@ -14,7 +14,7 @@ import 'package:it_project/src/utils/repository/delivery_repository.dart';
 import 'package:it_project/src/utils/repository/delivery_repository_impl.dart';
 import 'package:it_project/src/utils/repository/order_repository.dart';
 import 'package:it_project/src/utils/repository/order_repository_impl.dart';
-
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 part 'cart_to_order_state.dart';
@@ -48,18 +48,9 @@ class CartToOrderCubit extends Cubit<CartToOrderState> {
   final DeliveryRepository deliveryRepository = getIt<DeliveryRepositoryImpl>();
   final OrderRepository orderRepository = getIt<OrderRepositoryImpl>();
 
-  // initCubit({required List<ItemCart> itemCarts}) async {
-  //   emit(CartToOrderInitial(
-  //     isLoading: false,
-  //     addressId: null,
-  //     paymentMethod: 'cod',
-  //     shippingPrice: '',
-  //     subTotalPrice: '',
-  //     itemCarts: itemCarts,
-  //     totalPrice: '',
-  //   ));
-  //   getPrice();
-  // }
+  addNewState(CartToOrderInitial newState) {
+    emit(newState);
+  }
 
   setPaymentMethod(String value) {
     emit(state.copyWith(paymentMethod: value));

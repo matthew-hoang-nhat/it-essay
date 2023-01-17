@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:it_project/main.dart';
-import 'package:it_project/src/features/app/fuser_local.dart';
+import 'package:it_project/src/features/app/f_user_local.dart';
 import 'package:it_project/src/features/main/home/home_screen.dart';
 import 'package:it_project/src/features/main/notification/screens/notification_tab_screen.dart';
 import 'package:it_project/src/features/profile/screens/profile_screen.dart';

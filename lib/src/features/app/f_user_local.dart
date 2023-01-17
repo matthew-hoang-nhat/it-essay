@@ -2,7 +2,7 @@
 
 import 'package:hive/hive.dart';
 import 'package:it_project/main.dart';
-import 'package:it_project/src/local/dao/fuser_local_dao.dart';
+import 'package:it_project/src/local/dao/f_user_local_dao.dart';
 import 'package:it_project/src/services/socket_manager.dart';
 import 'package:it_project/src/utils/app_shared.dart';
 
@@ -13,10 +13,10 @@ class FUserLocal {
   void logOut() => _appShared.setFUserValue(null);
 
   set fUser(FUserLocalDao? fUser) {
-    final newToken = fUser?.accessToken;
+    final socket = getIt<SocketManager>();
     _appShared.setFUserValue(fUser);
 
-    if (newToken != acceptToken) {
+    if (socket.isConnected == false) {
       getIt<SocketManager>().connect();
     }
   }

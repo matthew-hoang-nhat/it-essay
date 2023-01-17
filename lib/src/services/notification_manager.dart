@@ -2,7 +2,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/routes/routes_name_app.dart';
+import 'package:it_project/src/features/order/screens/detail_order_screen.dart';
 import 'package:it_project/src/utils/remote/model/order_notification/order_notification.dart';
+import 'package:it_project/src/widgets/matt.dart';
 import 'package:logger/logger.dart';
 
 class NotificationManager {
@@ -23,10 +25,16 @@ class NotificationManager {
     await notificationPlugin.initialize(
       _setting,
       // onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
-      onDidReceiveNotificationResponse: (NotificationResponse response) {
-        final String? orderId = response.payload;
-        GoRouter.of(navigatorKey.currentContext!).push(
-            '${Paths.mainScreen}/${Paths.subHistoryOrderScreen}/${Paths.sDetailOrderScreen}/$orderId');
+      onDidReceiveNotificationResponse: (NotificationResponse response) async {
+        final String orderId = response.payload!;
+        GoRouter.of(navigatorKey.currentContext!)
+            .go('${Paths.mainScreen}/${Paths.subHistoryOrderScreen}');
+
+        await Future.delayed(const Duration(milliseconds: 500));
+        Matt.showBottom(navigatorKey.currentContext!,
+            heightFactor: 0.9,
+            title: 'Chi tiết đơn hàng',
+            widget: DetailOrderScreen(orderId: orderId));
       },
     );
   }
@@ -39,10 +47,15 @@ class NotificationManager {
 
     // if (detail != null && detail.didNotificationLaunchApp) {
     if (detail?.notificationResponse != null) {
-      final String? orderId = detail?.notificationResponse!.payload;
-      Logger().i(orderId);
-      GoRouter.of(navigatorKey.currentContext!).push(
-          '${Paths.mainScreen}/${Paths.subHistoryOrderScreen}/${Paths.sDetailOrderScreen}/$orderId');
+      final String orderId = detail!.notificationResponse!.payload!;
+      GoRouter.of(navigatorKey.currentContext!)
+          .go('${Paths.mainScreen}/${Paths.subHistoryOrderScreen}');
+
+      await Future.delayed(const Duration(milliseconds: 500));
+      Matt.showBottom(navigatorKey.currentContext!,
+          heightFactor: 0.9,
+          title: 'Chi tiết đơn hàng',
+          widget: DetailOrderScreen(orderId: orderId));
     }
   }
 

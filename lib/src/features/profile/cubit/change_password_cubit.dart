@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/utils/helpers/validate.dart';
-import 'package:it_project/src/utils/repository/profile_respository_impl.dart';
+import 'package:it_project/src/utils/repository/profile_repository_impl.dart';
 
 part 'change_password_state.dart';
 

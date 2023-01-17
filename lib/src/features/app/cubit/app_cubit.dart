@@ -2,15 +2,15 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/features/address/cubit/address_cubit.dart';
-import 'package:it_project/src/features/app/fcart_local.dart';
-import 'package:it_project/src/features/app/fuser_local.dart';
+import 'package:it_project/src/features/app/f_cart_local.dart';
+import 'package:it_project/src/features/app/f_user_local.dart';
 import 'package:it_project/src/features/main/notification/cubit/notification_cubit.dart';
 import 'package:it_project/src/features/shopping_cart/mixin/action_cart.dart';
-import 'package:it_project/src/local/dao/fuser_local_dao.dart';
+import 'package:it_project/src/local/dao/f_user_local_dao.dart';
 import 'package:it_project/src/services/socket_manager.dart';
 import 'package:it_project/src/utils/remote/model/order/get/address.dart';
-import 'package:it_project/src/utils/repository/profile_respository.dart';
-import 'package:it_project/src/utils/repository/profile_respository_impl.dart';
+import 'package:it_project/src/utils/repository/profile_repository.dart';
+import 'package:it_project/src/utils/repository/profile_repository_impl.dart';
 
 part 'app_state.dart';
 
