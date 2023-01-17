@@ -29,13 +29,17 @@ class HomeScreen extends StatelessWidget {
             controller: context.read<HomeCubit>().controller,
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              poster(),
+              InkWell(
+                  onTap: () {
+                    context.push(Paths.preSearchScreen);
+                  },
+                  child: poster()),
               meDivider(),
               const ComponentCategoryHorizontalWidget(),
               meDivider(),
               const ComponentFlashSaleWidget(),
               meDivider(),
-              const ComponentSellerWidget(),
+              if (isFuture == true) const ComponentSellerWidget(),
               meDivider(),
               Container(
                 color: AppColors.whiteGreyColor,

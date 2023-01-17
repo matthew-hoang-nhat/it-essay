@@ -62,4 +62,7 @@ abstract class AuthService {
   @POST("/profile/change-password-mobile")
   Future<SuccessResponse> changePassword(
       @Body() Map<String, String> changePasswordRequest);
+
+  @GET("/auth/refresh-token-mobile")
+  Future<Map<String, String>> refreshToken();
 }
