@@ -9,8 +9,8 @@ import 'package:it_project/src/features/order/widgets/inline_item_order_widget.d
 import 'package:it_project/src/utils/remote/model/order/get/item_order.dart';
 import 'package:it_project/src/utils/remote/model/order/get/order_response.dart';
 import 'package:it_project/src/widgets/load_widget.dart';
-
 import '../widgets/inline_history_order_response_widget.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
 class DetailOrderScreen extends StatelessWidget {

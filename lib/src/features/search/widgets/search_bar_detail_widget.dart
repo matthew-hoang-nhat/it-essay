@@ -8,7 +8,6 @@ import 'package:it_project/src/features/search/cubit/search_cubit.dart';
 import 'package:logger/logger.dart';
 
 import '../../../configs/constants/app_colors.dart';
-import 'package:intl/intl.dart';
 
 class SearchBarDetailWidget extends StatelessWidget {
   const SearchBarDetailWidget({super.key});
@@ -76,7 +75,7 @@ class _IconFilterTypeSearchWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        final formatCurrency = NumberFormat.simpleCurrency(locale: 'vi_VN');
+        // final formatCurrency = NumberFormat.simpleCurrency(locale: 'vi_VN');
         showModalBottomSheet(
             context: context,
             builder: (_) => _filterIconComponentWidget(context));

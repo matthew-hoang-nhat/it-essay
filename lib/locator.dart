@@ -5,9 +5,9 @@ import 'package:hive/hive.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/constants/app_constants.dart';
 import 'package:it_project/src/configs/routes/routers_app.dart';
-import 'package:it_project/src/features/app/fcart_local.dart';
-import 'package:it_project/src/features/app/fuser_local.dart';
-import 'package:it_project/src/local/dao/fuser_local_dao.dart';
+import 'package:it_project/src/features/app/f_cart_local.dart';
+import 'package:it_project/src/features/app/f_user_local.dart';
+import 'package:it_project/src/local/dao/f_user_local_dao.dart';
 import 'package:it_project/src/local/dao/item_cart_dao.dart';
 import 'package:it_project/src/services/notification_manager.dart';
 import 'package:it_project/src/services/socket_manager.dart';
@@ -33,7 +33,7 @@ import 'package:it_project/src/utils/repository/location_repository_impl.dart';
 import 'package:it_project/src/utils/repository/notification_repository_impl.dart';
 import 'package:it_project/src/utils/repository/order_repository_impl.dart';
 import 'package:it_project/src/utils/repository/product_repository_impl.dart';
-import 'package:it_project/src/utils/repository/profile_respository_impl.dart';
+import 'package:it_project/src/utils/repository/profile_repository_impl.dart';
 import 'package:it_project/src/utils/repository/review_repository_impl.dart';
 import 'package:it_project/src/utils/repository/search_repository_impl.dart';
 import 'package:it_project/src/utils/repository/seller_repository_impl.dart';
@@ -41,6 +41,7 @@ import 'package:it_project/src/utils/repository/seller_repository_impl.dart';
 import 'package:it_project/src/utils/repository/up_file_repository_impl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 Future<void> initializeApp() async {

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:it_project/src/utils/remote/model/order/add/add_order_request.dart';
 import 'package:it_project/src/utils/remote/model/order/get/item_order.dart';
-import 'package:it_project/src/utils/remote/services/fresult.dart';
+import 'package:it_project/src/utils/remote/services/f_result.dart';
 import 'package:it_project/src/utils/remote/model/order/get/order_response.dart';
 import 'package:it_project/src/utils/repository/order_repository.dart';
 import 'package:logger/logger.dart';
@@ -171,7 +171,7 @@ class OrderRepositoryImpl extends OrderRepository {
       {required String itemOrderId}) async {
     try {
       final cancelRequest = {'orderItemId': itemOrderId};
-      final result = await orderService.cancelAnItemOrder(cancelRequest);
+      await orderService.cancelAnItemOrder(cancelRequest);
       return FResult.success('Bạn đã hủy thành công');
     } catch (ex) {
       // if (ex is DioError) {
@@ -187,7 +187,7 @@ class OrderRepositoryImpl extends OrderRepository {
   Future<FResult<String>> cancelOrder({required String orderId}) async {
     try {
       final cancelRequest = {'orderId': orderId};
-      final result = await orderService.cancelOrder(cancelRequest);
+      await orderService.cancelOrder(cancelRequest);
       return FResult.success('Bạn đã hủy thành công');
     } catch (ex) {
       // if (ex is DioError) {

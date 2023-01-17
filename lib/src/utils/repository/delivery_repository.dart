@@ -1,6 +1,6 @@
 import 'package:it_project/src/utils/remote/model/order/get/address.dart';
 import 'package:it_project/src/utils/remote/services/delivery/delivery_service.dart';
-import 'package:it_project/src/utils/remote/services/fresult.dart';
+import 'package:it_project/src/utils/remote/services/f_result.dart';
 
 abstract class DeliveryRepository {
   final DeliveryService deliveryService;

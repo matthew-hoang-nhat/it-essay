@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/features/main/notification/cubit/notification_cubit.dart';
 import 'package:it_project/src/utils/remote/model/order_notification/m_notification.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 part '../widgets/item_notification_widget.dart';
@@ -31,7 +32,6 @@ class NotificationTabScreen extends StatelessWidget {
                     itemCount: state.notifications.length,
                     itemBuilder: (itemContext, index) {
                       final notification = state.notifications.elementAt(index);
-                      final notificationId = notification.id;
                       return _ItemNotificationWidget(
                         notification: notification,
                       );

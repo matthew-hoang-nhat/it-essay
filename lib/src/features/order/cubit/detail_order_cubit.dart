@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:it_project/main.dart';
 import 'package:it_project/src/configs/locates/lang_vi.dart';
@@ -33,8 +33,7 @@ class DetailOrderCubit extends Cubit<DetailOrderState> {
   }
 
   Future<void> cancelAnItemOrder(String itemOrderId) async {
-    final result =
-        await orderRepository.cancelAnItemOrder(itemOrderId: itemOrderId);
+    await orderRepository.cancelAnItemOrder(itemOrderId: itemOrderId);
     _getDetailDetailOrder();
   }
 

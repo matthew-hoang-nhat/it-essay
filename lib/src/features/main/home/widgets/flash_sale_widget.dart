@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:it_project/src/configs/constants/app_assets.dart';
@@ -17,7 +18,7 @@ class FlashSaleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formatCurrency = NumberFormat.simpleCurrency(locale: 'vi_VN');
-    final size = MediaQuery.of(context).size.width * 2 / 8;
+    // final size = MediaQuery.of(context).size.width * 2 / 8;
 
     final firstImage = (product.productImages as List)
         .map((e) => ProductPicture.fromJson(e))

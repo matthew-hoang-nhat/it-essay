@@ -22,7 +22,7 @@ class ComponentSellerWidget extends StatelessWidget {
                 Stack(
                   alignment: Alignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       MaterialCommunityIcons.hexagon,
                       size: 30,
                       color: AppColors.primaryColor,

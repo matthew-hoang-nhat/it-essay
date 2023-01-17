@@ -33,22 +33,24 @@ class AddressCubit extends Cubit<AddressState> {
   getAddressesAndSetAddressAppCubit() async {
     emit(state.copyWith(isLoading: true));
 
-    final addressesResponse = await _deliveryRepository.getAddresses();
-    if (addressesResponse.isSuccess) {
-      emit(state.copyWith(addresses: addressesResponse.data));
-      _checkEmptyAddresses();
-    }
+    await _deliveryRepository.getAddresses().then((result) {
+      if (result.isSuccess) {
+        emit(state.copyWith(addresses: result.data));
+        _checkEmptyAddresses();
+      }
 
-    final indexDefaultAddress =
-        state.addresses.indexWhere((element) => element.isDefault);
+      final indexDefaultAddress =
+          state.addresses.indexWhere((element) => element.isDefault);
 
-    if (indexDefaultAddress != -1) {
-      final context = navigatorKey.currentContext!;
-      context
-          .read<AppCubit>()
-          .changeSelectAddress(state.addresses[indexDefaultAddress]);
-      emit(state.copyWith(addressId: state.addresses[indexDefaultAddress].id));
-    }
+      if (indexDefaultAddress != -1) {
+        final context = navigatorKey.currentContext!;
+        context
+            .read<AppCubit>()
+            .changeSelectAddress(state.addresses[indexDefaultAddress]);
+        emit(
+            state.copyWith(addressId: state.addresses[indexDefaultAddress].id));
+      }
+    });
 
     emit(state.copyWith(isLoading: false));
   }

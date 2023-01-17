@@ -18,14 +18,12 @@ class CategoryCubit extends Cubit<CategoryState>
         ));
   CategoryRepository categoryRepository = getIt<CategoryRepositoryImpl>();
 
-  int _currentPageCategories = 1;
   bool isLoadingCategories = false;
 
   void loadPage(CategoryEnum categoryEnum) {
     switch (categoryEnum) {
       case CategoryEnum.categories:
         if (isLoadingCategories) return;
-        _currentPageCategories++;
         getCategories();
         break;
 
@@ -43,9 +41,7 @@ class CategoryCubit extends Cubit<CategoryState>
           [...state.categories, ...categoryResponse.data!]);
     }
 
-    if (categoryResponse.isError) {
-      _currentPageCategories--;
-    }
+    if (categoryResponse.isError) {}
 
     isLoadingCategories = false;
   }

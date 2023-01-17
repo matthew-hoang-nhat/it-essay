@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:it_project/src/configs/constants/app_colors.dart';
 import 'package:it_project/src/features/order/cubit/history_order_cubit.dart';
 import 'package:it_project/src/utils/remote/model/order/get/order_response.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:it_project/src/utils/remote/model/product/product_picture.dart';
 

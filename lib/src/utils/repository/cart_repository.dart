@@ -1,7 +1,7 @@
 import 'package:it_project/src/local/dao/item_cart_dao.dart';
 import 'package:it_project/src/utils/remote/model/cart/item_cart_request.dart';
 import 'package:it_project/src/utils/remote/services/cart/cart_service.dart';
-import 'package:it_project/src/utils/remote/services/fresult.dart';
+import 'package:it_project/src/utils/remote/services/f_result.dart';
 
 abstract class CartRepository {
   CartRepository({required this.cartService});

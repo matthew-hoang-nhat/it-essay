@@ -1,5 +1,5 @@
 import 'package:it_project/src/utils/remote/model/review/review.dart';
-import 'package:it_project/src/utils/remote/services/fresult.dart';
+import 'package:it_project/src/utils/remote/services/f_result.dart';
 import 'package:it_project/src/utils/remote/services/review/review_service.dart';
 
 abstract class ReviewRepository {

@@ -4,8 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:it_project/src/utils/remote/model/user/profile_user.dart';
 import 'package:it_project/src/utils/remote/model/user/update_profile_user_data.dart';
 import 'package:it_project/src/utils/remote/model/user/update_profile_user_request.dart';
-import 'package:it_project/src/utils/remote/services/fresult.dart';
-import 'package:it_project/src/utils/repository/profile_respository.dart';
+import 'package:it_project/src/utils/remote/services/f_result.dart';
+import 'package:it_project/src/utils/repository/profile_repository.dart';
 import 'package:logger/logger.dart';
 
 class ProfileRepositoryImpl extends ProfileRepository {
@@ -19,10 +19,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
 
       return FResult.success(profileUser);
     } catch (ex) {
-      print(ex.toString());
-      if (ex is DioError) {
-        log('getProfileUser: ${ex.error}');
-      }
+      Logger().e(ex);
       return FResult.error(ex.toString());
     }
   }
@@ -31,7 +28,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
   Future<FResult<String>> updateProfileUser(
       {required UpdateProfileUserData newProfileUserData}) async {
     try {
-      final response = await profileService.updateProfileUser(
+      await profileService.updateProfileUser(
           UpdateProfileUserRequest(profile: newProfileUserData));
       return FResult.success('Thành công');
     } catch (ex) {
@@ -52,8 +49,8 @@ class ProfileRepositoryImpl extends ProfileRepository {
         'oldPassword': oldPassword,
         'newPassword': newPassword
       };
-      final response =
-          await profileService.changePassword(changePasswordRequest);
+
+      await profileService.changePassword(changePasswordRequest);
       return FResult.success('Thành công');
     } catch (ex) {
       Logger().e(ex);

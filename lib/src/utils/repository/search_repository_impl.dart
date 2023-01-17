@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:it_project/src/utils/remote/model/search/content_search.dart';
-import 'package:it_project/src/utils/remote/services/fresult.dart';
+import 'package:it_project/src/utils/remote/services/f_result.dart';
 import 'package:it_project/src/utils/repository/search_repository.dart';
 
 class SearchRepositoryImpl extends SearchRepository {

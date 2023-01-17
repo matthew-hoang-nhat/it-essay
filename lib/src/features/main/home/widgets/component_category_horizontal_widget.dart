@@ -39,13 +39,11 @@ class ComponentCategoryHorizontalWidget extends StatelessWidget {
                   onTap: () {
                     context.push(Paths.categoryScreen);
                   },
-                  child: Container(
-                    child: Text('XEM THÊM',
-                        style: GoogleFonts.nunito(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryColor)),
-                  ),
+                  child: Text('XEM THÊM',
+                      style: GoogleFonts.nunito(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primaryColor)),
                 )
               ],
             ),

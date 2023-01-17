@@ -1,15 +1,16 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:it_project/main.dart';
-import 'package:it_project/src/features/app/fuser_local.dart';
+import 'package:it_project/src/features/app/f_user_local.dart';
 import 'package:it_project/src/features/profile/screens/detail_profile_screen.dart';
-import 'package:it_project/src/local/dao/fuser_local_dao.dart';
+import 'package:it_project/src/local/dao/f_user_local_dao.dart';
 import 'package:it_project/src/utils/helpers/validate.dart';
 import 'package:it_project/src/utils/remote/model/user/update_profile_user_data.dart';
-import 'package:it_project/src/utils/repository/profile_respository.dart';
-import 'package:it_project/src/utils/repository/profile_respository_impl.dart';
+import 'package:it_project/src/utils/repository/profile_repository.dart';
+import 'package:it_project/src/utils/repository/profile_repository_impl.dart';
 import 'package:it_project/src/utils/repository/up_file_repository.dart';
 import 'package:it_project/src/utils/repository/up_file_repository_impl.dart';
 

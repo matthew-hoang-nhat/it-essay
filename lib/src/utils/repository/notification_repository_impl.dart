@@ -1,4 +1,4 @@
-import 'package:it_project/src/utils/remote/services/fresult.dart';
+import 'package:it_project/src/utils/remote/services/f_result.dart';
 import 'package:it_project/src/utils/remote/model/order_notification/m_notification.dart';
 import 'package:it_project/src/utils/repository/notification_repository.dart';
 import 'package:logger/logger.dart';
@@ -42,8 +42,6 @@ class NotificationRepositoryImpl extends NotificationRepository {
       Logger().e(ex);
       return FResult.error(ex.toString());
     }
-
-    return FResult.error('error');
   }
 }
 

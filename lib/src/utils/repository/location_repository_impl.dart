@@ -1,4 +1,4 @@
-import 'package:it_project/src/utils/remote/services/fresult.dart';
+import 'package:it_project/src/utils/remote/services/f_result.dart';
 import 'package:it_project/src/utils/remote/model/order/get/province.dart';
 import 'package:it_project/src/utils/repository/location_repository.dart';
 

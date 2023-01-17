@@ -1,6 +1,6 @@
 import 'package:it_project/src/utils/remote/model/login/login_response.dart';
 import 'package:it_project/src/utils/remote/services/auth_service/auth_service.dart';
-import 'package:it_project/src/utils/remote/services/fresult.dart';
+import 'package:it_project/src/utils/remote/services/f_result.dart';
 
 abstract class AuthRepository {
   final AuthService authService;

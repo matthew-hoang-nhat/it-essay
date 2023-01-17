@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:it_project/src/utils/remote/services/fresult.dart';
+import 'package:it_project/src/utils/remote/services/f_result.dart';
 import 'package:it_project/src/utils/remote/model/order/get/address.dart';
 import 'package:it_project/src/utils/repository/delivery_repository.dart';
 import 'package:logger/logger.dart';

@@ -2,7 +2,7 @@
 
 import 'package:hive/hive.dart';
 import 'package:it_project/main.dart';
-import 'package:it_project/src/local/dao/fuser_local_dao.dart';
+import 'package:it_project/src/local/dao/f_user_local_dao.dart';
 import 'package:it_project/src/services/socket_manager.dart';
 import 'package:it_project/src/utils/app_shared.dart';
 

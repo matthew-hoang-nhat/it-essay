@@ -5,7 +5,7 @@ import 'package:it_project/src/utils/remote/model/login/login_request.dart';
 import 'package:it_project/src/utils/remote/model/login/login_response.dart';
 import 'package:it_project/src/utils/remote/model/register/otp_register_request.dart';
 import 'package:it_project/src/utils/remote/model/register/register_request.dart';
-import 'package:it_project/src/utils/remote/services/fresult.dart';
+import 'package:it_project/src/utils/remote/services/f_result.dart';
 import 'package:it_project/src/utils/repository/auth_repository.dart';
 import 'package:logger/logger.dart';
 
@@ -61,7 +61,7 @@ class AuthRepositoryImpl extends AuthRepository {
     final otpRequest = OtpRegisterRequest(userId: userId, otp: otpCode);
 
     try {
-      final result = await authService.otpRegister(otpRequest);
+      await authService.otpRegister(otpRequest);
       return FResult.success('');
     } catch (ex) {
       log(ex.toString());
@@ -95,7 +95,7 @@ class AuthRepositoryImpl extends AuthRepository {
     };
 
     try {
-      final result = await authService.finalResetPassword(
+      await authService.finalResetPassword(
           resetPasswordRequest: finalResetPasswordRequest);
       return FResult.success('');
     } catch (ex) {

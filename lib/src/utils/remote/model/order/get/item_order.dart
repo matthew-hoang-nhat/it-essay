@@ -19,16 +19,16 @@ class ItemOrder {
   bool? isCancel;
 
   @JsonKey(name: 'price')
-  dynamic? price;
+  dynamic price;
 
   @JsonKey(name: 'totalPaid')
-  dynamic? totalPaid;
+  dynamic totalPaid;
 
   @JsonKey(name: 'quantity')
   int? quantity;
 
   @JsonKey(name: 'shippingCost')
-  dynamic? shippingCost;
+  dynamic shippingCost;
 
   @JsonKey(name: 'orderId')
   String? orderId;
