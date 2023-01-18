@@ -94,7 +94,7 @@ jobs:
             git --no-pager log --pretty=format:%s ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} > changelog.txt
           }
 
-          firebase appdistribution:distribute 'build/app/outputs/flutter-apk/app-release.apk' --app ${{ secrets.FIREBASE_APP_ID }} --token '${{ secrets.FIREBASE_TOKEN }}' --groups "personal" --release-notes-file changelog.txt
+          firebase appdistribution:distribute 'build/app/outputs/flutter-apk/app-release.apk' --app '${{ secrets.FIREBASE_APP_ID }}' --token '${{ secrets.FIREBASE_TOKEN }}' --groups "personal" --release-notes-file changelog.txt
         shell: pwsh
 
   build-success:
